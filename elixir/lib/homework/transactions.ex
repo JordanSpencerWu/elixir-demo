@@ -17,6 +17,7 @@ defmodule Homework.Transactions do
       [%Transaction{}, ...]
 
   """
+  @spec list_transactions(map) :: [Transaction.t()]
   def list_transactions(_args) do
     Repo.all(Transaction)
   end
@@ -28,13 +29,14 @@ defmodule Homework.Transactions do
 
   ## Examples
 
-      iex> get_transaction!(123)
+      iex> get_transaction!("3f8d5bf5-264d-409c-a742-eb3dc2de831b")
       %Transaction{}
 
-      iex> get_transaction!(456)
+      iex> get_transaction!("d100bfb6-b148-45c7-bd9f-cb29bbcb823c")
       ** (Ecto.NoResultsError)
 
   """
+  @spec get_transaction!(Ecto.UUID.t()) :: Transaction.t()
   def get_transaction!(id), do: Repo.get!(Transaction, id)
 
   @doc """
@@ -49,6 +51,7 @@ defmodule Homework.Transactions do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec create_transaction(map) :: {:ok, Transaction.t()} | {:error, Ecto.Changeset.t()}
   def create_transaction(attrs \\ %{}) do
     %Transaction{}
     |> Transaction.changeset(attrs)
@@ -67,6 +70,8 @@ defmodule Homework.Transactions do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec update_transaction(Transaction.t(), map) ::
+          {:ok, Transaction.t()} | {:error, Ecto.Changeset.t()}
   def update_transaction(%Transaction{} = transaction, attrs) do
     transaction
     |> Transaction.changeset(attrs)
@@ -85,6 +90,8 @@ defmodule Homework.Transactions do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec delete_transaction(Transaction.t()) ::
+          {:ok, Transaction.t()} | {:error, Ecto.Changeset.t()}
   def delete_transaction(%Transaction{} = transaction) do
     Repo.delete(transaction)
   end
@@ -98,6 +105,7 @@ defmodule Homework.Transactions do
       %Ecto.Changeset{data: %Transaction{}}
 
   """
+  @spec change_transaction(Transaction.t(), map) :: Ecto.Changeset.t()
   def change_transaction(%Transaction{} = transaction, attrs \\ %{}) do
     Transaction.changeset(transaction, attrs)
   end

@@ -17,6 +17,7 @@ defmodule Homework.Merchants do
       [%Merchant{}, ...]
 
   """
+  @spec list_merchants(map) :: [Merchant.t()]
   def list_merchants(_args) do
     Repo.all(Merchant)
   end
@@ -28,13 +29,14 @@ defmodule Homework.Merchants do
 
   ## Examples
 
-      iex> get_merchant!(123)
+      iex> get_merchant!("3f8d5bf5-264d-409c-a742-eb3dc2de831b")
       %Merchant{}
 
-      iex> get_merchant!(456)
+      iex> get_merchant!("d100bfb6-b148-45c7-bd9f-cb29bbcb823c")
       ** (Ecto.NoResultsError)
 
   """
+  @spec get_merchant!(Ecto.UUID.t()) :: Merchant.t()
   def get_merchant!(id), do: Repo.get!(Merchant, id)
 
   @doc """
@@ -49,6 +51,7 @@ defmodule Homework.Merchants do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec create_merchant(map) :: {:ok, Merchant.t()} | {:error, Ecto.Changeset.t()}
   def create_merchant(attrs \\ %{}) do
     %Merchant{}
     |> Merchant.changeset(attrs)
@@ -67,6 +70,7 @@ defmodule Homework.Merchants do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec update_merchant(Merchant.t(), map) :: {:ok, Merchant.t()} | {:error, Ecto.Changeset.t()}
   def update_merchant(%Merchant{} = merchant, attrs) do
     merchant
     |> Merchant.changeset(attrs)
@@ -85,6 +89,7 @@ defmodule Homework.Merchants do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec delete_merchant(Merchant.t()) :: {:ok, Merchant.t()} | {:error, Ecto.Changeset.t()}
   def delete_merchant(%Merchant{} = merchant) do
     Repo.delete(merchant)
   end
@@ -98,6 +103,7 @@ defmodule Homework.Merchants do
       %Ecto.Changeset{data: %Merchant{}}
 
   """
+  @spec change_merchant(Merchant.t(), map) :: Ecto.Changeset.t()
   def change_merchant(%Merchant{} = merchant, attrs \\ %{}) do
     Merchant.changeset(merchant, attrs)
   end

@@ -25,7 +25,7 @@ defmodule Homework.MixProject do
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:test), do: ["lib", "test/support", "test/factories"]
   defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
@@ -36,6 +36,7 @@ defmodule Homework.MixProject do
       {:absinthe, "~> 1.4"},
       {:absinthe_plug, "~> 1.4"},
       {:ecto_sql, "~> 3.4"},
+      {:ex_machina, "~> 2.7.0", only: :test},
       {:faker, "~> 0.17", only: :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},

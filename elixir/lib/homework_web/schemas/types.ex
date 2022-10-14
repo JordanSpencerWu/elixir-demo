@@ -6,6 +6,7 @@ defmodule HomeworkWeb.Schemas.Types do
 
   import_types(Absinthe.Type.Custom)
   import_types(HomeworkWeb.Schemas.Types.Custom)
+  import_types(HomeworkWeb.Schemas.CompaniesSchema)
   import_types(HomeworkWeb.Schemas.MerchantsSchema)
   import_types(HomeworkWeb.Schemas.TransactionsSchema)
   import_types(HomeworkWeb.Schemas.UsersSchema)

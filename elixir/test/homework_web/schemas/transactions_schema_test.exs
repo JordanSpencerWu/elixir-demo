@@ -83,6 +83,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
 
     @query """
     mutation create_transaction(
+      $company_id: ID!,
       $user_id: ID!,
       $merchant_id: ID!,
       $amount: DecimalAmount!,
@@ -91,6 +92,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       $description: String!
     ) {
       create_transaction(
+        company_id: $company_id,
         user_id: $user_id,
         merchant_id: $merchant_id,
         amount: $amount,
@@ -105,14 +107,19 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
     """
 
     test "success: return create transaction mutation", %{conn: conn} do
-      user = Factory.insert(:user)
+      company = Factory.insert(:company)
+      user = Factory.insert(:user, company: company)
       merchant = Factory.insert(:merchant)
-      build_transaction = Factory.build(:transaction, user: user, merchant: merchant)
+
+      build_transaction =
+        Factory.build(:transaction, company: company, user: user, merchant: merchant)
+
       amount = 10.0
 
       params = %{
         "query" => @query,
         "variables" => %{
+          "company_id" => company.id,
           "user_id" => user.id,
           "merchant_id" => merchant.id,
           "amount" => amount,

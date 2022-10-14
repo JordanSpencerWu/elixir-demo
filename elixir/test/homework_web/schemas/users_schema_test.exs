@@ -45,8 +45,8 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
 
   describe "create user mutation" do
     @query """
-    mutation create_user($dob: String!, $first_name: String!, $last_name: String!) {
-      create_user(dob: $dob, first_name: $first_name, last_name: $last_name) {
+    mutation create_user($company_id: ID!, $dob: String!, $first_name: String!, $last_name: String!) {
+      create_user(company_id: $company_id, dob: $dob, first_name: $first_name, last_name: $last_name) {
         ...UserFields
       }
     }
@@ -54,11 +54,13 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
     """
 
     test "success: return create user mutation", %{conn: conn} do
-      build_user = Factory.build(:user)
+      company = Factory.insert(:company)
+      build_user = Factory.build(:user, company: company)
 
       params = %{
         "query" => @query,
         "variables" => %{
+          "company_id" => company.id,
           "dob" => build_user.dob,
           "first_name" => build_user.first_name,
           "last_name" => build_user.last_name

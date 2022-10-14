@@ -5,6 +5,7 @@ defmodule Homework.TransactionFactory do
     quote do
       def transaction_factory(attrs) do
         amount = Map.get(attrs, :amount, 1_000)
+        company = Map.get(attrs, :company)
         credit = Map.get(attrs, :credit, false)
         debit = Map.get(attrs, :debit, true)
         description = Map.get(attrs, :description, "default description")
@@ -13,6 +14,7 @@ defmodule Homework.TransactionFactory do
 
         transaction = %Homework.Transactions.Transaction{
           amount: amount,
+          company: company || build(:company),
           credit: credit,
           debit: debit,
           description: description,

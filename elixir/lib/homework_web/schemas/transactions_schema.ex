@@ -36,6 +36,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
   object :transaction_mutations do
     @desc "Create a new transaction"
     field :create_transaction, :transaction do
+      arg(:company_id, non_null(:id))
       arg(:user_id, non_null(:id))
       arg(:merchant_id, non_null(:id))
       @desc "amount is in decimal amount"

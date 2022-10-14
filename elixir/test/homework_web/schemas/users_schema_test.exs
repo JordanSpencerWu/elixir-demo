@@ -3,6 +3,16 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
 
   alias Homework.Factory
 
+  @company_fragment """
+  fragment CompanyFields on Company {
+    id
+    name
+    credit_line
+    inserted_at
+    updated_at
+  }
+  """
+
   @fragment """
     fragment UserFields on User {
       id
@@ -11,7 +21,11 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       last_name
       inserted_at
       updated_at
+      company {
+        ...CompanyFields
+      }
     }
+    #{@company_fragment}
   """
 
   describe "users query" do
@@ -76,13 +90,28 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       assert create_user["dob"] == build_user.dob
       assert create_user["first_name"] == build_user.first_name
       assert create_user["last_name"] == build_user.last_name
+      assert create_user["company"]["id"] == company.id
+      assert create_user["company"]["credit_line"] == company.credit_line
+      assert create_user["company"]["name"] == company.name
     end
   end
 
   describe "update user mutation" do
     @query """
-    mutation update_user($id: ID!, $dob: String!, $first_name: String!, $last_name: String!) {
-      update_user(id: $id, dob: $dob, first_name: $first_name, last_name: $last_name) {
+    mutation update_user(
+      $id: ID!,
+      $company_id: ID!,
+      $dob: String!,
+      $first_name: String!,
+      $last_name: String!
+    ) {
+      update_user(
+        id: $id,
+        company_id: $company_id,
+        dob: $dob,
+        first_name: $first_name,
+        last_name: $last_name
+      ) {
         ...UserFields
       }
     }
@@ -92,6 +121,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
     test "success: return update user mutation", %{conn: conn} do
       user = Factory.insert(:user)
 
+      update_company = Factory.insert(:company, credit_line: 100_000, name: "update company name")
       update_dob = Date.utc_today() |> Date.add(1) |> Date.to_iso8601()
       update_first_name = "Mary"
       update_last_name = "Jane"
@@ -100,6 +130,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
         "query" => @query,
         "variables" => %{
           "id" => user.id,
+          "company_id" => update_company.id,
           "dob" => update_dob,
           "first_name" => update_first_name,
           "last_name" => update_last_name
@@ -113,6 +144,9 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       assert update_user["dob"] == update_dob
       assert update_user["first_name"] == update_first_name
       assert update_user["last_name"] == update_last_name
+      assert update_user["company"]["id"] == update_company.id
+      assert update_user["company"]["credit_line"] == update_company.credit_line
+      assert update_user["company"]["name"] == update_company.name
     end
   end
 

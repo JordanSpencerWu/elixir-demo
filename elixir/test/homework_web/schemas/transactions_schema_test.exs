@@ -78,11 +78,14 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
   end
 
   describe "create transaction mutation" do
+    alias Homework.Repo
+    alias Homework.Transactions.Transaction
+
     @query """
     mutation create_transaction(
       $user_id: ID!,
       $merchant_id: ID!,
-      $amount: Int!,
+      $amount: DecimalAmount!,
       $credit: Boolean!,
       $debit: Boolean!,
       $description: String!
@@ -105,13 +108,14 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       user = Factory.insert(:user)
       merchant = Factory.insert(:merchant)
       build_transaction = Factory.build(:transaction, user: user, merchant: merchant)
+      amount = 10.0
 
       params = %{
         "query" => @query,
         "variables" => %{
           "user_id" => user.id,
           "merchant_id" => merchant.id,
-          "amount" => build_transaction.amount,
+          "amount" => amount,
           "credit" => build_transaction.credit,
           "debit" => build_transaction.debit,
           "description" => build_transaction.description
@@ -124,7 +128,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert create_transaction["id"]
       assert create_transaction["inserted_at"]
       assert create_transaction["updated_at"]
-      assert create_transaction["amount"] == build_transaction.amount
+      assert create_transaction["amount"] == "10.00"
       assert create_transaction["credit"] == build_transaction.credit
       assert create_transaction["debit"] == build_transaction.debit
       assert create_transaction["description"] == build_transaction.description
@@ -135,16 +139,22 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert create_transaction["merchant"]["id"] == merchant.id
       assert create_transaction["merchant"]["name"] == merchant.name
       assert create_transaction["merchant"]["description"] == merchant.description
+
+      transaction = Repo.get(Transaction, create_transaction["id"])
+      assert transaction.amount == 1000
     end
   end
 
   describe "update transaction mutation" do
+    alias Homework.Repo
+    alias Homework.Transactions.Transaction
+
     @query """
     mutation update_transaction(
       $id: ID!,
       $user_id: ID!,
       $merchant_id: ID!,
-      $amount: Int!,
+      $amount: DecimalAmount!,
       $credit: Boolean!,
       $debit: Boolean!,
       $description: String!
@@ -171,7 +181,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
 
       update_user = Factory.insert(:user, first_name: "Mary", last_name: "Jane")
       update_merchant = Factory.insert(:merchant, name: "Mary Jane")
-      update_amount = 100
+      update_amount = "100.00"
       update_credit = !transaction.credit
       update_debit = !transaction.debit
 
@@ -208,6 +218,9 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert update_transaction["merchant"]["id"] == update_merchant.id
       assert update_transaction["merchant"]["name"] == update_merchant.name
       assert update_transaction["merchant"]["description"] == update_merchant.description
+
+      transaction = Repo.get(Transaction, transaction.id)
+      assert transaction.amount == 10_000
     end
   end
 

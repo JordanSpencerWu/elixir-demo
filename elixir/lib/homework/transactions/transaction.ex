@@ -7,7 +7,7 @@ defmodule Homework.Transactions.Transaction do
   @type t :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
           id: Ecto.UUID.t(),
-          amount: non_neg_integer,
+          amount: integer,
           credit: boolean,
           debit: boolean,
           description: String.t(),

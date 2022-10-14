@@ -4,9 +4,6 @@ defmodule HomeworkWeb.Schema do
   """
   use Absinthe.Schema
 
-  alias HomeworkWeb.Resolvers.MerchantsResolver
-  alias HomeworkWeb.Resolvers.TransactionsResolver
-  alias HomeworkWeb.Resolvers.UsersResolver
   import_types(HomeworkWeb.Schemas.Types)
 
   query do

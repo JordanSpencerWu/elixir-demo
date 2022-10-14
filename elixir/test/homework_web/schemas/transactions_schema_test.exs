@@ -172,8 +172,8 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       update_user = Factory.insert(:user, first_name: "Mary", last_name: "Jane")
       update_merchant = Factory.insert(:merchant, name: "Mary Jane")
       update_amount = 100
-      update_credit = true
-      update_debit = true
+      update_credit = !transaction.credit
+      update_debit = !transaction.debit
 
       update_description =
         "Mary Jane Watson is a fictional character appearing in American comic books published by Marvel Comics."

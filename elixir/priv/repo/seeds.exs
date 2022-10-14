@@ -1,3 +1,4 @@
+alias Homework.Companies.Company
 alias Homework.Merchants.Merchant
 alias Homework.Transactions.Transaction
 alias Homework.Users.User
@@ -5,13 +6,25 @@ alias Homework.Users.User
 defmodule Seeds do
   @moduledoc false
 
-  def build_user do
+  def build_company do
+    now = NaiveDateTime.utc_now()
+
+    %{
+      name: Faker.Company.name(),
+      credit_line: :rand.uniform(100_000_000_000),
+      inserted_at: NaiveDateTime.truncate(now, :second),
+      updated_at: NaiveDateTime.truncate(now, :second)
+    }
+  end
+
+  def build_user(company) do
     now = NaiveDateTime.utc_now()
     start_date = Date.utc_today()
     end_date = Date.new!(1900, 1, 1)
     dob = Faker.Date.between(start_date, end_date)
 
     %{
+      company_id: company.id,
       dob: Date.to_iso8601(dob),
       first_name: Faker.Person.first_name(),
       last_name: Faker.Person.last_name(),
@@ -36,6 +49,7 @@ defmodule Seeds do
 
     %{
       amount: :rand.uniform(100_000_000),
+      company_id: user.company_id,
       credit: Enum.random([true, false]),
       debit: Enum.random([true, false]),
       description: Faker.Lorem.Shakespeare.hamlet(),
@@ -48,19 +62,28 @@ defmodule Seeds do
 end
 
 if Mix.env() == :dev do
+  num_of_companies = 100
   num_of_users = 50
   num_of_merchants = 50
   num_of_transactions = 100
 
+  seed_companies =
+    for _ <- 1..num_of_companies do
+      Seeds.build_company()
+    end
+
+  {_count, companies} = Homework.Repo.insert_all(Company, seed_companies, returning: true)
+
   seed_users =
     for _ <- 1..num_of_users do
-      Seeds.build_user()
+      company = Enum.random(companies)
+      Seeds.build_user(company)
     end
 
   {_count, users} = Homework.Repo.insert_all(User, seed_users, returning: true)
 
   seed_merchants =
-    for _ <- 1..num_of_users do
+    for _ <- 1..num_of_merchants do
       Seeds.build_merchant()
     end
 

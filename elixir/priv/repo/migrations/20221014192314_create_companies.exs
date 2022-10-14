@@ -5,7 +5,7 @@ defmodule Homework.Repo.Migrations.CreateCompanies do
     create table(:companies, primary_key: false) do
       add(:id, :uuid, primary_key: true)
       add(:name, :string)
-      add(:credit_line, :integer)
+      add(:credit_line, :bigint)
 
       timestamps()
     end

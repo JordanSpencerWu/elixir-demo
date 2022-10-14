@@ -46,7 +46,7 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
 
   describe "create company mutation" do
     @query """
-    mutation create_company($credit_line: Int!, $name: String!) {
+    mutation create_company($credit_line: DecimalAmount!, $name: String!) {
       create_company(credit_line: $credit_line, name: $name) {
         ...CompanyFields
       }
@@ -57,10 +57,12 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
     test "success: return create company mutation", %{conn: conn} do
       build_company = Factory.build(:company)
 
+      credit_line = "100000000.00"
+
       params = %{
         "query" => @query,
         "variables" => %{
-          "credit_line" => build_company.credit_line,
+          "credit_line" => credit_line,
           "name" => build_company.name
         }
       }
@@ -71,14 +73,14 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
       assert create_company["id"]
       assert create_company["inserted_at"]
       assert create_company["updated_at"]
-      assert create_company["credit_line"] == build_company.credit_line
+      assert create_company["credit_line"] == credit_line
       assert create_company["name"] == build_company.name
     end
   end
 
   describe "update company mutation" do
     @query """
-    mutation update_company($id: ID!, $credit_line: Int!, $name: String!) {
+    mutation update_company($id: ID!, $credit_line: DecimalAmount!, $name: String!) {
       update_company(id: $id, credit_line: $credit_line, name: $name) {
         ...CompanyFields
       }
@@ -89,7 +91,7 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
     test "success: return update company mutation", %{conn: conn} do
       company = Factory.insert(:company)
 
-      update_credit_line = 100_000
+      update_credit_line = "100000.00"
       update_name = "Mary Jane Inc"
 
       params = %{

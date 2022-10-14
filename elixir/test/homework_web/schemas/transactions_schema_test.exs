@@ -161,7 +161,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert create_transaction["merchant"]["name"] == merchant.name
       assert create_transaction["merchant"]["description"] == merchant.description
       assert create_transaction["company"]["id"] == company.id
-      assert create_transaction["company"]["credit_line"] == company.credit_line
+      assert create_transaction["company"]["credit_line"] == "1000000.00"
       assert create_transaction["company"]["name"] == company.name
 
       transaction = Repo.get(Transaction, create_transaction["id"])
@@ -247,7 +247,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert update_transaction["merchant"]["name"] == update_merchant.name
       assert update_transaction["merchant"]["description"] == update_merchant.description
       assert update_transaction["company"]["id"] == update_company.id
-      assert update_transaction["company"]["credit_line"] == update_company.credit_line
+      assert update_transaction["company"]["credit_line"] == "1000.00"
       assert update_transaction["company"]["name"] == update_company.name
 
       transaction = Repo.get(Transaction, transaction.id)

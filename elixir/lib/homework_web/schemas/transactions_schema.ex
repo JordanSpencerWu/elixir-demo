@@ -17,6 +17,10 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
     field(:inserted_at, :naive_datetime)
     field(:updated_at, :naive_datetime)
 
+    field(:company, :company) do
+      resolve(&TransactionsResolver.company/3)
+    end
+
     field(:user, :user) do
       resolve(&TransactionsResolver.user/3)
     end
@@ -51,6 +55,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
     @desc "Update a new transaction"
     field :update_transaction, :transaction do
       arg(:id, non_null(:id))
+      arg(:company_id, non_null(:id))
       arg(:user_id, non_null(:id))
       arg(:merchant_id, non_null(:id))
       @desc "amount is in decimal amount"

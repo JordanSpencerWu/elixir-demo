@@ -3,6 +3,16 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
 
   alias Homework.Factory
 
+  @company_fragment """
+  fragment CompanyFields on Company {
+    id
+    name
+    credit_line
+    inserted_at
+    updated_at
+  }
+  """
+
   @merchant_fragment """
   fragment MerchantFields on Merchant {
     id
@@ -35,6 +45,9 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
     merchant_id
     inserted_at
     updated_at
+    company {
+      ...CompanyFields
+    }
     user {
       ...UserFields
     }
@@ -42,6 +55,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       ...MerchantFields
     }
   }
+  #{@company_fragment}
   #{@merchant_fragment}
   #{@user_fragment}
   """
@@ -146,6 +160,9 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert create_transaction["merchant"]["id"] == merchant.id
       assert create_transaction["merchant"]["name"] == merchant.name
       assert create_transaction["merchant"]["description"] == merchant.description
+      assert create_transaction["company"]["id"] == company.id
+      assert create_transaction["company"]["credit_line"] == company.credit_line
+      assert create_transaction["company"]["name"] == company.name
 
       transaction = Repo.get(Transaction, create_transaction["id"])
       assert transaction.amount == 1000
@@ -159,6 +176,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
     @query """
     mutation update_transaction(
       $id: ID!,
+      $company_id: ID!,
       $user_id: ID!,
       $merchant_id: ID!,
       $amount: DecimalAmount!,
@@ -168,6 +186,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
     ) {
       update_transaction(
         id: $id,
+        company_id: $company_id,
         user_id: $user_id,
         merchant_id: $merchant_id,
         amount: $amount,
@@ -186,6 +205,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       merchant = Factory.insert(:merchant)
       transaction = Factory.insert(:transaction, user: user, merchant: merchant)
 
+      update_company = Factory.insert(:company, credit_line: 100_000, name: "update company name")
       update_user = Factory.insert(:user, first_name: "Mary", last_name: "Jane")
       update_merchant = Factory.insert(:merchant, name: "Mary Jane")
       update_amount = "100.00"
@@ -199,6 +219,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
         "query" => @query,
         "variables" => %{
           "id" => transaction.id,
+          "company_id" => update_company.id,
           "user_id" => update_user.id,
           "merchant_id" => update_merchant.id,
           "amount" => update_amount,
@@ -225,6 +246,9 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert update_transaction["merchant"]["id"] == update_merchant.id
       assert update_transaction["merchant"]["name"] == update_merchant.name
       assert update_transaction["merchant"]["description"] == update_merchant.description
+      assert update_transaction["company"]["id"] == update_company.id
+      assert update_transaction["company"]["credit_line"] == update_company.credit_line
+      assert update_transaction["company"]["name"] == update_company.name
 
       transaction = Repo.get(Transaction, transaction.id)
       assert transaction.amount == 10_000

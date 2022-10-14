@@ -89,7 +89,7 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
     test "success: return update merchant mutation", %{conn: conn} do
       merchant = Factory.insert(:merchant)
 
-      update_name = "Mary Jame"
+      update_name = "Mary Jane"
 
       update_description =
         "Mary Jane Watson is a fictional character appearing in American comic books published by Marvel Comics."

@@ -1,4 +1,8 @@
 defmodule Homework.Transactions.Transaction do
+  @moduledoc """
+  Ecto schema for Transaction
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
   alias Homework.Companies.Company

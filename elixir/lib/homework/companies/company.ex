@@ -1,4 +1,8 @@
 defmodule Homework.Companies.Company do
+  @moduledoc """
+  Ecto schema for Company
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

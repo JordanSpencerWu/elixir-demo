@@ -1,4 +1,8 @@
 defmodule Homework.Users.User do
+  @moduledoc """
+  Ecto schema for User
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
   alias Homework.Companies.Company

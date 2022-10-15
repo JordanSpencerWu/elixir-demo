@@ -18,7 +18,7 @@ defmodule Homework.Users do
 
   """
   @spec list_users(map) :: [User.t()]
-  def list_users(_args) do
+  def list_users(_args \\ %{}) do
     Repo.all(User)
   end
 

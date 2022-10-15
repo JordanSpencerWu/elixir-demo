@@ -169,5 +169,25 @@ defmodule Homework.PaginatorTest do
       assert offset == num_of_companies
       assert total_rows == num_of_companies
     end
+
+    test "error: returns error message when limit is a negative integer" do
+      num_of_companies = 50
+      companies = Factory.insert_list(num_of_companies, :company)
+      limit = -1
+
+      {:error, error_message} = Paginator.paginate(companies, limit: limit)
+
+      assert error_message == "Failed to paginate: limit and skip cannot be negative"
+    end
+
+    test "error: returns error message when skip is a negative integer" do
+      num_of_companies = 50
+      companies = Factory.insert_list(num_of_companies, :company)
+      skip = -1
+
+      {:error, error_message} = Paginator.paginate(companies, skip: skip)
+
+      assert error_message == "Failed to paginate: limit and skip cannot be negative"
+    end
   end
 end

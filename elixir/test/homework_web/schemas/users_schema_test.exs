@@ -33,7 +33,14 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
     @query """
     query {
       users {
-        ...UserFields
+        entries {
+          __typename
+          ... on User {
+            ...UserFields
+          }
+        }
+        offset
+        total_rows
       }
     }
     #{@fragment}
@@ -42,9 +49,15 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
     test "success: return empty users query", %{conn: conn} do
       params = %{"query" => @query}
 
-      %{"data" => %{"users" => users}} = conn |> post("/graphql", params) |> json_response(200)
+      %{
+        "data" => %{
+          "users" => %{"entries" => users, "offset" => offset, "total_rows" => total_rows}
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
 
       assert users == []
+      assert offset == 0
+      assert total_rows == 0
     end
 
     test "success: return users query", %{conn: conn} do
@@ -52,9 +65,15 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       Factory.insert_list(num_of_users, :user)
       params = %{"query" => @query}
 
-      %{"data" => %{"users" => users}} = conn |> post("/graphql", params) |> json_response(200)
+      %{
+        "data" => %{
+          "users" => %{"entries" => users, "offset" => offset, "total_rows" => total_rows}
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
 
       assert length(users) == num_of_users
+      assert offset == num_of_users
+      assert total_rows == num_of_users
     end
   end
 

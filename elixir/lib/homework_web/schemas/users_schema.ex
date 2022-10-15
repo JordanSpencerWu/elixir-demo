@@ -21,7 +21,10 @@ defmodule HomeworkWeb.Schemas.UsersSchema do
 
   object :user_queries do
     @desc "Get all Users"
-    field(:users, list_of(:user)) do
+    field(:users, :page_result) do
+      arg(:limit, :integer, default_value: 50)
+      arg(:skip, :integer, default_value: 0)
+
       resolve(&UsersResolver.users/3)
     end
   end

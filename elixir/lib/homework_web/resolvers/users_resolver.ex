@@ -1,12 +1,19 @@
 defmodule HomeworkWeb.Resolvers.UsersResolver do
   alias Homework.Companies
+  alias Homework.Paginator
   alias Homework.Users
 
   @doc """
   Get a list of users
   """
   def users(_root, args, _info) do
-    {:ok, Users.list_users(args)}
+    users = Users.list_users()
+    opts = args |> Map.take([:limit, :skip]) |> Enum.into([])
+
+    case Paginator.paginate(users, opts) do
+      {:ok, page} -> {:ok, page}
+      {:error, message} -> {:error, message}
+    end
   end
 
   @doc """

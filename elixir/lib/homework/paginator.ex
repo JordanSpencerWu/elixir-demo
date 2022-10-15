@@ -36,6 +36,10 @@ defmodule Homework.Paginator do
     limit = Keyword.get(opts, :limit, 50)
     skip = Keyword.get(opts, :skip, 0)
 
+    do_paginate(items, limit, skip)
+  end
+
+  defp do_paginate(items, limit, skip) when limit >= 0 and skip >= 0 do
     entries =
       if limit == 0 do
         []
@@ -56,5 +60,9 @@ defmodule Homework.Paginator do
     }
 
     {:ok, page}
+  end
+
+  defp do_paginate(_items, _limit, _skip) do
+    {:error, "Failed to paginate: limit and skip cannot be negative"}
   end
 end

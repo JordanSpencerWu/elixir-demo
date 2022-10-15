@@ -35,7 +35,7 @@ defmodule Homework.TransactionsTest do
 
       valid_attrs = %{
         amount: 42,
-        credit: true,
+        credit: false,
         debit: true,
         description: "some description",
         company_id: company.id,
@@ -45,7 +45,7 @@ defmodule Homework.TransactionsTest do
 
       update_attrs = %{
         amount: 43,
-        credit: false,
+        credit: true,
         debit: false,
         description: "some updated description",
         company_id: company.id,
@@ -103,7 +103,7 @@ defmodule Homework.TransactionsTest do
     } do
       assert {:ok, %Transaction{} = transaction} = Transactions.create_transaction(valid_attrs)
       assert transaction.amount == 42
-      assert transaction.credit == true
+      assert transaction.credit == false
       assert transaction.debit == true
       assert transaction.description == "some description"
       assert transaction.company_id == company.id
@@ -130,7 +130,7 @@ defmodule Homework.TransactionsTest do
                Transactions.update_transaction(transaction, update_attrs)
 
       assert transaction.amount == 43
-      assert transaction.credit == false
+      assert transaction.credit == true
       assert transaction.debit == false
       assert transaction.description == "some updated description"
       assert transaction.company_id == company.id

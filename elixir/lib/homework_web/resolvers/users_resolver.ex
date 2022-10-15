@@ -23,8 +23,9 @@ defmodule HomeworkWeb.Resolvers.UsersResolver do
   @doc """
   Get the company associated with a user
   """
-  def company(_root, _args, %{source: %{company_id: company_id}}) do
-    {:ok, Companies.get_company!(company_id)}
+  def companies_by_id(_args, company_ids) do
+    companies = Companies.list_companies(%{company_ids: company_ids})
+    Map.new(companies, fn company -> {company.id, company} end)
   end
 
   @doc """

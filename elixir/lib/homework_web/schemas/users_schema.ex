@@ -15,7 +15,11 @@ defmodule HomeworkWeb.Schemas.UsersSchema do
     field(:updated_at, :naive_datetime)
 
     field(:company, :company) do
-      resolve(&UsersResolver.company/3)
+      resolve(fn user, _args, _info ->
+        batch({UsersResolver, :companies_by_id}, user.company_id, fn batch_results ->
+          {:ok, Map.get(batch_results, user.company_id)}
+        end)
+      end)
     end
   end
 

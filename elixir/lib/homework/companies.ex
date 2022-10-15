@@ -4,6 +4,7 @@ defmodule Homework.Companies do
   """
 
   import Ecto.Query, warn: false
+  import Homework.Companies.CompanyQueries, only: [base_query: 0, build_query: 2]
   alias Homework.Repo
 
   alias Homework.Companies.Company
@@ -18,8 +19,10 @@ defmodule Homework.Companies do
 
   """
   @spec list_companies(map) :: [Company.t()]
-  def list_companies(_args \\ %{}) do
-    Repo.all(Company)
+  def list_companies(criteria \\ %{}) do
+    base_query()
+    |> build_query(criteria)
+    |> Repo.all()
   end
 
   @doc """

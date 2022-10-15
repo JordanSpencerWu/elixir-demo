@@ -35,8 +35,8 @@ defmodule Homework.Companies.CompanyTest do
       not_a_integer = DateTime.utc_now()
 
       attrs = %{
-        "credit_line" => not_a_string,
-        "name" => not_a_integer
+        "credit_line" => not_a_integer,
+        "name" => not_a_string
       }
 
       changeset = Company.changeset(%Company{}, attrs)

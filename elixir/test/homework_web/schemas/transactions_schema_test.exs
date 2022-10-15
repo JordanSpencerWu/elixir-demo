@@ -249,7 +249,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert update_transaction["merchant"]["name"] == update_merchant.name
       assert update_transaction["merchant"]["description"] == update_merchant.description
       assert update_transaction["company"]["id"] == update_company.id
-      assert update_transaction["company"]["available_credit"] == "900.00"
+      assert update_transaction["company"]["available_credit"] == "1000.00"
       assert update_transaction["company"]["credit_line"] == "1000.00"
       assert update_transaction["company"]["name"] == update_company.name
 

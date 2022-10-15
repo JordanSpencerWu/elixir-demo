@@ -19,7 +19,11 @@ defmodule HomeworkWeb.Resolvers.CompaniesResolver do
         transactions,
         credit_line,
         fn transaction, acc ->
-          acc - transaction.amount
+          if transaction.credit do
+            acc - transaction.amount
+          else
+            acc
+          end
         end
       )
 

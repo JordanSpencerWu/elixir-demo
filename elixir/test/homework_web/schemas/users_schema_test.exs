@@ -6,6 +6,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
   @company_fragment """
   fragment CompanyFields on Company {
     id
+    available_credit
     name
     credit_line
     inserted_at
@@ -91,6 +92,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       assert create_user["first_name"] == build_user.first_name
       assert create_user["last_name"] == build_user.last_name
       assert create_user["company"]["id"] == company.id
+      assert create_user["company"]["available_credit"] == "1000000.00"
       assert create_user["company"]["credit_line"] == "1000000.00"
       assert create_user["company"]["name"] == company.name
     end
@@ -145,6 +147,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       assert update_user["first_name"] == update_first_name
       assert update_user["last_name"] == update_last_name
       assert update_user["company"]["id"] == update_company.id
+      assert update_user["company"]["available_credit"] == "1000.00"
       assert update_user["company"]["credit_line"] == "1000.00"
       assert update_user["company"]["name"] == update_company.name
     end

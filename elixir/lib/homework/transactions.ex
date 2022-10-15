@@ -18,8 +18,10 @@ defmodule Homework.Transactions do
 
   """
   @spec list_transactions(map) :: [Transaction.t()]
-  def list_transactions(_args) do
-    Repo.all(Transaction)
+  def list_transactions(criteria) do
+    base_query()
+    |> build_query(criteria)
+    |> Repo.all()
   end
 
   @doc """
@@ -108,5 +110,17 @@ defmodule Homework.Transactions do
   @spec change_transaction(Transaction.t(), map) :: Ecto.Changeset.t()
   def change_transaction(%Transaction{} = transaction, attrs \\ %{}) do
     Transaction.changeset(transaction, attrs)
+  end
+
+  defp base_query do
+    from(p in Transaction)
+  end
+
+  defp build_query(query, criteria) do
+    Enum.reduce(criteria, query, &compose_query/2)
+  end
+
+  defp compose_query({:company_id, company_id}, query) do
+    where(query, [t], t.company_id == ^company_id)
   end
 end

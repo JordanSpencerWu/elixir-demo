@@ -1,5 +1,30 @@
 defmodule HomeworkWeb.Resolvers.CompaniesResolver do
   alias Homework.Companies
+  alias Homework.Transactions
+
+  @doc """
+  Get available credit
+  """
+  def available_credit(company, _args, _info) do
+    credit_line = company.credit_line
+
+    criteria = %{
+      company_id: company.id
+    }
+
+    transactions = Transactions.list_transactions(criteria)
+
+    available_credit =
+      Enum.reduce(
+        transactions,
+        credit_line,
+        fn transaction, acc ->
+          acc - transaction.amount
+        end
+      )
+
+    {:ok, available_credit}
+  end
 
   @doc """
   Get a list of companies

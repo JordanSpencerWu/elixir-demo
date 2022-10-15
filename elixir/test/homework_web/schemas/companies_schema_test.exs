@@ -6,6 +6,7 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
   @fragment """
   fragment CompanyFields on Company {
     id
+    available_credit
     name
     credit_line
     inserted_at
@@ -73,6 +74,7 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
       assert create_company["id"]
       assert create_company["inserted_at"]
       assert create_company["updated_at"]
+      assert create_company["available_credit"] == credit_line
       assert create_company["credit_line"] == credit_line
       assert create_company["name"] == build_company.name
     end
@@ -107,6 +109,7 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
         conn |> post("/graphql", params) |> json_response(200)
 
       assert update_company["id"] == company.id
+      assert update_company["available_credit"] == update_credit_line
       assert update_company["credit_line"] == update_credit_line
       assert update_company["name"] == update_name
     end

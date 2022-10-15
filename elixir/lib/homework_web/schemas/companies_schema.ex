@@ -12,6 +12,10 @@ defmodule HomeworkWeb.Schemas.CompaniesSchema do
     field(:credit_line, :decimal_amount)
     field(:inserted_at, :naive_datetime)
     field(:updated_at, :naive_datetime)
+
+    field(:available_credit, :decimal_amount) do
+      resolve(&CompaniesResolver.available_credit/3)
+    end
   end
 
   object :company_queries do

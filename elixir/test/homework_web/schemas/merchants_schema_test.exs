@@ -1,5 +1,5 @@
 defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
-  use HomeworkWeb.ConnCase
+  use HomeworkWeb.ConnCase, async: true
 
   alias Homework.Factory
 

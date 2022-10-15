@@ -1,5 +1,5 @@
 defmodule Homework.Companies.CompanyTest do
-  use Homework.DataCase
+  use Homework.DataCase, async: true
 
   alias Ecto.Changeset
   alias Homework.Companies.Company

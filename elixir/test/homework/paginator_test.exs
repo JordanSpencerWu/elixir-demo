@@ -1,5 +1,5 @@
 defmodule Homework.PaginatorTest do
-  use Homework.DataCase
+  use Homework.DataCase, async: true
 
   alias Homework.Paginator
   alias Homework.Paginator.Page

@@ -1,5 +1,5 @@
 defmodule Homework.Transactions.TransactionTest do
-  use Homework.DataCase
+  use Homework.DataCase, async: true
 
   alias Ecto.Changeset
   alias Homework.Transactions.Transaction

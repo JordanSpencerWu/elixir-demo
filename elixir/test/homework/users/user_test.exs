@@ -1,5 +1,5 @@
 defmodule Homework.Users.UserTest do
-  use Homework.DataCase
+  use Homework.DataCase, async: true
 
   alias Ecto.Changeset
   alias Homework.Users.User

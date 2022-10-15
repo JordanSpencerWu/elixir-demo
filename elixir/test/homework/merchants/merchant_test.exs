@@ -1,5 +1,5 @@
 defmodule Homework.Merchants.MerchantTest do
-  use Homework.DataCase
+  use Homework.DataCase, async: true
 
   alias Ecto.Changeset
   alias Homework.Merchants.Merchant

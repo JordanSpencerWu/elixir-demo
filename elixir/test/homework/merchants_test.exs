@@ -1,5 +1,5 @@
 defmodule Homework.MerchantsTest do
-  use Homework.DataCase
+  use Homework.DataCase, async: true
 
   alias Homework.Merchants
 

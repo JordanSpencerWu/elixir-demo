@@ -10,15 +10,17 @@ defmodule Homework.Paginator do
     ## Fields
       
     * `entries` - a list entries contained in this page.
-    * `total_rows` - total rows
+    * `offset` - the current offset in entries.
+    * `total_rows` - total number of rows.
     """
 
     @type t :: %__MODULE__{
             entries: [any()] | [],
+            offset: non_neg_integer(),
             total_rows: non_neg_integer()
           }
 
-    defstruct [:entries, :total_rows]
+    defstruct [:entries, :offset, :total_rows]
   end
 
   @doc """
@@ -44,9 +46,13 @@ defmodule Homework.Paginator do
         Enum.slice(items, range_start..range_end)
       end
 
+    total_rows = length(items)
+    offset = min(skip + limit, total_rows)
+
     page = %Page{
       entries: entries,
-      total_rows: length(items)
+      offset: offset,
+      total_rows: total_rows
     }
 
     {:ok, page}

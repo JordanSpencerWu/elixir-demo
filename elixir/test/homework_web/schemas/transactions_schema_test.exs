@@ -65,7 +65,14 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
     @query """
     query {
       transactions {
-        ...TransactionFields
+        entries {
+          __typename
+          ... on Transaction {
+            ...TransactionFields
+          }
+        }
+        offset
+        total_rows
       }
     }
     #{@fragment}
@@ -74,10 +81,19 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
     test "success: return empty transactions query", %{conn: conn} do
       params = %{"query" => @query}
 
-      %{"data" => %{"transactions" => transactions}} =
-        conn |> post("/graphql", params) |> json_response(200)
+      %{
+        "data" => %{
+          "transactions" => %{
+            "entries" => transactions,
+            "offset" => offset,
+            "total_rows" => total_rows
+          }
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
 
       assert transactions == []
+      assert offset == 0
+      assert total_rows == 0
     end
 
     test "success: return transactions query", %{conn: conn} do
@@ -85,10 +101,19 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       Factory.insert_list(num_of_transactions, :transaction)
       params = %{"query" => @query}
 
-      %{"data" => %{"transactions" => transactions}} =
-        conn |> post("/graphql", params) |> json_response(200)
+      %{
+        "data" => %{
+          "transactions" => %{
+            "entries" => transactions,
+            "offset" => offset,
+            "total_rows" => total_rows
+          }
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
 
       assert length(transactions) == num_of_transactions
+      assert offset == num_of_transactions
+      assert total_rows == num_of_transactions
     end
   end
 

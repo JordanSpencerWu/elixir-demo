@@ -1,5 +1,10 @@
 defmodule HomeworkWeb.Resolvers.CompaniesResolver do
+  @moduledoc """
+  The Resolver for Companies
+  """
+
   alias Homework.Companies
+  alias Homework.Paginator
   alias Homework.Transactions
 
   @doc """
@@ -34,7 +39,13 @@ defmodule HomeworkWeb.Resolvers.CompaniesResolver do
   Get a list of companies
   """
   def companies(_root, args, _info) do
-    {:ok, Companies.list_companies(args)}
+    companies = Companies.list_companies()
+    opts = args |> Map.take([:limit, :skip]) |> Enum.into([])
+
+    case Paginator.paginate(companies, opts) do
+      {:ok, page} -> {:ok, page}
+      {:error, message} -> {:error, message}
+    end
   end
 
   @doc """

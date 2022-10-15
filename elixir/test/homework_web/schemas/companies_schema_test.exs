@@ -18,7 +18,14 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
     @query """
     query {
       companies {
-        ...CompanyFields
+        entries {
+          __typename
+          ... on Company {
+            ...CompanyFields
+          }
+        }
+        offset
+        total_rows
       }
     }
     #{@fragment}
@@ -27,10 +34,15 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
     test "success: return empty companies query", %{conn: conn} do
       params = %{"query" => @query}
 
-      %{"data" => %{"companies" => companies}} =
-        conn |> post("/graphql", params) |> json_response(200)
+      %{
+        "data" => %{
+          "companies" => %{"entries" => companies, "offset" => offset, "total_rows" => total_rows}
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
 
       assert companies == []
+      assert offset == 0
+      assert total_rows == 0
     end
 
     test "success: return companies query", %{conn: conn} do
@@ -38,10 +50,15 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
       Factory.insert_list(num_of_companies, :company)
       params = %{"query" => @query}
 
-      %{"data" => %{"companies" => companies}} =
-        conn |> post("/graphql", params) |> json_response(200)
+      %{
+        "data" => %{
+          "companies" => %{"entries" => companies, "offset" => offset, "total_rows" => total_rows}
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
 
       assert length(companies) == num_of_companies
+      assert offset == num_of_companies
+      assert total_rows == num_of_companies
     end
   end
 

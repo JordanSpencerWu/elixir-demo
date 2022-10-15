@@ -18,7 +18,7 @@ defmodule Homework.Transactions do
 
   """
   @spec list_transactions(map) :: [Transaction.t()]
-  def list_transactions(criteria) do
+  def list_transactions(criteria \\ %{}) do
     base_query()
     |> build_query(criteria)
     |> Repo.all()

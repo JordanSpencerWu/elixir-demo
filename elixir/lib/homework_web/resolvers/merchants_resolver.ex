@@ -1,11 +1,22 @@
 defmodule HomeworkWeb.Resolvers.MerchantsResolver do
+  @moduledoc """
+  The Resolver for Merchants
+  """
+
   alias Homework.Merchants
+  alias Homework.Paginator
 
   @doc """
   Get a list of merchants
   """
   def merchants(_root, args, _info) do
-    {:ok, Merchants.list_merchants(args)}
+    merchants = Merchants.list_merchants()
+    opts = args |> Map.take([:limit, :skip]) |> Enum.into([])
+
+    case Paginator.paginate(merchants, opts) do
+      {:ok, page} -> {:ok, page}
+      {:error, message} -> {:error, message}
+    end
   end
 
   @doc """

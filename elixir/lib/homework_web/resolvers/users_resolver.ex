@@ -1,4 +1,8 @@
 defmodule HomeworkWeb.Resolvers.UsersResolver do
+  @moduledoc """
+  The Resolver for Users
+  """
+
   alias Homework.Companies
   alias Homework.Paginator
   alias Homework.Users

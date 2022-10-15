@@ -32,7 +32,10 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
 
   object :transaction_queries do
     @desc "Get all Transactions"
-    field(:transactions, list_of(:transaction)) do
+    field(:transactions, :page_result) do
+      arg(:limit, :integer, default_value: 50)
+      arg(:skip, :integer, default_value: 0)
+
       resolve(&TransactionsResolver.transactions/3)
     end
   end

@@ -18,7 +18,7 @@ defmodule Homework.Companies do
 
   """
   @spec list_companies(map) :: [Company.t()]
-  def list_companies(_args) do
+  def list_companies(_args \\ %{}) do
     Repo.all(Company)
   end
 

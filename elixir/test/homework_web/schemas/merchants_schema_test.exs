@@ -17,7 +17,14 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
     @query """
     query {
       merchants {
-        ...MerchantFields
+        entries {
+          __typename
+          ... on Merchant {
+            ...MerchantFields
+          }
+        }
+        offset
+        total_rows
       }
     }
     #{@fragment}
@@ -26,10 +33,15 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
     test "success: return empty merchants query", %{conn: conn} do
       params = %{"query" => @query}
 
-      %{"data" => %{"merchants" => merchants}} =
-        conn |> post("/graphql", params) |> json_response(200)
+      %{
+        "data" => %{
+          "merchants" => %{"entries" => merchants, "offset" => offset, "total_rows" => total_rows}
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
 
       assert merchants == []
+      assert offset == 0
+      assert total_rows == 0
     end
 
     test "success: return merchants query", %{conn: conn} do
@@ -37,10 +49,15 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
       Factory.insert_list(num_of_merchants, :merchant)
       params = %{"query" => @query}
 
-      %{"data" => %{"merchants" => merchants}} =
-        conn |> post("/graphql", params) |> json_response(200)
+      %{
+        "data" => %{
+          "merchants" => %{"entries" => merchants, "offset" => offset, "total_rows" => total_rows}
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
 
       assert length(merchants) == num_of_merchants
+      assert offset == num_of_merchants
+      assert total_rows == num_of_merchants
     end
   end
 

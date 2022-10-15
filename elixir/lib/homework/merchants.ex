@@ -18,7 +18,7 @@ defmodule Homework.Merchants do
 
   """
   @spec list_merchants(map) :: [Merchant.t()]
-  def list_merchants(_args) do
+  def list_merchants(_args \\ %{}) do
     Repo.all(Merchant)
   end
 

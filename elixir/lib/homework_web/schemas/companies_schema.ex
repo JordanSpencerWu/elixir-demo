@@ -20,7 +20,10 @@ defmodule HomeworkWeb.Schemas.CompaniesSchema do
 
   object :company_queries do
     @desc "Get all Companies"
-    field(:companies, list_of(:company)) do
+    field(:companies, :page_result) do
+      arg(:limit, :integer, default_value: 50)
+      arg(:skip, :integer, default_value: 0)
+
       resolve(&CompaniesResolver.companies/3)
     end
   end

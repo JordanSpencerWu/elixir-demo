@@ -1,6 +1,11 @@
 defmodule HomeworkWeb.Resolvers.TransactionsResolver do
+  @moduledoc """
+  The Resolver for Transactions
+  """
+
   alias Homework.Companies
   alias Homework.Merchants
+  alias Homework.Paginator
   alias Homework.Transactions
   alias Homework.Users
 
@@ -8,7 +13,13 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   Get a list of transcations
   """
   def transactions(_root, args, _info) do
-    {:ok, Transactions.list_transactions(args)}
+    transactions = Transactions.list_transactions()
+    opts = args |> Map.take([:limit, :skip]) |> Enum.into([])
+
+    case Paginator.paginate(transactions, opts) do
+      {:ok, page} -> {:ok, page}
+      {:error, message} -> {:error, message}
+    end
   end
 
   @doc """

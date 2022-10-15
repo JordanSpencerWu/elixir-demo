@@ -6,7 +6,7 @@ defmodule Homework.Merchants.MerchantTest do
 
   @schema_fields ~w(description name)a
 
-  @schema_create_required_fields ~w(description name)a
+  @schema_required_fields ~w(description name)a
 
   @vaild_attrs %{
     "description" =>
@@ -59,7 +59,7 @@ defmodule Homework.Merchants.MerchantTest do
 
       assert %Changeset{valid?: false, errors: errors} = changeset
 
-      for field <- @schema_create_required_fields do
+      for field <- @schema_required_fields do
         assert errors[field], "The field #{inspect(field)} is missing from errors"
 
         {_, meta} = errors[field]

@@ -11,14 +11,14 @@ defmodule Homework.UsersTest do
       company = Factory.insert(:company)
 
       valid_attrs = %{
-        dob: "some dob",
+        dob: "2022-10-14",
         first_name: "some first_name",
         last_name: "some last_name",
         company_id: company.id
       }
 
       update_attrs = %{
-        dob: "some updated dob",
+        dob: "2022-10-15",
         first_name: "some updated first_name",
         last_name: "some updated last_name",
         company_id: company.id
@@ -59,7 +59,7 @@ defmodule Homework.UsersTest do
       valid_attrs: valid_attrs
     } do
       assert {:ok, %User{} = user} = Users.create_user(valid_attrs)
-      assert user.dob == "some dob"
+      assert user.dob == "2022-10-14"
       assert user.first_name == "some first_name"
       assert user.last_name == "some last_name"
       assert user.company_id == company.id
@@ -77,7 +77,7 @@ defmodule Homework.UsersTest do
     } do
       user = user_fixture(valid_attrs)
       assert {:ok, %User{} = user} = Users.update_user(user, update_attrs)
-      assert user.dob == "some updated dob"
+      assert user.dob == "2022-10-15"
       assert user.first_name == "some updated first_name"
       assert user.last_name == "some updated last_name"
     end

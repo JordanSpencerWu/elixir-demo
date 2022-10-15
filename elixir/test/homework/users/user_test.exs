@@ -1,23 +1,25 @@
-defmodule Homework.Companies.CompanyTest do
+defmodule Homework.Users.UserTest do
   use Homework.DataCase
 
   alias Ecto.Changeset
-  alias Homework.Companies.Company
+  alias Homework.Users.User
 
-  @schema_fields ~w(credit_line name)a
+  @schema_fields ~w(dob first_name last_name company_id)a
 
-  @schema_required_fields ~w(credit_line name)a
+  @schema_required_fields ~w(first_name last_name company_id)a
 
   @vaild_attrs %{
-    "credit_line" => 100_000_000,
-    "name" => "Mary Jane Inc."
+    "company_id" => "2864b299-60ef-4464-bf2b-db53127356de",
+    "dob" => "2022-10-15",
+    "first_name" => "Mary",
+    "last_name" => "Jane"
   }
 
   describe "changeset/2" do
     test "success: return a valid changeset when given a valid arguments" do
       attrs = @vaild_attrs
 
-      changeset = Company.changeset(%Company{}, attrs)
+      changeset = User.changeset(%User{}, attrs)
 
       assert %Changeset{valid?: true, changes: changes} = changeset
 
@@ -32,14 +34,16 @@ defmodule Homework.Companies.CompanyTest do
 
     test "error: return an error changeset when given un-castable values" do
       not_a_string = DateTime.utc_now()
-      not_a_integer = DateTime.utc_now()
+      not_a_id = DateTime.utc_now()
 
       attrs = %{
-        "credit_line" => not_a_integer,
-        "name" => not_a_string
+        "company_id" => not_a_id,
+        "dob" => not_a_string,
+        "first_name" => not_a_string,
+        "last_name" => not_a_string
       }
 
-      changeset = Company.changeset(%Company{}, attrs)
+      changeset = User.changeset(%User{}, attrs)
 
       assert %Changeset{valid?: false, errors: errors} = changeset
 
@@ -55,7 +59,7 @@ defmodule Homework.Companies.CompanyTest do
     test "error: return error changeset when required fields are missing" do
       attrs = %{}
 
-      changeset = Company.changeset(%Company{}, attrs)
+      changeset = User.changeset(%User{}, attrs)
 
       assert %Changeset{valid?: false, errors: errors} = changeset
 
@@ -69,19 +73,19 @@ defmodule Homework.Companies.CompanyTest do
       end
     end
 
-    test "error: return error changeset when credit line is a negative integer" do
-      attrs = Map.merge(@vaild_attrs, %{"credit_line" => -100})
+    test "error: return error changeset when dob is not a valid value" do
+      attrs = Map.merge(@vaild_attrs, %{"dob" => "2015-01-32"})
 
-      changeset = Company.changeset(%Company{}, attrs)
+      changeset = User.changeset(%User{}, attrs)
 
       assert %Changeset{valid?: false, errors: errors} = changeset
 
-      assert errors[:credit_line], "The field :credit_line is missing from errors"
+      assert errors[:dob], "The field :dob is missing from errors"
 
-      {_, meta} = errors[:credit_line]
+      {_, meta} = errors[:dob]
 
-      assert [validation: :number, kind: :greater_than_or_equal_to, number: 0] == meta,
-             "The validation failed for credit_line, must be #{meta[:kind]} to #{meta[:number]}"
+      assert meta[:validation] == :value,
+             "The validation type, #{meta[:validation]}, is incorrect"
     end
   end
 end

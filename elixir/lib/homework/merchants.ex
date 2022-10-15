@@ -4,6 +4,7 @@ defmodule Homework.Merchants do
   """
 
   import Ecto.Query, warn: false
+  import Homework.Merchants.MerchantQueries, only: [base_query: 0, build_query: 2]
   alias Homework.Repo
 
   alias Homework.Merchants.Merchant
@@ -18,8 +19,10 @@ defmodule Homework.Merchants do
 
   """
   @spec list_merchants(map) :: [Merchant.t()]
-  def list_merchants(_args \\ %{}) do
-    Repo.all(Merchant)
+  def list_merchants(criteria \\ %{}) do
+    base_query()
+    |> build_query(criteria)
+    |> Repo.all()
   end
 
   @doc """

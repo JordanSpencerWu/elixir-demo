@@ -25,22 +25,25 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   @doc """
   Get the company associated with a transaction
   """
-  def company(_root, _args, %{source: %{company_id: company_id}}) do
-    {:ok, Companies.get_company!(company_id)}
+  def companies_by_ids(_args, company_ids) do
+    companies = Companies.list_companies(%{company_ids: company_ids})
+    Map.new(companies, fn company -> {company.id, company} end)
   end
 
   @doc """
   Get the user associated with a transaction
   """
-  def user(_root, _args, %{source: %{user_id: user_id}}) do
-    {:ok, Users.get_user!(user_id)}
+  def users_by_ids(_args, users_ids) do
+    users = Users.list_users(%{users_ids: users_ids})
+    Map.new(users, fn user -> {user.id, user} end)
   end
 
   @doc """
   Get the merchant associated with a transaction
   """
-  def merchant(_root, _args, %{source: %{merchant_id: merchant_id}}) do
-    {:ok, Merchants.get_merchant!(merchant_id)}
+  def merchants_by_ids(_args, merchant_ids) do
+    merchants = Merchants.list_merchants(%{merchant_ids: merchant_ids})
+    Map.new(merchants, fn merchant -> {merchant.id, merchant} end)
   end
 
   @doc """

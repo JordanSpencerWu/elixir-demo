@@ -4,6 +4,7 @@ defmodule Homework.Users do
   """
 
   import Ecto.Query, warn: false
+  import Homework.Users.UserQueries, only: [base_query: 0, build_query: 2]
   alias Homework.Repo
 
   alias Homework.Users.User
@@ -18,8 +19,10 @@ defmodule Homework.Users do
 
   """
   @spec list_users(map) :: [User.t()]
-  def list_users(_args \\ %{}) do
-    Repo.all(User)
+  def list_users(criteria \\ %{}) do
+    base_query()
+    |> build_query(criteria)
+    |> Repo.all()
   end
 
   @doc """

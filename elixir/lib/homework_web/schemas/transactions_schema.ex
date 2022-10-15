@@ -18,15 +18,35 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
     field(:updated_at, :naive_datetime)
 
     field(:company, :company) do
-      resolve(&TransactionsResolver.company/3)
+      resolve(fn transaction, _args, _info ->
+        batch(
+          {TransactionsResolver, :companies_by_ids},
+          transaction.company_id,
+          fn batch_results ->
+            {:ok, Map.get(batch_results, transaction.company_id)}
+          end
+        )
+      end)
     end
 
     field(:user, :user) do
-      resolve(&TransactionsResolver.user/3)
+      resolve(fn transaction, _args, _info ->
+        batch({TransactionsResolver, :users_by_ids}, transaction.user_id, fn batch_results ->
+          {:ok, Map.get(batch_results, transaction.user_id)}
+        end)
+      end)
     end
 
     field(:merchant, :merchant) do
-      resolve(&TransactionsResolver.merchant/3)
+      resolve(fn transaction, _args, _info ->
+        batch(
+          {TransactionsResolver, :merchants_by_ids},
+          transaction.merchant_id,
+          fn batch_results ->
+            {:ok, Map.get(batch_results, transaction.merchant_id)}
+          end
+        )
+      end)
     end
   end
 

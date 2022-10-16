@@ -14,7 +14,7 @@ defmodule Homework.Companies.CompanyQueries do
     Enum.reduce(criteria, query, &compose_query/2)
   end
 
-  defp compose_query({:company_ids, company_ids}, query) do
+  defp compose_query({:ids, company_ids}, query) do
     where(query, [c], c.id in ^company_ids)
   end
 end

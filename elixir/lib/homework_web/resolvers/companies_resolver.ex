@@ -5,34 +5,31 @@ defmodule HomeworkWeb.Resolvers.CompaniesResolver do
 
   alias Homework.Companies
   alias Homework.Paginator
-  alias Homework.Transactions
 
   @doc """
   Get available credit
   """
-  def available_credit(company, _args, _info) do
-    credit_line = company.credit_line
+  def available_credit_by_companies_by_ids(_args, company_ids) do
+    criteria = %{ids: company_ids}
 
-    criteria = %{
-      company_id: company.id
-    }
+    companies = criteria |> Companies.list_companies() |> Companies.preload(:transactions)
 
-    transactions = Transactions.list_transactions(criteria)
-
-    available_credit =
-      Enum.reduce(
-        transactions,
-        credit_line,
-        fn transaction, acc ->
-          if transaction.credit do
-            acc - transaction.amount
-          else
-            acc
+    for company <- companies, into: %{} do
+      available_credit =
+        Enum.reduce(
+          company.transactions,
+          company.credit_line,
+          fn transaction, acc ->
+            if transaction.credit do
+              acc - transaction.amount
+            else
+              acc
+            end
           end
-        end
-      )
+        )
 
-    {:ok, available_credit}
+      {company.id, available_credit}
+    end
   end
 
   @doc """

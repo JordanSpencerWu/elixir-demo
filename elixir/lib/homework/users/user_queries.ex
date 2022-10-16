@@ -14,7 +14,7 @@ defmodule Homework.Users.UserQueries do
     Enum.reduce(criteria, query, &compose_query/2)
   end
 
-  defp compose_query({:users_ids, users_ids}, query) do
+  defp compose_query({:ids, users_ids}, query) do
     where(query, [u], u.id in ^users_ids)
   end
 end

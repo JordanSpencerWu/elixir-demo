@@ -5,12 +5,14 @@ defmodule Homework.Companies.Company do
 
   use Ecto.Schema
   import Ecto.Changeset
+  alias Homework.Transactions.Transaction
 
   @type t :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
           id: Ecto.UUID.t(),
           credit_line: non_neg_integer(),
           name: String.t(),
+          transactions: [Transaction.t()],
           inserted_at: NaiveDateTime.t(),
           updated_at: NaiveDateTime.t()
         }
@@ -22,6 +24,8 @@ defmodule Homework.Companies.Company do
   schema "companies" do
     field(:credit_line, :integer)
     field(:name, :string)
+
+    has_many(:transactions, Transaction)
 
     timestamps()
   end

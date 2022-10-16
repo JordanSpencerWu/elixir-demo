@@ -4,7 +4,7 @@ defmodule Homework.Transactions do
   """
 
   import Ecto.Query, warn: false
-  import Homework.Transactions.TransactionQueries, only: [base_query: 0, build_query: 2]
+  import Homework.Transactions.TransactionQueries, only: [base_query: 0]
   alias Homework.Repo
 
   alias Homework.Transactions.Transaction
@@ -19,9 +19,8 @@ defmodule Homework.Transactions do
 
   """
   @spec list_transactions(map) :: [Transaction.t()]
-  def list_transactions(criteria \\ %{}) do
+  def list_transactions(_criteria \\ %{}) do
     base_query()
-    |> build_query(criteria)
     |> Repo.all()
   end
 

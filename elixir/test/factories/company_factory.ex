@@ -5,12 +5,12 @@ defmodule Homework.CompanyFactory do
         credit_line = Map.get(attrs, :credit_line, 100_000_000)
         name = Map.get(attrs, :name, "Default Company Name")
 
-        merchant = %Homework.Companies.Company{
+        company = %Homework.Companies.Company{
           credit_line: credit_line,
           name: name
         }
 
-        merchant
+        company
         |> merge_attributes(attrs)
         |> evaluate_lazy_attributes()
       end

@@ -60,6 +60,52 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
       assert offset == num_of_companies
       assert total_rows == num_of_companies
     end
+
+    test "success: return companies query with correct available_credit", %{conn: conn} do
+      merchant = Factory.insert(:merchant)
+      company = Factory.insert(:company, credit_line: 100_000)
+      user = Factory.insert(:user, company: company)
+
+      credit_transaction =
+        Factory.insert(:transaction,
+          company: company,
+          merchant: merchant,
+          user: user,
+          debit: false,
+          credit: true,
+          amount: 100
+        )
+
+      _debit_transaction =
+        Factory.insert(:transaction,
+          company: company,
+          merchant: merchant,
+          user: user,
+          debit: true,
+          credit: false,
+          amount: 100
+        )
+
+      _cash_transaction =
+        Factory.insert(:transaction,
+          company: company,
+          merchant: merchant,
+          user: user,
+          debit: false,
+          credit: false,
+          amount: 100
+        )
+
+      params = %{"query" => @query}
+
+      %{
+        "data" => %{
+          "companies" => %{"entries" => [company]}
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert company["available_credit"] == "999.00"
+    end
   end
 
   describe "create company mutation" do

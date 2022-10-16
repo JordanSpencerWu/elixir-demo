@@ -110,4 +110,9 @@ defmodule Homework.Companies do
   def change_company(%Company{} = company, attrs \\ %{}) do
     Company.changeset(company, attrs)
   end
+
+  @spec preload([Company.t()] | Company.t(), [atom], keyword) :: [Company.t()] | Company.t() | nil
+  def preload(companies, preloads, opts \\ []) do
+    Repo.preload(companies, preloads, opts)
+  end
 end

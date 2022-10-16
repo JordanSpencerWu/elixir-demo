@@ -24,7 +24,7 @@ defmodule HomeworkWeb.Resolvers.UsersResolver do
   Get the company associated with a user
   """
   def companies_by_id(_args, company_ids) do
-    companies = Companies.list_companies(%{company_ids: company_ids})
+    companies = Companies.list_companies(%{ids: company_ids})
     Map.new(companies, fn company -> {company.id, company} end)
   end
 

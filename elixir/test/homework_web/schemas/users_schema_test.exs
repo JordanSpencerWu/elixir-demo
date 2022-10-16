@@ -31,8 +31,8 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
 
   describe "users query" do
     @query """
-    query users($filter: UserFilter) {
-      users(filter: $filter) {
+    query users($filter: UserFilter, $search: UserSearch) {
+      users(filter: $filter, search: $search) {
         entries {
           __typename
           ... on User {
@@ -77,7 +77,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       assert total_rows == num_of_users
     end
 
-    test "success: return users query filtered by company_id", %{conn: conn} do
+    test "success: return users query filtered by company", %{conn: conn} do
       num_of_users = 5
       company = Factory.insert(:company)
       Factory.insert_list(num_of_users, :user, company: company)
@@ -101,6 +101,58 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       assert length(users) == num_of_users
       assert offset == num_of_users
       assert total_rows == num_of_users
+    end
+
+    test "success: return users query when searching by first name for Mary", %{conn: conn} do
+      company = Factory.insert(:company)
+      Factory.insert(:user, company: company, first_name: "Mary", last_name: "Jane")
+      Factory.insert(:user, company: company, first_name: "Marylin", last_name: "Monroe")
+      Factory.insert(:user, company: company, first_name: "Peter", last_name: "Parker")
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "search" => %{
+            "search_by_first_name" => "Mary"
+          }
+        }
+      }
+
+      %{
+        "data" => %{
+          "users" => %{"entries" => users}
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      user_names = Enum.map(users, & &1["first_name"])
+
+      assert ["Mary", "Marylin"] == user_names
+    end
+
+    test "success: return users query when searching by last name for Jane", %{conn: conn} do
+      company = Factory.insert(:company)
+      Factory.insert(:user, company: company, first_name: "Mary", last_name: "Jane")
+      Factory.insert(:user, company: company, first_name: "Marylin", last_name: "Monroe")
+      Factory.insert(:user, company: company, first_name: "Peter", last_name: "Parker")
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "search" => %{
+            "search_by_last_name" => "Jane"
+          }
+        }
+      }
+
+      %{
+        "data" => %{
+          "users" => %{"entries" => users}
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      user_names = Enum.map(users, & &1["last_name"])
+
+      assert ["Jane"] == user_names
     end
   end
 

@@ -61,7 +61,7 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
       assert total_rows == num_of_merchants
     end
 
-    test "success: return merchants query when searching for Mary", %{conn: conn} do
+    test "success: return merchants query when searching by name for Mary", %{conn: conn} do
       Factory.insert(:merchant, name: "Mary Jane")
       Factory.insert(:merchant, name: "Mary Poppins")
       Factory.insert(:merchant, name: "Marylin Monroe")

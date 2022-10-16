@@ -11,7 +11,8 @@ defmodule HomeworkWeb.Resolvers.UsersResolver do
   Get a list of users
   """
   def users(_root, args, _info) do
-    users = Users.list_users(args.filter)
+    criteria = Map.merge(args.filter, args.search)
+    users = Users.list_users(criteria)
     opts = args |> Map.take([:limit, :skip]) |> Enum.into([])
 
     case Paginator.paginate(users, opts) do

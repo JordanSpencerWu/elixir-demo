@@ -21,4 +21,26 @@ defmodule Homework.Users.UserQueries do
   defp compose_query({:ids, users_ids}, query) do
     where(query, [u], u.id in ^users_ids)
   end
+
+  defp compose_query({:search_by_first_name, first_name}, query) do
+    start_character = String.slice(first_name, 0..1)
+
+    from(
+      u in query,
+      where: ilike(u.first_name, ^"#{start_character}%"),
+      where: fragment("SIMILARITY(?, ?) > 0", u.first_name, ^first_name),
+      order_by: fragment("LEVENSHTEIN(?, ?)", u.first_name, ^first_name)
+    )
+  end
+
+  defp compose_query({:search_by_last_name, last_name}, query) do
+    start_character = String.slice(last_name, 0..1)
+
+    from(
+      u in query,
+      where: ilike(u.last_name, ^"#{start_character}%"),
+      where: fragment("SIMILARITY(?, ?) > 0", u.last_name, ^last_name),
+      order_by: fragment("LEVENSHTEIN(?, ?)", u.last_name, ^last_name)
+    )
+  end
 end

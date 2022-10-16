@@ -28,6 +28,7 @@ defmodule HomeworkWeb.Schemas.UsersSchema do
     field(:users, :page_result) do
       arg(:filter, :user_filter, default_value: %{})
       arg(:limit, :integer, default_value: 50)
+      arg(:search, :user_search, default_value: %{})
       arg(:skip, :integer, default_value: 0)
 
       resolve(&UsersResolver.users/3)
@@ -66,5 +67,10 @@ defmodule HomeworkWeb.Schemas.UsersSchema do
 
   input_object :user_filter do
     field(:company_id, :id)
+  end
+
+  input_object :user_search do
+    field(:search_by_first_name, :string)
+    field(:search_by_last_name, :string)
   end
 end

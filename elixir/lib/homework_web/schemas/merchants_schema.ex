@@ -18,8 +18,8 @@ defmodule HomeworkWeb.Schemas.MerchantsSchema do
     @desc "Get all Merchants"
     field(:merchants, :page_result) do
       arg(:limit, :integer, default_value: 50)
-      arg(:skip, :integer, default_value: 0)
       arg(:search, :merchant_search, default_value: %{})
+      arg(:skip, :integer, default_value: 0)
 
       resolve(&MerchantsResolver.merchants/3)
     end

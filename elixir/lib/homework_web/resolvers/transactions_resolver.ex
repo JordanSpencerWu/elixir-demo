@@ -60,6 +60,8 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
     transaction = Transactions.get_transaction!(id)
 
     Transactions.update_transaction(transaction, args)
+  rescue
+    _e in Ecto.NoResultsError -> {:error, "id: invalid value"}
   end
 
   @doc """
@@ -69,5 +71,7 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
     transaction = Transactions.get_transaction!(id)
 
     Transactions.delete_transaction(transaction)
+  rescue
+    _e in Ecto.NoResultsError -> {:error, "id: invalid value"}
   end
 end

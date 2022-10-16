@@ -486,6 +486,32 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
                }
              ] == errors
     end
+
+    test "error: return error message id is invalid", %{conn: conn} do
+      invalid_transaction_id = Ecto.UUID.generate()
+
+      update_credit = true
+      update_debit = false
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "id" => invalid_transaction_id,
+          "credit" => update_credit,
+          "debit" => update_debit
+        }
+      }
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 11}],
+                 "message" => "id: invalid value",
+                 "path" => ["update_transaction"]
+               }
+             ] == errors
+    end
   end
 
   describe "delete transaction mutation" do
@@ -522,6 +548,27 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert Repo.get(Merchant, merchant.id)
       assert Repo.get(User, user.id)
       refute Repo.get(Transaction, transaction.id)
+    end
+
+    test "error: return error message id is invalid", %{conn: conn} do
+      invalid_transaction_id = Ecto.UUID.generate()
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "id" => invalid_transaction_id
+        }
+      }
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 2}],
+                 "message" => "id: invalid value",
+                 "path" => ["delete_transaction"]
+               }
+             ] == errors
     end
   end
 end

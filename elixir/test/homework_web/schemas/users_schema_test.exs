@@ -297,6 +297,29 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
                }
              ] == errors
     end
+
+    test "error: return error message id is invalid", %{conn: conn} do
+      invalid_user_id = Ecto.UUID.generate()
+      update_dob = Date.utc_today() |> Date.add(1) |> Date.to_iso8601()
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "id" => invalid_user_id,
+          "dob" => update_dob
+        }
+      }
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 8}],
+                 "message" => "id: invalid value",
+                 "path" => ["update_user"]
+               }
+             ] == errors
+    end
   end
 
   describe "delete user mutation" do
@@ -327,6 +350,27 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
 
       assert delete_user["id"] == user.id
       refute Repo.get(User, user.id)
+    end
+
+    test "error: return error message id is invalid", %{conn: conn} do
+      invalid_user_id = Ecto.UUID.generate()
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "id" => invalid_user_id
+        }
+      }
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 2}],
+                 "message" => "id: invalid value",
+                 "path" => ["delete_user"]
+               }
+             ] == errors
     end
   end
 end

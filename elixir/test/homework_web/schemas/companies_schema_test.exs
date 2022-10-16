@@ -177,6 +177,32 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
       assert update_company["credit_line"] == update_credit_line
       assert update_company["name"] == update_name
     end
+
+    test "error: return error message id is invalid", %{conn: conn} do
+      invalid_company_id = Ecto.UUID.generate()
+
+      update_credit_line = "100000.00"
+      update_name = "Mary Jane Inc"
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "id" => invalid_company_id,
+          "credit_line" => update_credit_line,
+          "name" => update_name
+        }
+      }
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 2}],
+                 "message" => "id: invalid value",
+                 "path" => ["update_company"]
+               }
+             ] == errors
+    end
   end
 
   describe "delete company mutation" do
@@ -207,6 +233,27 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
 
       assert delete_company["id"] == company.id
       refute Repo.get(Company, company.id)
+    end
+
+    test "error: return error message id is invalid", %{conn: conn} do
+      invalid_company_id = Ecto.UUID.generate()
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "id" => invalid_company_id
+        }
+      }
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 2}],
+                 "message" => "id: invalid value",
+                 "path" => ["delete_company"]
+               }
+             ] == errors
     end
   end
 end

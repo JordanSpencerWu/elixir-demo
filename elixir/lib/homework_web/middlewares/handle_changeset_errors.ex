@@ -1,7 +1,7 @@
 defmodule HomeworkWeb.Middlewares.HandleChangesetErrors do
   @behaviour Absinthe.Middleware
 
-  @impl true
+  @impl Absinthe.Middleware
   def call(resolution, _config) do
     %{resolution | errors: Enum.flat_map(resolution.errors, &handle_error/1)}
   end

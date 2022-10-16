@@ -49,6 +49,8 @@ defmodule HomeworkWeb.Resolvers.CompaniesResolver do
     company = Companies.get_company!(id)
 
     Companies.update_company(company, args)
+  rescue
+    _e in Ecto.NoResultsError -> {:error, "id: invalid value"}
   end
 
   @doc """
@@ -58,5 +60,7 @@ defmodule HomeworkWeb.Resolvers.CompaniesResolver do
     company = Companies.get_company!(id)
 
     Companies.delete_company(company)
+  rescue
+    _e in Ecto.NoResultsError -> {:error, "id: invalid value"}
   end
 end

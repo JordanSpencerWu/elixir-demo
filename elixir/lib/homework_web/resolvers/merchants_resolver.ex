@@ -34,6 +34,8 @@ defmodule HomeworkWeb.Resolvers.MerchantsResolver do
     merchant = Merchants.get_merchant!(id)
 
     Merchants.update_merchant(merchant, args)
+  rescue
+    _e in Ecto.NoResultsError -> {:error, "id: invalid value"}
   end
 
   @doc """
@@ -43,5 +45,7 @@ defmodule HomeworkWeb.Resolvers.MerchantsResolver do
     merchant = Merchants.get_merchant!(id)
 
     Merchants.delete_merchant(merchant)
+  rescue
+    _e in Ecto.NoResultsError -> {:error, "id: invalid value"}
   end
 end

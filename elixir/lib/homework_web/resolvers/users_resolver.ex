@@ -43,6 +43,8 @@ defmodule HomeworkWeb.Resolvers.UsersResolver do
     user = Users.get_user!(id)
 
     Users.update_user(user, args)
+  rescue
+    _e in Ecto.NoResultsError -> {:error, "id: invalid value"}
   end
 
   @doc """
@@ -52,5 +54,7 @@ defmodule HomeworkWeb.Resolvers.UsersResolver do
     user = Users.get_user!(id)
 
     Users.delete_user(user)
+  rescue
+    _e in Ecto.NoResultsError -> {:error, "id: invalid value"}
   end
 end

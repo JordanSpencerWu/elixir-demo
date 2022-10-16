@@ -112,7 +112,7 @@ defmodule Homework.Companies do
   end
 
   @doc """
-  The available_credit is the company's credit_line minus the total amount of credit transactions for the company.
+  The available credit is the company's credit line minus the total amount of credit transactions for the company.
   """
   def calculate_available_credit(credit_line, transactions) do
     Enum.reduce(

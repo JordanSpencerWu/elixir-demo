@@ -155,6 +155,34 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
       assert update_merchant["name"] == update_name
       assert update_merchant["description"] == update_description
     end
+
+    test "error: return error message id is invalid", %{conn: conn} do
+      invalid_merchant_id = Ecto.UUID.generate()
+
+      update_name = "Mary Jane"
+
+      update_description =
+        "Mary Jane Watson is a fictional character appearing in American comic books published by Marvel Comics."
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "id" => invalid_merchant_id,
+          "name" => update_name,
+          "description" => update_description
+        }
+      }
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 2}],
+                 "message" => "id: invalid value",
+                 "path" => ["update_merchant"]
+               }
+             ] == errors
+    end
   end
 
   describe "delete merchant mutation" do
@@ -185,6 +213,27 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
 
       assert delete_merchant["id"] == merchant.id
       refute Repo.get(Merchant, merchant.id)
+    end
+
+    test "error: return error message id is invalid", %{conn: conn} do
+      invalid_merchant_id = Ecto.UUID.generate()
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "id" => invalid_merchant_id
+        }
+      }
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 2}],
+                 "message" => "id: invalid value",
+                 "path" => ["delete_merchant"]
+               }
+             ] == errors
     end
   end
 end

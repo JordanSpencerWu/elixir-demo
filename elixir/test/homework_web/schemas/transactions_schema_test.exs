@@ -206,6 +206,42 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert offset == num_of_transactions
       assert total_rows == num_of_transactions
     end
+
+    test "success: return transactions query filtered by min and max amount", %{conn: conn} do
+      min = "100.00"
+      max = "10000.00"
+      Factory.insert(:transaction, amount: 1_000)
+      _min = Factory.insert(:transaction, amount: 10_000)
+      _between = Factory.insert(:transaction, amount: 100_000)
+      _max = Factory.insert(:transaction, amount: 1_000_000)
+      Factory.insert(:transaction, amount: 10_000_000)
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "filter" => %{
+            "amount" => %{
+              "min" => min,
+              "max" => max
+            }
+          }
+        }
+      }
+
+      %{
+        "data" => %{
+          "transactions" => %{
+            "entries" => transactions,
+            "offset" => offset,
+            "total_rows" => total_rows
+          }
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert length(transactions) == 3
+      assert offset == 3
+      assert total_rows == 3
+    end
   end
 
   describe "create transaction mutation" do

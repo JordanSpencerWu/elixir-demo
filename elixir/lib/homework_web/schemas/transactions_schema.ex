@@ -103,5 +103,12 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
     field(:company_id, :id)
     field(:user_id, :id)
     field(:merchant_id, :id)
+    @desc "filter by min and max amount inclusive"
+    field(:amount, :amount_filter)
+  end
+
+  input_object :amount_filter do
+    field(:max, non_null(:decimal_amount))
+    field(:min, non_null(:decimal_amount))
   end
 end

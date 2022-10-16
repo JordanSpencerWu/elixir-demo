@@ -18,6 +18,10 @@ defmodule Homework.Transactions.TransactionQueries do
     where(query, [t], t.company_id == ^company_id)
   end
 
+  defp compose_query({:amount, %{max: max, min: min}}, query) do
+    where(query, [t], t.amount >= ^min and t.amount <= ^max)
+  end
+
   defp compose_query({:merchant_id, merchant_id}, query) do
     where(query, [t], t.merchant_id == ^merchant_id)
   end

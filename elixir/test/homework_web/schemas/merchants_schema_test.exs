@@ -47,6 +47,7 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
     test "success: return merchants query", %{conn: conn} do
       num_of_merchants = 5
       Factory.insert_list(num_of_merchants, :merchant)
+
       params = %{"query" => @query}
 
       %{

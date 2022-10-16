@@ -48,6 +48,7 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
     test "success: return companies query", %{conn: conn} do
       num_of_companies = 5
       Factory.insert_list(num_of_companies, :company)
+
       params = %{"query" => @query}
 
       %{
@@ -66,7 +67,7 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
       company = Factory.insert(:company, credit_line: 100_000)
       user = Factory.insert(:user, company: company)
 
-      credit_transaction =
+      _credit_transaction =
         Factory.insert(:transaction,
           company: company,
           merchant: merchant,

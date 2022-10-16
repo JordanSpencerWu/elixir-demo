@@ -14,6 +14,10 @@ defmodule Homework.Users.UserQueries do
     Enum.reduce(criteria, query, &compose_query/2)
   end
 
+  defp compose_query({:company_id, company_id}, query) do
+    where(query, [u], u.company_id == ^company_id)
+  end
+
   defp compose_query({:ids, users_ids}, query) do
     where(query, [u], u.id in ^users_ids)
   end

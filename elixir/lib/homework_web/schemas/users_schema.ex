@@ -26,6 +26,7 @@ defmodule HomeworkWeb.Schemas.UsersSchema do
   object :user_queries do
     @desc "Get all Users"
     field(:users, :page_result) do
+      arg(:filter, :user_filter, default_value: %{})
       arg(:limit, :integer, default_value: 50)
       arg(:skip, :integer, default_value: 0)
 
@@ -61,5 +62,9 @@ defmodule HomeworkWeb.Schemas.UsersSchema do
 
       resolve(&UsersResolver.delete_user/3)
     end
+  end
+
+  input_object :user_filter do
+    field(:company_id, :id)
   end
 end

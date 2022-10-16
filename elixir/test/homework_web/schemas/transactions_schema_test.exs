@@ -99,6 +99,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
     test "success: return transactions query", %{conn: conn} do
       num_of_transactions = 5
       Factory.insert_list(num_of_transactions, :transaction)
+
       params = %{"query" => @query}
 
       %{

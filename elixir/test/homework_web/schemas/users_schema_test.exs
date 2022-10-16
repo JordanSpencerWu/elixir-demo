@@ -31,8 +31,8 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
 
   describe "users query" do
     @query """
-    query {
-      users {
+    query users($filter: UserFilter) {
+      users(filter: $filter) {
         entries {
           __typename
           ... on User {
@@ -63,7 +63,34 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
     test "success: return users query", %{conn: conn} do
       num_of_users = 5
       Factory.insert_list(num_of_users, :user)
+
       params = %{"query" => @query}
+
+      %{
+        "data" => %{
+          "users" => %{"entries" => users, "offset" => offset, "total_rows" => total_rows}
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert length(users) == num_of_users
+      assert offset == num_of_users
+      assert total_rows == num_of_users
+    end
+
+    test "success: return users query filtered by company_id", %{conn: conn} do
+      num_of_users = 5
+      company = Factory.insert(:company)
+      Factory.insert_list(num_of_users, :user, company: company)
+      Factory.insert(:user)
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "filter" => %{
+            "company_id" => company.id
+          }
+        }
+      }
 
       %{
         "data" => %{

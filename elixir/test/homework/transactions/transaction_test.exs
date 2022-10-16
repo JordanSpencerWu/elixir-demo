@@ -82,27 +82,6 @@ defmodule Homework.Transactions.TransactionTest do
       end
     end
 
-    test "error: return error changeset when transaction is not valid when both debit and credit is false" do
-      attrs = Map.merge(@vaild_attrs, %{"credit" => false, "debit" => false})
-
-      changeset = Transaction.changeset(%Transaction{}, attrs)
-
-      assert %Changeset{valid?: false, errors: errors} = changeset
-
-      assert errors[:credit], "The field :credit is missing from errors"
-      assert errors[:debit], "The field :debit is missing from errors"
-
-      {_, meta} = errors[:credit]
-
-      assert meta[:validation] == :value,
-             "The validation type, #{meta[:validation]}, is incorrect"
-
-      {_, meta} = errors[:debit]
-
-      assert meta[:validation] == :value,
-             "The validation type, #{meta[:validation]}, is incorrect"
-    end
-
     test "error: return error changeset when transaction is not valid when both debit and credit is true" do
       attrs = Map.merge(@vaild_attrs, %{"credit" => true, "debit" => true})
 

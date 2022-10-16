@@ -8,9 +8,9 @@ defmodule HomeworkWeb.Schemas.CompaniesSchema do
 
   object :company do
     field(:id, non_null(:id))
-    field(:name, :string)
     field(:credit_line, :decimal_amount)
     field(:inserted_at, :naive_datetime)
+    field(:name, :string)
     field(:updated_at, :naive_datetime)
 
     field(:available_credit, :decimal_amount) do

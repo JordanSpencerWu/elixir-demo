@@ -10,8 +10,8 @@ defmodule HomeworkWeb.Schemas.UsersSchema do
     field(:id, non_null(:id))
     field(:dob, :string)
     field(:first_name, :string)
-    field(:last_name, :string)
     field(:inserted_at, :naive_datetime)
+    field(:last_name, :string)
     field(:updated_at, :naive_datetime)
 
     field(:company, :company) do

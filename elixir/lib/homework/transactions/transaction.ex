@@ -55,27 +55,25 @@ defmodule Homework.Transactions.Transaction do
   @spec all_fields :: list(atom)
   defp all_fields, do: __MODULE__.__schema__(:fields)
 
-  @doc """
-  A transaction can only be a credit or debit transaction.
+  # A transaction can only be a credit or debit or cash transaction.
 
-  +--------+-------+----------------------+
-  | credit | debit | is valid transaction |
-  +--------+-------+----------------------+
-  | false  | false | false                |
-  +--------+-------+----------------------+
-  | false  | true  | true                 |
-  +--------+-------+----------------------+
-  | true   | false | true                 |
-  +--------+-------+----------------------+
-  | true   | true  | false                |
-  +--------+-------+----------------------+
-  """
+  # +--------+-------+----------------------+
+  # | credit | debit | is valid transaction |
+  # +--------+-------+----------------------+
+  # | false  | false | true                 |
+  # +--------+-------+----------------------+
+  # | false  | true  | true                 |
+  # +--------+-------+----------------------+
+  # | true   | false | true                 |
+  # +--------+-------+----------------------+
+  # | true   | true  | false                |
+  # +--------+-------+----------------------+
   @spec validate_transaction(Changeset.t()) :: Changeset.t()
   defp validate_transaction(changeset) do
     credit = fetch_field!(changeset, :credit)
     debit = fetch_field!(changeset, :debit)
 
-    if credit == debit do
+    if credit && debit do
       changeset
       |> add_error(:credit, "invalid value", validation: :value)
       |> add_error(:debit, "invalid value", validation: :value)

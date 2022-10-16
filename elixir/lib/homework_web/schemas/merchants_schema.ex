@@ -8,9 +8,9 @@ defmodule HomeworkWeb.Schemas.MerchantsSchema do
 
   object :merchant do
     field(:id, non_null(:id))
-    field(:name, :string)
     field(:description, :string)
     field(:inserted_at, :naive_datetime)
+    field(:name, :string)
     field(:updated_at, :naive_datetime)
   end
 

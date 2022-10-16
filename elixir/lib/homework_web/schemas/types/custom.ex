@@ -72,13 +72,13 @@ defmodule HomeworkWeb.Schemas.Types.Custom do
   end
 
   defp parse_decimal_amount(%Absinthe.Blueprint.Input.Float{value: value}) do
-    decimal_amount_integer =
+    decimal_amount =
       value
       |> Decimal.from_float()
       |> Decimal.mult(100)
       |> Decimal.to_integer()
 
-    {:ok, decimal_amount_integer}
+    {:ok, decimal_amount}
   end
 
   defp parse_decimal_amount(%Absinthe.Blueprint.Input.Null{}) do

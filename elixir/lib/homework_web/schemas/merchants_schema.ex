@@ -19,6 +19,7 @@ defmodule HomeworkWeb.Schemas.MerchantsSchema do
     field(:merchants, :page_result) do
       arg(:limit, :integer, default_value: 50)
       arg(:skip, :integer, default_value: 0)
+      arg(:search, :merchant_search, default_value: %{})
 
       resolve(&MerchantsResolver.merchants/3)
     end
@@ -48,5 +49,9 @@ defmodule HomeworkWeb.Schemas.MerchantsSchema do
 
       resolve(&MerchantsResolver.delete_merchant/3)
     end
+  end
+
+  input_object :merchant_search do
+    field(:search_by_name, :string)
   end
 end

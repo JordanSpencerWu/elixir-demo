@@ -15,8 +15,8 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
 
   describe "merchants query" do
     @query """
-    query {
-      merchants {
+    query merchants($search: MerchantSearch) {
+      merchants(search: $search) {
         entries {
           __typename
           ... on Merchant {
@@ -59,6 +59,33 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
       assert length(merchants) == num_of_merchants
       assert offset == num_of_merchants
       assert total_rows == num_of_merchants
+    end
+
+    test "success: return merchants query when searching for Mary", %{conn: conn} do
+      Factory.insert(:merchant, name: "Mary Jane")
+      Factory.insert(:merchant, name: "Mary Poppins")
+      Factory.insert(:merchant, name: "Marylin Monroe")
+      Factory.insert(:merchant, name: "Miley Cyrus")
+      Factory.insert(:merchant, name: "Peter Parker")
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "search" => %{
+            "search_by_name" => "Mary"
+          }
+        }
+      }
+
+      %{
+        "data" => %{
+          "merchants" => %{"entries" => merchants}
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      merchant_names = Enum.map(merchants, & &1["name"])
+
+      assert ["Mary Jane", "Mary Poppins", "Marylin Monroe"] == merchant_names
     end
   end
 

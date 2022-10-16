@@ -10,7 +10,8 @@ defmodule HomeworkWeb.Resolvers.MerchantsResolver do
   Get a list of merchants
   """
   def merchants(_root, args, _info) do
-    merchants = Merchants.list_merchants()
+    criteria = args.search
+    merchants = Merchants.list_merchants(criteria)
     opts = args |> Map.take([:limit, :skip]) |> Enum.into([])
 
     case Paginator.paginate(merchants, opts) do

@@ -16,17 +16,7 @@ defmodule HomeworkWeb.Resolvers.CompaniesResolver do
 
     for company <- companies, into: %{} do
       available_credit =
-        Enum.reduce(
-          company.transactions,
-          company.credit_line,
-          fn transaction, acc ->
-            if transaction.credit do
-              acc - transaction.amount
-            else
-              acc
-            end
-          end
-        )
+        Companies.calculate_available_credit(company.credit_line, company.transactions)
 
       {company.id, available_credit}
     end

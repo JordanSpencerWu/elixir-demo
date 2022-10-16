@@ -3,10 +3,11 @@ defmodule Homework.Transactions do
   The Transactions context.
   """
 
-  import Ecto.Query, warn: false
+  import Ecto.Query, except: [preload: 2], warn: false
   import Homework.Transactions.TransactionQueries, only: [base_query: 0, build_query: 2]
-  alias Homework.Repo
 
+  alias Homework.Companies
+  alias Homework.Repo
   alias Homework.Transactions.Transaction
 
   @doc """
@@ -56,9 +57,23 @@ defmodule Homework.Transactions do
   """
   @spec create_transaction(map) :: {:ok, Transaction.t()} | {:error, Ecto.Changeset.t()}
   def create_transaction(attrs \\ %{}) do
-    %Transaction{}
-    |> Transaction.changeset(attrs)
-    |> Repo.insert()
+    Repo.transaction(fn repo ->
+      changeset = Transaction.changeset(%Transaction{}, attrs)
+
+      case Repo.insert(changeset) do
+        {:ok, transaction} ->
+          available_credit = calculate_company_available_credit(transaction)
+
+          if available_credit >= 0 do
+            transaction
+          else
+            repo.rollback("failed to create transaction: will exceed company's available credit")
+          end
+
+        {:error, changeset} ->
+          repo.rollback(changeset)
+      end
+    end)
   end
 
   @doc """
@@ -76,9 +91,23 @@ defmodule Homework.Transactions do
   @spec update_transaction(Transaction.t(), map) ::
           {:ok, Transaction.t()} | {:error, Ecto.Changeset.t()}
   def update_transaction(%Transaction{} = transaction, attrs) do
-    transaction
-    |> Transaction.changeset(attrs)
-    |> Repo.update()
+    Repo.transaction(fn repo ->
+      changeset = Transaction.changeset(transaction, attrs)
+
+      case Repo.update(changeset) do
+        {:ok, transaction} ->
+          available_credit = calculate_company_available_credit(transaction)
+
+          if available_credit >= 0 do
+            transaction
+          else
+            repo.rollback("failed to update transaction: will exceed company's available credit")
+          end
+
+        {:error, changeset} ->
+          repo.rollback(changeset)
+      end
+    end)
   end
 
   @doc """
@@ -111,5 +140,23 @@ defmodule Homework.Transactions do
   @spec change_transaction(Transaction.t(), map) :: Ecto.Changeset.t()
   def change_transaction(%Transaction{} = transaction, attrs \\ %{}) do
     Transaction.changeset(transaction, attrs)
+  end
+
+  @doc """
+  Preload loads Transaction associations
+  """
+  @spec preload([Transaction.t()] | Transaction.t(), [atom], keyword) ::
+          [Transaction.t()] | Transaction.t() | nil
+  def preload(structs_or_struct, preloads, opts \\ []) do
+    Repo.preload(structs_or_struct, preloads, opts)
+  end
+
+  @spec calculate_company_available_credit(Transaction.t()) :: integer
+  defp calculate_company_available_credit(transaction) do
+    transaction = preload(transaction, :company)
+    company = transaction.company
+    company_transactions = list_transactions(%{company_id: company.id})
+
+    Companies.calculate_available_credit(company.credit_line, company_transactions)
   end
 end

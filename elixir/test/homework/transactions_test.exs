@@ -111,6 +111,23 @@ defmodule Homework.TransactionsTest do
       assert transaction.user_id == user1.id
     end
 
+    test "create_transaction/1 with valid data but exceed company's available credit returns error",
+         %{valid_attrs: valid_attrs} do
+      company = Factory.insert(:company, credit_line: 10_000_000)
+
+      valid_attrs =
+        Map.merge(valid_attrs, %{
+          company_id: company.id,
+          amount: 10_000_000_000,
+          credit: true,
+          debit: false
+        })
+
+      {:error, message} = Transactions.create_transaction(valid_attrs)
+
+      assert message == "failed to create transaction: will exceed company's available credit"
+    end
+
     test "create_transaction/1 with invalid data returns error changeset", %{
       invalid_attrs: invalid_attrs
     } do
@@ -136,6 +153,20 @@ defmodule Homework.TransactionsTest do
       assert transaction.company_id == company.id
       assert transaction.merchant_id == merchant2.id
       assert transaction.user_id == user2.id
+    end
+
+    test "update_transaction/2 with valid data but exceed company's available credit returns error",
+         %{
+           valid_attrs: valid_attrs
+         } do
+      transaction = transaction_fixture(valid_attrs)
+
+      update_attrs =
+        Map.merge(valid_attrs, %{amount: 100_000_000_000, credit: true, debit: false})
+
+      {:error, message} = Transactions.update_transaction(transaction, update_attrs)
+
+      assert message == "failed to update transaction: will exceed company's available credit"
     end
 
     test "update_transaction/2 with invalid data returns error changeset", %{

@@ -5,8 +5,8 @@ defmodule Homework.Users do
 
   import Ecto.Query, warn: false
   import Homework.Users.UserQueries, only: [base_query: 0, build_query: 2]
-  alias Homework.Repo
 
+  alias Homework.Repo
   alias Homework.Users.User
 
   @doc """

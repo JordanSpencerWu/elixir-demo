@@ -5,9 +5,9 @@ defmodule Homework.Merchants do
 
   import Ecto.Query, warn: false
   import Homework.Merchants.MerchantQueries, only: [base_query: 0, build_query: 2]
-  alias Homework.Repo
 
   alias Homework.Merchants.Merchant
+  alias Homework.Repo
 
   @doc """
   Returns the list of merchants.

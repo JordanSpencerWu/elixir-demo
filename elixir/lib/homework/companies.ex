@@ -5,9 +5,9 @@ defmodule Homework.Companies do
 
   import Ecto.Query, warn: false
   import Homework.Companies.CompanyQueries, only: [base_query: 0, build_query: 2]
-  alias Homework.Repo
 
   alias Homework.Companies.Company
+  alias Homework.Repo
 
   @doc """
   Returns the list of companies.
@@ -111,8 +111,28 @@ defmodule Homework.Companies do
     Company.changeset(company, attrs)
   end
 
+  @doc """
+  The available_credit is the company's credit_line minus the total amount of credit transactions for the company.
+  """
+  def calculate_available_credit(credit_line, transactions) do
+    Enum.reduce(
+      transactions,
+      credit_line,
+      fn transaction, acc ->
+        if transaction.credit do
+          acc - transaction.amount
+        else
+          acc
+        end
+      end
+    )
+  end
+
+  @doc """
+  Preload loads Company associations
+  """
   @spec preload([Company.t()] | Company.t(), [atom], keyword) :: [Company.t()] | Company.t() | nil
-  def preload(companies, preloads, opts \\ []) do
-    Repo.preload(companies, preloads, opts)
+  def preload(structs_or_struct, preloads, opts \\ []) do
+    Repo.preload(structs_or_struct, preloads, opts)
   end
 end

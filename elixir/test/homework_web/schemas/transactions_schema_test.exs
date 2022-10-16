@@ -63,8 +63,8 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
 
   describe "transactions query" do
     @query """
-    query {
-      transactions {
+    query transactions($filter: TransactionFilter) {
+      transactions(filter: $filter) {
         entries {
           __typename
           ... on Transaction {
@@ -101,6 +101,96 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       Factory.insert_list(num_of_transactions, :transaction)
 
       params = %{"query" => @query}
+
+      %{
+        "data" => %{
+          "transactions" => %{
+            "entries" => transactions,
+            "offset" => offset,
+            "total_rows" => total_rows
+          }
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert length(transactions) == num_of_transactions
+      assert offset == num_of_transactions
+      assert total_rows == num_of_transactions
+    end
+
+    test "success: return transactions query filtered by company", %{conn: conn} do
+      num_of_transactions = 5
+      company = Factory.insert(:company)
+      Factory.insert_list(num_of_transactions, :transaction, company: company)
+      Factory.insert(:transaction)
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "filter" => %{
+            "company_id" => company.id
+          }
+        }
+      }
+
+      %{
+        "data" => %{
+          "transactions" => %{
+            "entries" => transactions,
+            "offset" => offset,
+            "total_rows" => total_rows
+          }
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert length(transactions) == num_of_transactions
+      assert offset == num_of_transactions
+      assert total_rows == num_of_transactions
+    end
+
+    test "success: return transactions query filtered by merchant", %{conn: conn} do
+      num_of_transactions = 5
+      merchant = Factory.insert(:merchant)
+      Factory.insert_list(num_of_transactions, :transaction, merchant: merchant)
+      Factory.insert(:transaction)
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "filter" => %{
+            "merchant_id" => merchant.id
+          }
+        }
+      }
+
+      %{
+        "data" => %{
+          "transactions" => %{
+            "entries" => transactions,
+            "offset" => offset,
+            "total_rows" => total_rows
+          }
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert length(transactions) == num_of_transactions
+      assert offset == num_of_transactions
+      assert total_rows == num_of_transactions
+    end
+
+    test "success: return transactions query filtered by user", %{conn: conn} do
+      num_of_transactions = 5
+      user = Factory.insert(:user)
+      Factory.insert_list(num_of_transactions, :transaction, user: user)
+      Factory.insert(:transaction)
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "filter" => %{
+            "user_id" => user.id
+          }
+        }
+      }
 
       %{
         "data" => %{

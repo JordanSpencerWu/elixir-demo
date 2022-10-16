@@ -13,7 +13,7 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   Get a list of transcations
   """
   def transactions(_root, args, _info) do
-    transactions = Transactions.list_transactions()
+    transactions = Transactions.list_transactions(args.filter)
     opts = args |> Map.take([:limit, :skip]) |> Enum.into([])
 
     case Paginator.paginate(transactions, opts) do

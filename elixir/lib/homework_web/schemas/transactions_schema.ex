@@ -53,6 +53,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
   object :transaction_queries do
     @desc "Get all Transactions"
     field(:transactions, :page_result) do
+      arg(:filter, :transaction_filter, default_value: %{})
       arg(:limit, :integer, default_value: 50)
       arg(:skip, :integer, default_value: 0)
 
@@ -96,5 +97,11 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
 
       resolve(&TransactionsResolver.delete_transaction/3)
     end
+  end
+
+  input_object :transaction_filter do
+    field(:company_id, :id)
+    field(:user_id, :id)
+    field(:merchant_id, :id)
   end
 end

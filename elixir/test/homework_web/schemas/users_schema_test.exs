@@ -194,16 +194,41 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       assert create_user["company"]["credit_line"] == "1000000.00"
       assert create_user["company"]["name"] == company.name
     end
+
+    test "error: return changeset error", %{conn: conn} do
+      company = Factory.insert(:company)
+      build_user = Factory.build(:user, company: company)
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "company_id" => company.id,
+          "dob" => "2015-01-32",
+          "first_name" => build_user.first_name,
+          "last_name" => build_user.last_name
+        }
+      }
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 2}],
+                 "message" => "dob: invalid value",
+                 "path" => ["create_user"]
+               }
+             ] == errors
+    end
   end
 
   describe "update user mutation" do
     @query """
     mutation update_user(
       $id: ID!,
-      $company_id: ID!,
-      $dob: String!,
-      $first_name: String!,
-      $last_name: String!
+      $company_id: ID,
+      $dob: String,
+      $first_name: String,
+      $last_name: String
     ) {
       update_user(
         id: $id,
@@ -248,6 +273,29 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       assert update_user["company"]["available_credit"] == "1000.00"
       assert update_user["company"]["credit_line"] == "1000.00"
       assert update_user["company"]["name"] == update_company.name
+    end
+
+    test "error: return changeset error", %{conn: conn} do
+      user = Factory.insert(:user)
+      update_dob = "2015-01-32"
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "id" => user.id,
+          "dob" => update_dob
+        }
+      }
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 8}],
+                 "message" => "dob: invalid value",
+                 "path" => ["update_user"]
+               }
+             ] == errors
     end
   end
 

@@ -321,6 +321,51 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       transaction = Repo.get(Transaction, create_transaction["id"])
       assert transaction.amount == 1000
     end
+
+    test "error: return changeset error", %{conn: conn} do
+      company = Factory.insert(:company)
+      user = Factory.insert(:user, company: company)
+      merchant = Factory.insert(:merchant)
+
+      build_invalid_transaction =
+        Factory.build(:transaction,
+          company: company,
+          user: user,
+          merchant: merchant,
+          credit: true,
+          debit: true
+        )
+
+      amount = 10.0
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "company_id" => company.id,
+          "user_id" => user.id,
+          "merchant_id" => merchant.id,
+          "amount" => amount,
+          "credit" => build_invalid_transaction.credit,
+          "debit" => build_invalid_transaction.debit,
+          "description" => build_invalid_transaction.description
+        }
+      }
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 10}],
+                 "message" => "credit: invalid value, cannot be true when debit is true",
+                 "path" => ["create_transaction"]
+               },
+               %{
+                 "locations" => [%{"column" => 3, "line" => 10}],
+                 "message" => "debit: invalid value, cannot be true when credit is true",
+                 "path" => ["create_transaction"]
+               }
+             ] == errors
+    end
   end
 
   describe "update transaction mutation" do
@@ -330,13 +375,13 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
     @query """
     mutation update_transaction(
       $id: ID!,
-      $company_id: ID!,
-      $user_id: ID!,
-      $merchant_id: ID!,
-      $amount: DecimalAmount!,
-      $credit: Boolean!,
-      $debit: Boolean!,
-      $description: String!
+      $company_id: ID,
+      $user_id: ID,
+      $merchant_id: ID,
+      $amount: DecimalAmount,
+      $credit: Boolean,
+      $debit: Boolean,
+      $description: String
     ) {
       update_transaction(
         id: $id,
@@ -407,6 +452,39 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
 
       transaction = Repo.get(Transaction, transaction.id)
       assert transaction.amount == 10_000
+    end
+
+    test "error: return changeset error", %{conn: conn} do
+      user = Factory.insert(:user)
+      merchant = Factory.insert(:merchant)
+      transaction = Factory.insert(:transaction, user: user, merchant: merchant)
+
+      update_credit = true
+      update_debit = true
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "id" => transaction.id,
+          "credit" => update_credit,
+          "debit" => update_debit
+        }
+      }
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 11}],
+                 "message" => "credit: invalid value, cannot be true when debit is true",
+                 "path" => ["update_transaction"]
+               },
+               %{
+                 "locations" => [%{"column" => 3, "line" => 11}],
+                 "message" => "debit: invalid value, cannot be true when credit is true",
+                 "path" => ["update_transaction"]
+               }
+             ] == errors
     end
   end
 

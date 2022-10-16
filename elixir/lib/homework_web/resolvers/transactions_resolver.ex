@@ -50,13 +50,7 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   Create a new transaction
   """
   def create_transaction(_root, args, _info) do
-    case Transactions.create_transaction(args) do
-      {:ok, transaction} ->
-        {:ok, transaction}
-
-      error ->
-        {:error, "could not create transaction: #{inspect(error)}"}
-    end
+    Transactions.create_transaction(args)
   end
 
   @doc """
@@ -65,13 +59,7 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   def update_transaction(_root, %{id: id} = args, _info) do
     transaction = Transactions.get_transaction!(id)
 
-    case Transactions.update_transaction(transaction, args) do
-      {:ok, transaction} ->
-        {:ok, transaction}
-
-      error ->
-        {:error, "could not update transaction: #{inspect(error)}"}
-    end
+    Transactions.update_transaction(transaction, args)
   end
 
   @doc """
@@ -80,12 +68,6 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   def delete_transaction(_root, %{id: id}, _info) do
     transaction = Transactions.get_transaction!(id)
 
-    case Transactions.delete_transaction(transaction) do
-      {:ok, transaction} ->
-        {:ok, transaction}
-
-      error ->
-        {:error, "could not update transaction: #{inspect(error)}"}
-    end
+    Transactions.delete_transaction(transaction)
   end
 end

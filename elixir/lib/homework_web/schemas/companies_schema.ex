@@ -48,8 +48,8 @@ defmodule HomeworkWeb.Schemas.CompaniesSchema do
     @desc "Update a new company"
     field :update_company, :company do
       arg(:id, non_null(:id))
-      arg(:credit_line, non_null(:decimal_amount))
-      arg(:name, non_null(:string))
+      arg(:credit_line, :decimal_amount)
+      arg(:name, :string)
 
       resolve(&CompaniesResolver.update_company/3)
     end

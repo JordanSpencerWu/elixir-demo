@@ -123,7 +123,7 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
 
   describe "update merchant mutation" do
     @query """
-    mutation update_merchant($id: ID!, $name: String!, $description: String!) {
+    mutation update_merchant($id: ID!, $name: String, $description: String) {
       update_merchant(id: $id, name: $name, description: $description) {
         ...MerchantFields
       }

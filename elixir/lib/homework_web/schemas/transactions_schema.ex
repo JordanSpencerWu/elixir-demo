@@ -79,14 +79,14 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
     @desc "Update a new transaction"
     field :update_transaction, :transaction do
       arg(:id, non_null(:id))
-      arg(:company_id, non_null(:id))
-      arg(:user_id, non_null(:id))
-      arg(:merchant_id, non_null(:id))
+      arg(:company_id, :id)
+      arg(:user_id, :id)
+      arg(:merchant_id, :id)
       @desc "amount is in decimal amount"
-      arg(:amount, non_null(:decimal_amount))
-      arg(:credit, non_null(:boolean))
-      arg(:debit, non_null(:boolean))
-      arg(:description, non_null(:string))
+      arg(:amount, :decimal_amount)
+      arg(:credit, :boolean)
+      arg(:debit, :boolean)
+      arg(:description, :string)
 
       resolve(&TransactionsResolver.update_transaction/3)
     end

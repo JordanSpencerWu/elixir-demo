@@ -37,8 +37,8 @@ defmodule HomeworkWeb.Schemas.MerchantsSchema do
     @desc "Update a new merchant"
     field :update_merchant, :merchant do
       arg(:id, non_null(:id))
-      arg(:name, non_null(:string))
-      arg(:description, non_null(:string))
+      arg(:name, :string)
+      arg(:description, :string)
 
       resolve(&MerchantsResolver.update_merchant/3)
     end

@@ -33,13 +33,7 @@ defmodule HomeworkWeb.Resolvers.UsersResolver do
   Creates a user
   """
   def create_user(_root, args, _info) do
-    case Users.create_user(args) do
-      {:ok, user} ->
-        {:ok, user}
-
-      error ->
-        {:error, "could not create user: #{inspect(error)}"}
-    end
+    Users.create_user(args)
   end
 
   @doc """
@@ -48,13 +42,7 @@ defmodule HomeworkWeb.Resolvers.UsersResolver do
   def update_user(_root, %{id: id} = args, _info) do
     user = Users.get_user!(id)
 
-    case Users.update_user(user, args) do
-      {:ok, user} ->
-        {:ok, user}
-
-      error ->
-        {:error, "could not update user: #{inspect(error)}"}
-    end
+    Users.update_user(user, args)
   end
 
   @doc """
@@ -63,12 +51,6 @@ defmodule HomeworkWeb.Resolvers.UsersResolver do
   def delete_user(_root, %{id: id}, _info) do
     user = Users.get_user!(id)
 
-    case Users.delete_user(user) do
-      {:ok, user} ->
-        {:ok, user}
-
-      error ->
-        {:error, "could not update user: #{inspect(error)}"}
-    end
+    Users.delete_user(user)
   end
 end

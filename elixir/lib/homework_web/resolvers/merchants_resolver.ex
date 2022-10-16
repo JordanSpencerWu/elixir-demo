@@ -24,13 +24,7 @@ defmodule HomeworkWeb.Resolvers.MerchantsResolver do
   Create a new merchant
   """
   def create_merchant(_root, args, _info) do
-    case Merchants.create_merchant(args) do
-      {:ok, merchant} ->
-        {:ok, merchant}
-
-      error ->
-        {:error, "could not create merchant: #{inspect(error)}"}
-    end
+    Merchants.create_merchant(args)
   end
 
   @doc """
@@ -39,13 +33,7 @@ defmodule HomeworkWeb.Resolvers.MerchantsResolver do
   def update_merchant(_root, %{id: id} = args, _info) do
     merchant = Merchants.get_merchant!(id)
 
-    case Merchants.update_merchant(merchant, args) do
-      {:ok, merchant} ->
-        {:ok, merchant}
-
-      error ->
-        {:error, "could not update merchant: #{inspect(error)}"}
-    end
+    Merchants.update_merchant(merchant, args)
   end
 
   @doc """
@@ -54,12 +42,6 @@ defmodule HomeworkWeb.Resolvers.MerchantsResolver do
   def delete_merchant(_root, %{id: id}, _info) do
     merchant = Merchants.get_merchant!(id)
 
-    case Merchants.delete_merchant(merchant) do
-      {:ok, merchant} ->
-        {:ok, merchant}
-
-      error ->
-        {:error, "could not update merchant: #{inspect(error)}"}
-    end
+    Merchants.delete_merchant(merchant)
   end
 end

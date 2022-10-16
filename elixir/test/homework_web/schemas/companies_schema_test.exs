@@ -146,7 +146,7 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
 
   describe "update company mutation" do
     @query """
-    mutation update_company($id: ID!, $credit_line: DecimalAmount!, $name: String!) {
+    mutation update_company($id: ID!, $credit_line: DecimalAmount, $name: String) {
       update_company(id: $id, credit_line: $credit_line, name: $name) {
         ...CompanyFields
       }

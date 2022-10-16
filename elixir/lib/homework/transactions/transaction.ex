@@ -75,8 +75,8 @@ defmodule Homework.Transactions.Transaction do
 
     if credit && debit do
       changeset
-      |> add_error(:credit, "invalid value", validation: :value)
-      |> add_error(:debit, "invalid value", validation: :value)
+      |> add_error(:credit, "invalid value, cannot be true when debit is true", validation: :value)
+      |> add_error(:debit, "invalid value, cannot be true when credit is true", validation: :value)
     else
       changeset
     end

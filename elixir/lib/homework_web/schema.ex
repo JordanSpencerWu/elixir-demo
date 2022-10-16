@@ -3,6 +3,13 @@ defmodule HomeworkWeb.Schema do
   Defines the graphql schema for this project.
   """
   use Absinthe.Schema
+  alias HomeworkWeb.Middlewares.HandleChangesetErrors
+
+  def middleware(middleware, _field, %{identifier: :mutation}) do
+    middleware ++ [HandleChangesetErrors]
+  end
+
+  def middleware(middleware, _field, _object), do: middleware
 
   import_types(HomeworkWeb.Schemas.Types)
 

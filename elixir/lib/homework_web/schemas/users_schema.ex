@@ -49,10 +49,10 @@ defmodule HomeworkWeb.Schemas.UsersSchema do
     @desc "Update a new user"
     field :update_user, :user do
       arg(:id, non_null(:id))
-      arg(:company_id, non_null(:id))
-      arg(:dob, non_null(:string))
-      arg(:first_name, non_null(:string))
-      arg(:last_name, non_null(:string))
+      arg(:company_id, :id)
+      arg(:dob, :string)
+      arg(:first_name, :string)
+      arg(:last_name, :string)
 
       resolve(&UsersResolver.update_user/3)
     end

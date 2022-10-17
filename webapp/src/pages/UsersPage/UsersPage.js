@@ -1,6 +1,12 @@
+import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 
-function PageNotFound() {
+import query from "clients/graphql/queries/usersQuery";
+
+function UsersPage() {
+  const { loading, error, data } = useQuery(query);
+  console.log(data);
+
   return (
     <Box
       sx={{
@@ -11,9 +17,9 @@ function PageNotFound() {
         alignItems: "center",
       }}
     >
-      404 Page not found.
+      Users Page
     </Box>
   );
 }
 
-export default PageNotFound;
+export default UsersPage;

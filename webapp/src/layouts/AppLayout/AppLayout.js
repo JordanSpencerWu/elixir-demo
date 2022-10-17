@@ -17,7 +17,7 @@ function AppLayout() {
       <CssBaseline />
       <AppBar open={open} toggleDrawer={toggleDrawer} />
       <Drawer open={open} toggleDrawer={toggleDrawer} />
-      <main css={{ marginTop: 64 }}>
+      <main css={{ marginTop: 64, height: "calc(100% - 64px)", width: "100%" }}>
         <Outlet />
       </main>
     </Box>

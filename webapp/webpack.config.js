@@ -60,6 +60,18 @@ const config = {
       },
     },
   },
+  resolve: {
+    alias: {
+      components: path.resolve(__dirname, "./src/components"),
+      clients: path.resolve(__dirname, "./src/clients"),
+      pages: path.resolve(__dirname, "./src/pages"),
+    },
+    extensions: [".js", ".jsx"],
+    modules: [
+      path.resolve(__dirname, "./src"),
+      path.resolve(__dirname, "./node_modules"),
+    ],
+  },
 };
 
 module.exports = (env, argv) => {

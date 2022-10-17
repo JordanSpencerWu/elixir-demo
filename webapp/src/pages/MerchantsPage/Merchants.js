@@ -13,6 +13,8 @@ function Merchants() {
   if (loading) return null;
   if (error) return <div>Failed to fetch merchants</div>;
 
+  const { merchants } = data;
+
   const columns = [
     {
       id: "id",
@@ -28,7 +30,7 @@ function Merchants() {
     },
   ];
 
-  const rows = data.merchants.entries.map((merchant) => ({
+  const rows = merchants.entries.map((merchant) => ({
     id: merchant.id,
     description: merchant.description,
     name: merchant.name,

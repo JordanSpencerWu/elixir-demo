@@ -15,6 +15,8 @@ function Transactions() {
   if (loading) return null;
   if (error) return <div>Failed to fetch transactions</div>;
 
+  const { transactions } = data;
+
   const columns = [
     {
       id: "id",
@@ -31,7 +33,7 @@ function Transactions() {
     },
   ];
 
-  const rows = data.transactions.entries.map((transaction) => ({
+  const rows = transactions.entries.map((transaction) => ({
     id: transaction.id,
     amount: currencyFormatter(transaction.amount),
     type: getTransactionType(transaction),

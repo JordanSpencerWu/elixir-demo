@@ -14,6 +14,8 @@ function Companies() {
   if (loading) return null;
   if (error) return <div>Failed to fetch companies</div>;
 
+  const { companies } = data;
+
   const columns = [
     {
       id: "id",
@@ -31,7 +33,7 @@ function Companies() {
     },
   ];
 
-  const rows = data.companies.entries.map((company) => ({
+  const rows = companies.entries.map((company) => ({
     id: company.id,
     availableCredit: currencyFormatter(company.availableCredit),
     creditLine: currencyFormatter(company.creditLine),

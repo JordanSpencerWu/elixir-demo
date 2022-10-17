@@ -13,6 +13,8 @@ function Users() {
   if (loading) return null;
   if (error) return <div>Failed to fetch users</div>;
 
+  const { users } = data;
+
   const columns = [
     {
       id: "id",
@@ -32,7 +34,7 @@ function Users() {
     },
   ];
 
-  const rows = data.users.entries.map((user) => ({
+  const rows = users.entries.map((user) => ({
     id: user.id,
     firstName: user.firstName,
     lastName: user.lastName,

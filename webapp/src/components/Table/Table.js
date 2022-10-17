@@ -1,4 +1,5 @@
 import { array, arrayOf, bool, func, shape, string } from "prop-types";
+import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import MUITable from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -65,11 +66,16 @@ function Table(props) {
                   />
                 </TableCell>
               )}
-              {columns.map((column) => (
-                <TableCell key={column.id} align={column.align}>
-                  {row[column.id]}
-                </TableCell>
-              ))}
+              {columns.map((column) => {
+                const value = row[column.id];
+                const isId = column.id === "id";
+
+                return (
+                  <TableCell key={column.id} align={column.align}>
+                    {isId ? <Link to={row.id}>{value}</Link> : value}
+                  </TableCell>
+                );
+              })}
             </StyledTableRow>
           );
         })}

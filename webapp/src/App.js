@@ -1,11 +1,15 @@
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 import HomePage from "pages/HomePage";
+import AppLayout from "layouts/AppLayout";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route element={<HomePage />} exact path="/" />
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<HomePage />} />
+        </Route>
       </Routes>
     </Router>
   );

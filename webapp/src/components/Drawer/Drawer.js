@@ -5,17 +5,45 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import BusinessIcon from "@mui/icons-material/Business";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import StorefrontIcon from "@mui/icons-material/Storefront";
 import PeopleIcon from "@mui/icons-material/People";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import LayersIcon from "@mui/icons-material/Layers";
 import { bool, func } from "prop-types";
 
+import ListItemLink from "components/ListItemLink";
+import pathTo from "utils/pathTo";
+
 export const DRAWER_WIDTH = 240;
+
+const NAV_LINKS = [
+  {
+    icon: <DashboardIcon />,
+    primary: "Dashboard",
+    to: pathTo.dashboard,
+  },
+  {
+    icon: <ReceiptIcon />,
+    primary: "Transactions",
+    to: pathTo.transactions,
+  },
+  {
+    icon: <BusinessIcon />,
+    primary: "Companies",
+    to: pathTo.companies,
+  },
+  {
+    icon: <StorefrontIcon />,
+    primary: "Merchants",
+    to: pathTo.merchants,
+  },
+  {
+    icon: <PeopleIcon />,
+    primary: "Users",
+    to: pathTo.users,
+  },
+];
 
 const StyledDrawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -61,37 +89,10 @@ function Drawer(props) {
         </IconButton>
       </Toolbar>
       <Divider />
-      <List component="nav" sx={{ height: "100%" }}>
-        <ListItemButton>
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText primary="Dashboard" />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <ShoppingCartIcon />
-          </ListItemIcon>
-          <ListItemText primary="Orders" />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Customers" />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <BarChartIcon />
-          </ListItemIcon>
-          <ListItemText primary="Reports" />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <LayersIcon />
-          </ListItemIcon>
-          <ListItemText primary="Integrations" />
-        </ListItemButton>
+      <List sx={{ height: "100%" }}>
+        {NAV_LINKS.map((link) => (
+          <ListItemLink key={link.primary} {...link} />
+        ))}
       </List>
     </StyledDrawer>
   );

@@ -62,9 +62,10 @@ const config = {
   },
   resolve: {
     alias: {
-      components: path.resolve(__dirname, "./src/components"),
       clients: path.resolve(__dirname, "./src/clients"),
+      components: path.resolve(__dirname, "./src/components"),
       pages: path.resolve(__dirname, "./src/pages"),
+      utils: path.resolve(__dirname, "./src/utils"),
     },
     extensions: [".js", ".jsx"],
     modules: [

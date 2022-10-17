@@ -1,29 +1,8 @@
-import { useQuery } from '@apollo/client'
-import GetTransactions from '../gql/transactions.gql'
-import TxTable from '../components/transactions/TxTable'
+import { useQuery } from "@apollo/client";
+import GetTransactions from "../gql/transactions.gql";
+import TxTable from "../components/transactions/TxTable";
+import Button from "@mui/material/Button";
 
-export function Home () {
-  const { loading, error, data = {} } = useQuery(GetTransactions)
-
-  if (loading) {
-    return (
-      <>
-        Loading...
-      </>
-    )
-  }
-
-  if (error) {
-    return (
-      <>
-        ¯\_(ツ)_/¯
-      </>
-    )
-  }
-
-  return (
-    <>
-      <TxTable data={data.transactions} />
-    </>
-  )
+export function Home() {
+  return <Button variant="contained">Hello World</Button>;
 }

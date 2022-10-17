@@ -33,6 +33,13 @@ defmodule HomeworkWeb.Schemas.UsersSchema do
 
       resolve(&UsersResolver.users/3)
     end
+
+    @desc "Get a User"
+    field(:user, :user) do
+      arg(:id, non_null(:id))
+
+      resolve(&UsersResolver.user/3)
+    end
   end
 
   object :user_mutations do

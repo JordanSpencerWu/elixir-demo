@@ -244,6 +244,62 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
     end
   end
 
+  describe "transaction query" do
+    @query """
+    query transaction($id: ID!) {
+      transaction(id: $id) {
+        ...TransactionFields
+      }
+    }
+    #{@fragment}
+    """
+
+    test "success: return transaction query", %{conn: conn} do
+      expected_transaction = Factory.insert(:transaction)
+
+      params = %{"query" => @query, "variables" => %{"id" => expected_transaction.id}}
+
+      %{
+        "data" => %{
+          "transaction" => transaction
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert transaction["id"]
+      assert transaction["amount"] == "10.00"
+      assert transaction["credit"] == expected_transaction.credit
+      assert transaction["debit"] == expected_transaction.debit
+      assert transaction["description"] == expected_transaction.description
+      assert transaction["user"]["id"] == expected_transaction.user.id
+      assert transaction["user"]["dob"] == expected_transaction.user.dob
+      assert transaction["user"]["first_name"] == expected_transaction.user.first_name
+      assert transaction["user"]["last_name"] == expected_transaction.user.last_name
+      assert transaction["merchant"]["id"] == expected_transaction.merchant.id
+      assert transaction["merchant"]["name"] == expected_transaction.merchant.name
+      assert transaction["merchant"]["description"] == expected_transaction.merchant.description
+      assert transaction["company"]["id"] == expected_transaction.company.id
+      assert transaction["company"]["available_credit"] == "1000000.00"
+      assert transaction["company"]["credit_line"] == "1000000.00"
+      assert transaction["company"]["name"] == expected_transaction.company.name
+    end
+
+    test "error: return changeset error", %{conn: conn} do
+      invalid_transaction_id = Ecto.UUID.generate()
+
+      params = %{"query" => @query, "variables" => %{"id" => invalid_transaction_id}}
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 2}],
+                 "message" => "id: invalid value",
+                 "path" => ["transaction"]
+               }
+             ] = errors
+    end
+  end
+
   describe "create transaction mutation" do
     alias Homework.Repo
     alias Homework.Transactions.Transaction

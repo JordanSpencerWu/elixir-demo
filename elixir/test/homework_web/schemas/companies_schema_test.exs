@@ -109,6 +109,50 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
     end
   end
 
+  describe "company query" do
+    @query """
+    query company($id: ID!) {
+      company(id: $id) {
+        ...CompanyFields
+      }
+    }
+    #{@fragment}
+    """
+
+    test "success: return company query", %{conn: conn} do
+      expected_company = Factory.insert(:company)
+
+      params = %{"query" => @query, "variables" => %{"id" => expected_company.id}}
+
+      %{
+        "data" => %{
+          "company" => company
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert company["id"] == expected_company.id
+      assert company["available_credit"] == "1000000.00"
+      assert company["credit_line"] == "1000000.00"
+      assert company["name"] == expected_company.name
+    end
+
+    test "error: return changeset error", %{conn: conn} do
+      invalid_company_id = Ecto.UUID.generate()
+
+      params = %{"query" => @query, "variables" => %{"id" => invalid_company_id}}
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 2}],
+                 "message" => "id: invalid value",
+                 "path" => ["company"]
+               }
+             ] == errors
+    end
+  end
+
   describe "create company mutation" do
     @query """
     mutation create_company($credit_line: DecimalAmount!, $name: String!) {

@@ -156,6 +156,54 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
     end
   end
 
+  describe "user query" do
+    @query """
+    query user($id: ID!) {
+      user(id: $id) {
+        ...UserFields
+      }
+    }
+    #{@fragment}
+    """
+
+    test "success: return user query", %{conn: conn} do
+      expected_user = Factory.insert(:user)
+
+      params = %{"query" => @query, "variables" => %{"id" => expected_user.id}}
+
+      %{
+        "data" => %{
+          "user" => user
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert user["id"] == expected_user.id
+      assert user["dob"] == expected_user.dob
+      assert user["first_name"] == expected_user.first_name
+      assert user["last_name"] == expected_user.last_name
+      assert user["company"]["id"] == expected_user.company.id
+      assert user["company"]["available_credit"] == "1000000.00"
+      assert user["company"]["credit_line"] == "1000000.00"
+      assert user["company"]["name"] == expected_user.company.name
+    end
+
+    test "error: return changeset error", %{conn: conn} do
+      invalid_user_id = Ecto.UUID.generate()
+
+      params = %{"query" => @query, "variables" => %{"id" => invalid_user_id}}
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 2}],
+                 "message" => "id: invalid value",
+                 "path" => ["user"]
+               }
+             ] == errors
+    end
+  end
+
   describe "create user mutation" do
     @query """
     mutation create_user($company_id: ID!, $dob: String!, $first_name: String!, $last_name: String!) {

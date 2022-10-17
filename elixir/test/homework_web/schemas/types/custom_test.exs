@@ -1,5 +1,5 @@
 defmodule HomeworkWeb.Schemas.Types.CustomTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias Absinthe.Type
   alias Absinthe.Blueprint.Input

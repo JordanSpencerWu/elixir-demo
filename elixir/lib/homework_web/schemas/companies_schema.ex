@@ -34,6 +34,13 @@ defmodule HomeworkWeb.Schemas.CompaniesSchema do
 
       resolve(&CompaniesResolver.companies/3)
     end
+
+    @desc "Get a company"
+    field(:company, :company) do
+      arg(:id, non_null(:id))
+
+      resolve(&CompaniesResolver.company/3)
+    end
   end
 
   object :company_mutations do

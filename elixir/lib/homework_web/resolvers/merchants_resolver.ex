@@ -18,6 +18,17 @@ defmodule HomeworkWeb.Resolvers.MerchantsResolver do
   end
 
   @doc """
+  Get a merchant
+  """
+  def merchant(_root, args, _info) do
+    merchant = Merchants.get_merchant!(args.id)
+
+    {:ok, merchant}
+  rescue
+    _e in Ecto.NoResultsError -> {:error, "id: invalid value"}
+  end
+
+  @doc """
   Create a new merchant
   """
   def create_merchant(_root, args, _info) do

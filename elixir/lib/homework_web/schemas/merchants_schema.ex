@@ -23,6 +23,13 @@ defmodule HomeworkWeb.Schemas.MerchantsSchema do
 
       resolve(&MerchantsResolver.merchants/3)
     end
+
+    @desc "Get a Merchant"
+    field(:merchant, :merchant) do
+      arg(:id, non_null(:id))
+
+      resolve(&MerchantsResolver.merchant/3)
+    end
   end
 
   object :merchant_mutations do

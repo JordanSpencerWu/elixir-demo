@@ -33,6 +33,17 @@ defmodule HomeworkWeb.Resolvers.CompaniesResolver do
   end
 
   @doc """
+  Get a company
+  """
+  def company(_root, args, _info) do
+    company = Companies.get_company!(args.id)
+
+    {:ok, company}
+  rescue
+    _e in Ecto.NoResultsError -> {:error, "id: invalid value"}
+  end
+
+  @doc """
   Create a new company
   """
   def create_company(_root, args, _info) do

@@ -59,6 +59,13 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
 
       resolve(&TransactionsResolver.transactions/3)
     end
+
+    @desc "Get a Transaction"
+    field(:transaction, :transaction) do
+      arg(:id, non_null(:id))
+
+      resolve(&TransactionsResolver.transaction/3)
+    end
   end
 
   object :transaction_mutations do

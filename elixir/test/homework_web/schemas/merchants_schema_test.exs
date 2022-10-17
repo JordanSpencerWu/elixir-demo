@@ -89,6 +89,47 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
     end
   end
 
+  describe "merchant query" do
+    @query """
+    query merchant($id: ID!) {
+      merchant(id: $id) {
+        ...MerchantFields
+      }
+    }
+    #{@fragment}
+    """
+
+    test "success: return merchant query", %{conn: conn} do
+      expected_merchant = Factory.insert(:merchant)
+      params = %{"query" => @query, "variables" => %{"id" => expected_merchant.id}}
+
+      %{
+        "data" => %{
+          "merchant" => merchant
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert merchant["id"] == expected_merchant.id
+      assert merchant["description"] == expected_merchant.description
+      assert merchant["name"] == expected_merchant.name
+    end
+
+    test "error: return changeset error", %{conn: conn} do
+      invalid_merchant_id = Ecto.UUID.generate()
+      params = %{"query" => @query, "variables" => %{"id" => invalid_merchant_id}}
+
+      %{"errors" => errors} = conn |> post("/graphql", params) |> json_response(200)
+
+      assert [
+               %{
+                 "locations" => [%{"column" => 3, "line" => 2}],
+                 "message" => "id: invalid value",
+                 "path" => ["merchant"]
+               }
+             ] == errors
+    end
+  end
+
   describe "create merchant mutation" do
     @query """
     mutation create_merchant($name: String!, $description: String!) {

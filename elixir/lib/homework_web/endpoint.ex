@@ -17,7 +17,7 @@ defmodule HomeworkWeb.Endpoint do
 
   socket("/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]])
 
-  plug CORSPlug, origin: ["http://localhost:3000"]
+  plug(CORSPlug, origin: ["http://localhost:3000"])
 
   # Serve at "/" the static files from "priv/static" directory.
   #

@@ -19,6 +19,17 @@ defmodule HomeworkWeb.Resolvers.UsersResolver do
   end
 
   @doc """
+  Get a user
+  """
+  def user(_root, args, _info) do
+    user = Users.get_user!(args.id)
+
+    {:ok, user}
+  rescue
+    _e in Ecto.NoResultsError -> {:error, "id: invalid value"}
+  end
+
+  @doc """
   Get the company associated with a user
   """
   def companies_by_id(_args, company_ids) do

@@ -20,6 +20,17 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   end
 
   @doc """
+  Get a transcation
+  """
+  def transaction(_root, args, _info) do
+    transaction = Transactions.get_transaction!(args.id)
+
+    {:ok, transaction}
+  rescue
+    _e in Ecto.NoResultsError -> {:error, "id: invalid value"}
+  end
+
+  @doc """
   Get the company associated with a transaction
   """
   def companies_by_ids(_args, company_ids) do

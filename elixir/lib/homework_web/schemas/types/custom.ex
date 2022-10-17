@@ -26,12 +26,12 @@ defmodule HomeworkWeb.Schemas.Types.Custom do
     decimal = Decimal.new(value)
 
     if Decimal.positive?(decimal) do
-      decimal = do_serialize_decimal_amount(decimal)
-      Decimal.to_string(decimal)
+      decimal_amount = do_serialize_decimal_amount(decimal)
+      Decimal.to_string(decimal_amount)
     else
-      decimal = decimal |> Decimal.abs() |> do_serialize_decimal_amount()
+      decimal_amount = decimal |> Decimal.abs() |> do_serialize_decimal_amount()
 
-      decimal |> Decimal.mult(-1) |> Decimal.to_string()
+      decimal_amount |> Decimal.mult(-1) |> Decimal.to_string()
     end
   end
 

@@ -29,10 +29,7 @@ defmodule HomeworkWeb.Resolvers.CompaniesResolver do
     companies = Companies.list_companies()
     opts = args |> Map.take([:limit, :skip]) |> Enum.into([])
 
-    case Paginator.paginate(companies, opts) do
-      {:ok, page} -> {:ok, page}
-      {:error, message} -> {:error, message}
-    end
+    Paginator.paginate(companies, opts)
   end
 
   @doc """

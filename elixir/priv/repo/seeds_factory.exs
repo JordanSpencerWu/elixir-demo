@@ -1,4 +1,4 @@
-defmodule Build do
+defmodule SeedsFactory do
   @moduledoc false
 
   alias Homework.Companies.Company
@@ -7,8 +7,8 @@ defmodule Build do
 
   @type transaction_type :: :credit | :debit | :cash
 
-  @spec company_entry() :: map
-  def company_entry do
+  @spec build_company() :: map
+  def build_company do
     now = NaiveDateTime.utc_now()
 
     %{
@@ -19,8 +19,8 @@ defmodule Build do
     }
   end
 
-  @spec user_entry(Company.t()) :: map
-  def user_entry(company) do
+  @spec build_user(Company.t()) :: map
+  def build_user(company) do
     now = NaiveDateTime.utc_now()
     start_date = Date.utc_today()
     end_date = Date.new!(1900, 1, 1)
@@ -36,8 +36,8 @@ defmodule Build do
     }
   end
 
-  @spec merchant_entry() :: map
-  def merchant_entry do
+  @spec build_merchant() :: map
+  def build_merchant do
     now = NaiveDateTime.utc_now()
 
     %{
@@ -48,8 +48,8 @@ defmodule Build do
     }
   end
 
-  @spec transaction_entry(User.t(), Merchant.t(), transaction_type) :: map
-  def transaction_entry(user, merchant, type \\ :credit) do
+  @spec build_transaction(User.t(), Merchant.t(), transaction_type) :: map
+  def build_transaction(user, merchant, type \\ :credit) do
     now = NaiveDateTime.utc_now()
 
     credit_transaction = %{

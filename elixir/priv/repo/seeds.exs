@@ -4,7 +4,7 @@ alias Homework.Transactions.Transaction
 alias Homework.Users.User
 
 if Mix.env() == :dev do
-  [{Build, _}] = Code.require_file("build.exs", "priv/repo")
+  [{SeedsFactory, _}] = Code.require_file("seeds_factory.exs", "priv/repo")
 
   num_of_companies = 100
   num_of_users = 50
@@ -13,7 +13,7 @@ if Mix.env() == :dev do
 
   company_entries =
     for _ <- 1..num_of_companies do
-      Build.company_entry()
+      SeedsFactory.build_company()
     end
 
   {_count, companies} = Homework.Repo.insert_all(Company, company_entries, returning: true)
@@ -21,14 +21,14 @@ if Mix.env() == :dev do
   user_entries =
     for _ <- 1..num_of_users do
       company = Enum.random(companies)
-      Build.user_entry(company)
+      SeedsFactory.build_user(company)
     end
 
   {_count, users} = Homework.Repo.insert_all(User, user_entries, returning: true)
 
   merchant_entries =
     for _ <- 1..num_of_merchants do
-      Build.merchant_entry()
+      SeedsFactory.build_merchant()
     end
 
   {_count, merchants} = Homework.Repo.insert_all(Merchant, merchant_entries, returning: true)
@@ -41,7 +41,7 @@ if Mix.env() == :dev do
       merchant = Enum.random(merchants)
       transaction_type = Enum.random(transaction_types)
 
-      Build.transaction_entry(user, merchant, transaction_type)
+      SeedsFactory.build_transaction(user, merchant, transaction_type)
     end
 
   Homework.Repo.insert_all(Transaction, transaction_entries)

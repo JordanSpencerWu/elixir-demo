@@ -16,10 +16,7 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
     transactions = Transactions.list_transactions(args.filter)
     opts = args |> Map.take([:limit, :skip]) |> Enum.into([])
 
-    case Paginator.paginate(transactions, opts) do
-      {:ok, page} -> {:ok, page}
-      {:error, message} -> {:error, message}
-    end
+    Paginator.paginate(transactions, opts)
   end
 
   @doc """

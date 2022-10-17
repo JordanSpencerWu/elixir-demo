@@ -15,10 +15,7 @@ defmodule HomeworkWeb.Resolvers.UsersResolver do
     users = Users.list_users(criteria)
     opts = args |> Map.take([:limit, :skip]) |> Enum.into([])
 
-    case Paginator.paginate(users, opts) do
-      {:ok, page} -> {:ok, page}
-      {:error, message} -> {:error, message}
-    end
+    Paginator.paginate(users, opts)
   end
 
   @doc """

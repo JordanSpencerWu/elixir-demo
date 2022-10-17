@@ -14,10 +14,7 @@ defmodule HomeworkWeb.Resolvers.MerchantsResolver do
     merchants = Merchants.list_merchants(criteria)
     opts = args |> Map.take([:limit, :skip]) |> Enum.into([])
 
-    case Paginator.paginate(merchants, opts) do
-      {:ok, page} -> {:ok, page}
-      {:error, message} -> {:error, message}
-    end
+    Paginator.paginate(merchants, opts)
   end
 
   @doc """

@@ -17,6 +17,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
   @fragment """
     fragment UserFields on User {
       id
+      company_id
       dob
       first_name
       last_name
@@ -183,6 +184,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       assert user["dob"] == expected_user.dob
       assert user["first_name"] == expected_user.first_name
       assert user["last_name"] == expected_user.last_name
+      assert user["company_id"] == expected_user.company.id
       assert user["company"]["id"] == expected_user.company.id
       assert user["company"]["available_credit"] == "1000000.00"
       assert user["company"]["credit_line"] == "1000000.00"
@@ -334,6 +336,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       assert update_user["dob"] == update_dob
       assert update_user["first_name"] == update_first_name
       assert update_user["last_name"] == update_last_name
+      assert update_user["company_id"] == update_company.id
       assert update_user["company"]["id"] == update_company.id
       assert update_user["company"]["available_credit"] == "1000.00"
       assert update_user["company"]["credit_line"] == "1000.00"

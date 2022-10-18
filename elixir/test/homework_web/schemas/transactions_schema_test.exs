@@ -27,6 +27,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
   @user_fragment """
     fragment UserFields on User {
       id
+      company_id
       dob
       first_name
       last_name
@@ -276,6 +277,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert transaction["user"]["dob"] == expected_transaction.user.dob
       assert transaction["user"]["first_name"] == expected_transaction.user.first_name
       assert transaction["user"]["last_name"] == expected_transaction.user.last_name
+      assert transaction["user"]["company_id"] == expected_transaction.user.company_id
       assert transaction["merchant"]["id"] == expected_transaction.merchant.id
       assert transaction["merchant"]["name"] == expected_transaction.merchant.name
       assert transaction["merchant"]["description"] == expected_transaction.merchant.description

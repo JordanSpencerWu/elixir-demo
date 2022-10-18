@@ -22,6 +22,7 @@ defmodule Homework.Transactions.Transaction do
           merchant: Merchant.t(),
           user_id: Ecto.UUID.t(),
           user: User.t(),
+          deleted_at: NaiveDateTime.t(),
           inserted_at: NaiveDateTime.t(),
           updated_at: NaiveDateTime.t()
         }
@@ -40,6 +41,7 @@ defmodule Homework.Transactions.Transaction do
     belongs_to(:merchant, Merchant, type: :binary_id, foreign_key: :merchant_id)
     belongs_to(:user, User, type: :binary_id, foreign_key: :user_id)
 
+    field(:deleted_at, :naive_datetime, read_after_writes: true)
     timestamps()
   end
 

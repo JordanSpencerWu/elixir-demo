@@ -46,7 +46,9 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
 
     test "success: return merchants query", %{conn: conn} do
       num_of_merchants = 5
+      now = DateTime.utc_now() |> DateTime.to_naive()
       Factory.insert_list(num_of_merchants, :merchant)
+      Factory.insert(:merchant, deleted_at: now)
 
       params = %{"query" => @query}
 
@@ -112,6 +114,20 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
       assert merchant["id"] == expected_merchant.id
       assert merchant["description"] == expected_merchant.description
       assert merchant["name"] == expected_merchant.name
+    end
+
+    test "success: return nil for deleted company", %{conn: conn} do
+      now = DateTime.utc_now() |> DateTime.to_naive()
+      expected_merchant = Factory.insert(:merchant, deleted_at: now)
+      params = %{"query" => @query, "variables" => %{"id" => expected_merchant.id}}
+
+      %{
+        "data" => %{
+          "merchant" => merchant
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert merchant == nil
     end
 
     test "error: return changeset error", %{conn: conn} do
@@ -253,7 +269,9 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
         conn |> post("/graphql", params) |> json_response(200)
 
       assert delete_merchant["id"] == merchant.id
-      refute Repo.get(Merchant, merchant.id)
+
+      merchant = Repo.get(Merchant, merchant.id)
+      assert merchant.deleted_at != DateTime.from_unix!(0) |> DateTime.to_naive()
     end
 
     test "error: return error message id is invalid", %{conn: conn} do

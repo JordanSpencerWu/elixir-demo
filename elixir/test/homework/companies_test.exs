@@ -54,8 +54,8 @@ defmodule Homework.CompaniesTest do
 
     test "delete_company/1 deletes the company" do
       company = company_fixture()
-      assert {:ok, %Company{}} = Companies.delete_company(company)
-      assert_raise Ecto.NoResultsError, fn -> Companies.get_company!(company.id) end
+      assert {:ok, company = %Company{}} = Companies.delete_company(company)
+      assert company.deleted_at != DateTime.from_unix!(0) |> DateTime.to_naive()
     end
 
     test "change_company/1 returns a company changeset" do

@@ -91,10 +91,10 @@ defmodule Homework.UsersTest do
       assert user == Users.get_user!(user.id)
     end
 
-    test "delete_user/1 deletes the user", %{valid_attrs: valid_attrs} do
+    test "delete_user/1 soft deletes the user", %{valid_attrs: valid_attrs} do
       user = user_fixture(valid_attrs)
-      assert {:ok, %User{}} = Users.delete_user(user)
-      assert_raise Ecto.NoResultsError, fn -> Users.get_user!(user.id) end
+      assert {:ok, user = %User{}} = Users.delete_user(user)
+      assert user.deleted_at != DateTime.from_unix!(0) |> DateTime.to_naive()
     end
 
     test "change_user/1 returns a user changeset", %{valid_attrs: valid_attrs} do

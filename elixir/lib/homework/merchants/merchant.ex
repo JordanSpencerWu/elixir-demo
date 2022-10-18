@@ -11,6 +11,7 @@ defmodule Homework.Merchants.Merchant do
           id: Ecto.UUID.t(),
           description: String.t(),
           name: String.t(),
+          deleted_at: NaiveDateTime.t(),
           inserted_at: NaiveDateTime.t(),
           updated_at: NaiveDateTime.t()
         }
@@ -23,6 +24,7 @@ defmodule Homework.Merchants.Merchant do
     field(:description, :string)
     field(:name, :string)
 
+    field(:deleted_at, :naive_datetime, read_after_writes: true)
     timestamps()
   end
 

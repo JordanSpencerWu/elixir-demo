@@ -13,6 +13,7 @@ defmodule Homework.Companies.Company do
           credit_line: non_neg_integer(),
           name: String.t(),
           transactions: [Transaction.t()],
+          deleted_at: NaiveDateTime.t(),
           inserted_at: NaiveDateTime.t(),
           updated_at: NaiveDateTime.t()
         }
@@ -27,6 +28,7 @@ defmodule Homework.Companies.Company do
 
     has_many(:transactions, Transaction)
 
+    field(:deleted_at, :naive_datetime, read_after_writes: true)
     timestamps()
   end
 

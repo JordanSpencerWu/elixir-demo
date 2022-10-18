@@ -40,7 +40,16 @@ defmodule Homework.Users do
 
   """
   @spec get_user!(Ecto.UUID.t()) :: User.t()
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
+
+    query =
+      from(u in User,
+        where: u.id == ^id and u.deleted_at == ^epoch
+      )
+
+    Repo.one!(query)
+  end
 
   @doc """
   Creates a user.
@@ -81,7 +90,7 @@ defmodule Homework.Users do
   end
 
   @doc """
-  Deletes a user.
+  Soft deletes a user.
 
   ## Examples
 
@@ -94,7 +103,10 @@ defmodule Homework.Users do
   """
   @spec delete_user(User.t()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def delete_user(%User{} = user) do
-    Repo.delete(user)
+    epoch = DateTime.utc_now() |> DateTime.to_naive()
+    attrs = %{deleted_at: epoch}
+
+    update_user(user, attrs)
   end
 
   @doc """

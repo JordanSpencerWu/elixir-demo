@@ -183,8 +183,8 @@ defmodule Homework.TransactionsTest do
 
     test "delete_transaction/1 deletes the transaction", %{valid_attrs: valid_attrs} do
       transaction = transaction_fixture(valid_attrs)
-      assert {:ok, %Transaction{}} = Transactions.delete_transaction(transaction)
-      assert_raise Ecto.NoResultsError, fn -> Transactions.get_transaction!(transaction.id) end
+      assert {:ok, transaction = %Transaction{}} = Transactions.delete_transaction(transaction)
+      assert transaction.deleted_at != DateTime.from_unix!(0) |> DateTime.to_naive()
     end
 
     test "change_transaction/1 returns a transaction changeset", %{valid_attrs: valid_attrs} do

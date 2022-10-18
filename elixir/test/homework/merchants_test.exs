@@ -57,8 +57,8 @@ defmodule Homework.MerchantsTest do
 
     test "delete_merchant/1 deletes the merchant" do
       merchant = merchant_fixture()
-      assert {:ok, %Merchant{}} = Merchants.delete_merchant(merchant)
-      assert_raise Ecto.NoResultsError, fn -> Merchants.get_merchant!(merchant.id) end
+      assert {:ok, merchant = %Merchant{}} = Merchants.delete_merchant(merchant)
+      assert merchant.deleted_at != DateTime.from_unix!(0) |> DateTime.to_naive()
     end
 
     test "change_merchant/1 returns a merchant changeset" do

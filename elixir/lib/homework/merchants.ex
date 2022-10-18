@@ -40,7 +40,16 @@ defmodule Homework.Merchants do
 
   """
   @spec get_merchant!(Ecto.UUID.t()) :: Merchant.t()
-  def get_merchant!(id), do: Repo.get!(Merchant, id)
+  def get_merchant!(id) do
+    epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
+
+    query =
+      from(m in Merchant,
+        where: m.id == ^id and m.deleted_at == ^epoch
+      )
+
+    Repo.one!(query)
+  end
 
   @doc """
   Creates a merchant.
@@ -81,7 +90,7 @@ defmodule Homework.Merchants do
   end
 
   @doc """
-  Deletes a merchant.
+  Soft deletes a merchant.
 
   ## Examples
 
@@ -94,7 +103,10 @@ defmodule Homework.Merchants do
   """
   @spec delete_merchant(Merchant.t()) :: {:ok, Merchant.t()} | {:error, Ecto.Changeset.t()}
   def delete_merchant(%Merchant{} = merchant) do
-    Repo.delete(merchant)
+    epoch = DateTime.utc_now() |> DateTime.to_naive()
+    attrs = %{deleted_at: epoch}
+
+    update_merchant(merchant, attrs)
   end
 
   @doc """

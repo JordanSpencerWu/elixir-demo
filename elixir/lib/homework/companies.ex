@@ -40,7 +40,16 @@ defmodule Homework.Companies do
 
   """
   @spec get_company!(Ecto.UUID.t()) :: Company.t()
-  def get_company!(id), do: Repo.get!(Company, id)
+  def get_company!(id) do
+    epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
+
+    query =
+      from(c in Company,
+        where: c.id == ^id and c.deleted_at == ^epoch
+      )
+
+    Repo.one!(query)
+  end
 
   @doc """
   Creates a company.
@@ -81,7 +90,7 @@ defmodule Homework.Companies do
   end
 
   @doc """
-  Deletes a company.
+  Soft deletes a company.
 
   ## Examples
 
@@ -94,7 +103,10 @@ defmodule Homework.Companies do
   """
   @spec delete_company(Company.t()) :: {:ok, Company.t()} | {:error, Ecto.Changeset.t()}
   def delete_company(%Company{} = company) do
-    Repo.delete(company)
+    epoch = DateTime.utc_now() |> DateTime.to_naive()
+    attrs = %{deleted_at: epoch}
+
+    update_company(company, attrs)
   end
 
   @doc """

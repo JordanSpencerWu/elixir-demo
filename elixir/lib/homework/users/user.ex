@@ -15,6 +15,7 @@ defmodule Homework.Users.User do
           dob: String.t(),
           first_name: String.t(),
           last_name: String.t(),
+          deleted_at: NaiveDateTime.t(),
           inserted_at: NaiveDateTime.t(),
           updated_at: NaiveDateTime.t()
         }
@@ -30,6 +31,7 @@ defmodule Homework.Users.User do
 
     belongs_to(:company, Company, type: :binary_id, foreign_key: :company_id)
 
+    field(:deleted_at, :naive_datetime, read_after_writes: true)
     timestamps()
   end
 

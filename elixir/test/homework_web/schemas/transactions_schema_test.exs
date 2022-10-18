@@ -98,7 +98,9 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
 
     test "success: return transactions query", %{conn: conn} do
       num_of_transactions = 5
+      now = DateTime.utc_now() |> DateTime.to_naive()
       Factory.insert_list(num_of_transactions, :transaction)
+      Factory.insert(:transaction, deleted_at: now)
 
       params = %{"query" => @query}
 
@@ -281,6 +283,21 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert transaction["company"]["available_credit"] == "1000000.00"
       assert transaction["company"]["credit_line"] == "1000000.00"
       assert transaction["company"]["name"] == expected_transaction.company.name
+    end
+
+    test "success: return nil for deleted transaction", %{conn: conn} do
+      now = DateTime.utc_now() |> DateTime.to_naive()
+      expected_transaction = Factory.insert(:transaction, deleted_at: now)
+
+      params = %{"query" => @query, "variables" => %{"id" => expected_transaction.id}}
+
+      %{
+        "data" => %{
+          "transaction" => transaction
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert transaction == nil
     end
 
     test "error: return changeset error", %{conn: conn} do
@@ -603,7 +620,9 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert delete_transaction["id"] == transaction.id
       assert Repo.get(Merchant, merchant.id)
       assert Repo.get(User, user.id)
-      refute Repo.get(Transaction, transaction.id)
+
+      transaction = Repo.get(Transaction, transaction.id)
+      assert transaction.deleted_at != DateTime.from_unix!(0) |> DateTime.to_naive()
     end
 
     test "error: return error message id is invalid", %{conn: conn} do

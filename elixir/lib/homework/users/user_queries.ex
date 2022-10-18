@@ -11,7 +11,7 @@ defmodule Homework.Users.UserQueries do
   end
 
   def build_query(query, criteria) do
-    Enum.reduce(criteria, query, &compose_query/2)
+    Enum.reduce(criteria, query, &compose_query/2) |> not_deleted_query()
   end
 
   defp compose_query({:company_id, company_id}, query) do
@@ -41,6 +41,15 @@ defmodule Homework.Users.UserQueries do
       where: ilike(u.last_name, ^"#{start_character}%"),
       where: fragment("SIMILARITY(?, ?) > 0", u.last_name, ^last_name),
       order_by: fragment("LEVENSHTEIN(?, ?)", u.last_name, ^last_name)
+    )
+  end
+
+  defp not_deleted_query(query) do
+    epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
+
+    from(
+      u in query,
+      where: u.deleted_at == ^epoch
     )
   end
 end

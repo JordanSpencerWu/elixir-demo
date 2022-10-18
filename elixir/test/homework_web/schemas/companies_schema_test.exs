@@ -47,7 +47,9 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
 
     test "success: return companies query", %{conn: conn} do
       num_of_companies = 5
+      now = DateTime.utc_now() |> DateTime.to_naive()
       Factory.insert_list(num_of_companies, :company)
+      Factory.insert(:company, deleted_at: now)
 
       params = %{"query" => @query}
 
@@ -134,6 +136,21 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
       assert company["available_credit"] == "1000000.00"
       assert company["credit_line"] == "1000000.00"
       assert company["name"] == expected_company.name
+    end
+
+    test "success: return nil for deleted company", %{conn: conn} do
+      now = DateTime.utc_now() |> DateTime.to_naive()
+      expected_company = Factory.insert(:company, deleted_at: now)
+
+      params = %{"query" => @query, "variables" => %{"id" => expected_company.id}}
+
+      %{
+        "data" => %{
+          "company" => company
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert company == nil
     end
 
     test "error: return changeset error", %{conn: conn} do
@@ -276,7 +293,9 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
         conn |> post("/graphql", params) |> json_response(200)
 
       assert delete_company["id"] == company.id
-      refute Repo.get(Company, company.id)
+
+      company = Repo.get(Company, company.id)
+      assert company.deleted_at != DateTime.from_unix!(0) |> DateTime.to_naive()
     end
 
     test "error: return error message id is invalid", %{conn: conn} do

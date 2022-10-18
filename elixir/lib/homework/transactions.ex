@@ -41,7 +41,16 @@ defmodule Homework.Transactions do
 
   """
   @spec get_transaction!(Ecto.UUID.t()) :: Transaction.t()
-  def get_transaction!(id), do: Repo.get!(Transaction, id)
+  def get_transaction!(id) do
+    epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
+
+    query =
+      from(t in Transaction,
+        where: t.id == ^id and t.deleted_at == ^epoch
+      )
+
+    Repo.one!(query)
+  end
 
   @doc """
   Creates a transaction.
@@ -111,7 +120,7 @@ defmodule Homework.Transactions do
   end
 
   @doc """
-  Deletes a transaction.
+  Soft deletes a transaction.
 
   ## Examples
 
@@ -125,7 +134,10 @@ defmodule Homework.Transactions do
   @spec delete_transaction(Transaction.t()) ::
           {:ok, Transaction.t()} | {:error, Ecto.Changeset.t()}
   def delete_transaction(%Transaction{} = transaction) do
-    Repo.delete(transaction)
+    epoch = DateTime.utc_now() |> DateTime.to_naive()
+    attrs = %{deleted_at: epoch}
+
+    update_transaction(transaction, attrs)
   end
 
   @doc """

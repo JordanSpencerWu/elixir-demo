@@ -11,7 +11,7 @@ defmodule Homework.Merchants.MerchantQueries do
   end
 
   def build_query(query, criteria) do
-    Enum.reduce(criteria, query, &compose_query/2)
+    Enum.reduce(criteria, query, &compose_query/2) |> not_deleted_query()
   end
 
   defp compose_query({:ids, merchant_ids}, query) do
@@ -26,6 +26,15 @@ defmodule Homework.Merchants.MerchantQueries do
       where: ilike(m.name, ^"#{start_character}%"),
       where: fragment("SIMILARITY(?, ?) > 0", m.name, ^name),
       order_by: fragment("LEVENSHTEIN(?, ?)", m.name, ^name)
+    )
+  end
+
+  defp not_deleted_query(query) do
+    epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
+
+    from(
+      m in query,
+      where: m.deleted_at == ^epoch
     )
   end
 end

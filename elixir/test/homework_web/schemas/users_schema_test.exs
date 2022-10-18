@@ -62,7 +62,9 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
 
     test "success: return users query", %{conn: conn} do
       num_of_users = 5
+      now = DateTime.utc_now() |> DateTime.to_naive()
       Factory.insert_list(num_of_users, :user)
+      Factory.insert(:user, deleted_at: now)
 
       params = %{"query" => @query}
 
@@ -185,6 +187,21 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       assert user["company"]["available_credit"] == "1000000.00"
       assert user["company"]["credit_line"] == "1000000.00"
       assert user["company"]["name"] == expected_user.company.name
+    end
+
+    test "success: return nil for deleted user", %{conn: conn} do
+      now = DateTime.utc_now() |> DateTime.to_naive()
+      expected_user = Factory.insert(:user, deleted_at: now)
+
+      params = %{"query" => @query, "variables" => %{"id" => expected_user.id}}
+
+      %{
+        "data" => %{
+          "user" => user
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      assert user == nil
     end
 
     test "error: return changeset error", %{conn: conn} do
@@ -397,7 +414,10 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
         conn |> post("/graphql", params) |> json_response(200)
 
       assert delete_user["id"] == user.id
-      refute Repo.get(User, user.id)
+
+      user = Repo.get(User, user.id)
+
+      assert user.deleted_at != DateTime.from_unix!(0) |> DateTime.to_naive()
     end
 
     test "error: return error message id is invalid", %{conn: conn} do

@@ -12,7 +12,8 @@ import BackButton from "components/BackButton";
 
 function Merchant() {
   const { id } = useParams();
-  const { setMerchantId, setOpenDeleteDialog } = useOutletContext();
+  const { setSelectMerchant, setOpenDeleteDialog, setOpenMerchantFormModal } =
+    useOutletContext();
   const { loading, error, data } = useQuery(query, { variables: { id: id } });
 
   if (loading) return null;
@@ -21,8 +22,13 @@ function Merchant() {
   const { merchant } = data;
 
   const handleDeleteClick = () => {
-    setMerchantId(merchant.id);
+    setSelectMerchant(merchant);
     setOpenDeleteDialog(true);
+  };
+
+  const handleEditClick = () => {
+    setSelectMerchant(merchant);
+    setOpenMerchantFormModal(true);
   };
 
   return (
@@ -47,7 +53,9 @@ function Merchant() {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="large">Edit</Button>
+          <Button size="large" onClick={handleEditClick}>
+            Edit
+          </Button>
           <Button size="large" onClick={handleDeleteClick}>
             Delete
           </Button>

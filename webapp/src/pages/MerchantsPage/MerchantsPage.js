@@ -5,21 +5,42 @@ import Box from "@mui/material/Box";
 
 import deleteMerchantMutation from "clients/graphql/mutations/deleteMerchantMutation";
 import merchantsQuery from "clients/graphql/queries/merchantsQuery";
+import createMerchantMutation from "clients/graphql/mutations/createMerchantMutation";
+import updateMerchantMutation from "clients/graphql/mutations/updateMerchantMutation";
+
 import DeleteDialog from "components/DeleteDialog/DeleteDialog";
 import pathTo from "utils/pathTo";
+
+import MerchantFormModal from "./MerchantFormModal";
 
 function MerchantsPage() {
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [merchantId, setMerchantId] = useState();
+  const [openMerchantFormModal, setOpenMerchantFormModal] = useState(false);
+  const [selectMerchant, setSelectMerchant] = useState();
+
   const [deleteMerchant] = useMutation(deleteMerchantMutation, {
     refetchQueries: [{ query: merchantsQuery }],
     onCompleted: (data) => {
       const { deleteMerchant } = data;
 
-      if (merchantId === deleteMerchant.id) {
-        setMerchantId(null);
+      if (selectMerchant.id === deleteMerchant.id) {
+        setSelectMerchant({});
       }
+    },
+  });
+
+  const [createMerchant] = useMutation(createMerchantMutation, {
+    refetchQueries: [{ query: merchantsQuery }],
+    onCompleted: () => {
+      setOpenMerchantFormModal(false);
+    },
+  });
+
+  const [updateMerchant] = useMutation(updateMerchantMutation, {
+    refetchQueries: [{ query: merchantsQuery }],
+    onCompleted: () => {
+      setOpenMerchantFormModal(false);
     },
   });
 
@@ -28,13 +49,41 @@ function MerchantsPage() {
   }
 
   function handleAgree() {
-    deleteMerchant({ variables: { id: merchantId } });
+    deleteMerchant({ variables: { id: selectMerchant.id } });
     setOpenDeleteDialog((previousOpen) => !previousOpen);
     navigate(pathTo.merchants, { replace: true });
   }
 
+  function handleMerchantFormModelClose() {
+    setOpenMerchantFormModal(false);
+  }
+
+  function handleSubmit(formMerchant) {
+    if (formMerchant.id) {
+      const options = {
+        variables: {
+          ...formMerchant,
+        },
+      };
+      updateMerchant(options);
+    } else {
+      const options = {
+        variables: {
+          ...formMerchant,
+        },
+      };
+      createMerchant(options);
+    }
+  }
+
   return (
     <>
+      <MerchantFormModal
+        open={openMerchantFormModal}
+        handleClose={handleMerchantFormModelClose}
+        handleSubmit={handleSubmit}
+        merchant={selectMerchant}
+      />
       <DeleteDialog
         open={openDeleteDialog}
         deleteMessage="Are you sure you want to delete this merchant?"
@@ -50,7 +99,14 @@ function MerchantsPage() {
           alignItems: "center",
         }}
       >
-        <Outlet context={{ merchantId, setMerchantId, setOpenDeleteDialog }} />
+        <Outlet
+          context={{
+            selectMerchant,
+            setSelectMerchant,
+            setOpenDeleteDialog,
+            setOpenMerchantFormModal,
+          }}
+        />
       </Box>
     </>
   );

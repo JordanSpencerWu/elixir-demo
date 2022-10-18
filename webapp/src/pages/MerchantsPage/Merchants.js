@@ -9,7 +9,12 @@ import TableToolbar from "components/TableToolbar";
 
 function Merchants() {
   const { loading, error, data } = useQuery(query);
-  const { merchantId, setMerchantId, setOpenDeleteDialog } = useOutletContext();
+  const {
+    selectMerchant,
+    setSelectMerchant,
+    setOpenDeleteDialog,
+    setOpenMerchantFormModal,
+  } = useOutletContext();
 
   if (loading) return null;
   if (error) return <div>Failed to fetch merchants</div>;
@@ -38,10 +43,11 @@ function Merchants() {
   }));
 
   function handleRowClick(id) {
-    if (id == merchantId) {
-      setMerchantId(null);
+    if (id == selectMerchant?.id) {
+      setSelectMerchant({});
     } else {
-      setMerchantId(id);
+      const merchant = merchants.entries.find((merchant) => merchant.id == id);
+      setSelectMerchant(merchant);
     }
   }
 
@@ -49,18 +55,24 @@ function Merchants() {
     setOpenDeleteDialog(true);
   };
 
+  const handleAddOrEditClick = () => {
+    setOpenMerchantFormModal(true);
+  };
+
   return (
     <Paper sx={{ width: 1200, mb: 2 }}>
       <TableToolbar
         label="Merchants"
-        open={!!merchantId}
+        open={!!selectMerchant?.id}
         handleDeleteClick={handleDeleteClick}
+        handleAddClick={handleAddOrEditClick}
+        handleEditClick={handleAddOrEditClick}
       />
       <TableContainer sx={{ height: 650 }}>
         <Table
           columns={columns}
           rows={rows}
-          selectedId={merchantId}
+          selectedId={selectMerchant?.id}
           handleRowClick={handleRowClick}
           checkbox
         />

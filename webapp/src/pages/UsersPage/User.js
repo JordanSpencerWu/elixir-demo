@@ -1,4 +1,4 @@
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -6,14 +6,13 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import MuiLink from "@mui/material/Link";
 
 import query from "clients/graphql/queries/userQuery";
+import BackButton from "components/BackButton";
 import pathTo from "utils/pathTo";
 
 function User() {
   const { id } = useParams();
-  const naviagte = useNavigate();
   const { loading, error, data } = useQuery(query, { variables: { id: id } });
 
   if (loading) return null;
@@ -21,15 +20,9 @@ function User() {
 
   const { user } = data;
 
-  const handleBackClick = () => {
-    naviagte(-1);
-  };
-
   return (
     <Box sx={{ width: 500 }}>
-      <MuiLink component="button" onClick={handleBackClick}>
-        Back
-      </MuiLink>
+      <BackButton />
       <Card variant="outlined">
         <CardContent>
           <Typography sx={{ fontSize: 32 }} color="text.secondary" gutterBottom>

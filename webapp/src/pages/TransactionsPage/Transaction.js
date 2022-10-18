@@ -1,4 +1,4 @@
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useOutletContext } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -6,16 +6,16 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import MuiLink from "@mui/material/Link";
 
 import query from "clients/graphql/queries/transactionQuery";
 import getTransactionType from "utils/getTransactionType";
 import currencyFormatter from "utils/currencyFormatter";
+import BackButton from "components/BackButton";
 import pathTo from "utils/pathTo";
 
 function Transaction() {
   const { id } = useParams();
-  const naviagte = useNavigate();
+  const { setTransactionId, setOpenDeleteDialog } = useOutletContext();
   const { loading, error, data } = useQuery(query, { variables: { id: id } });
 
   if (loading) return null;
@@ -23,15 +23,14 @@ function Transaction() {
 
   const { transaction } = data;
 
-  const handleBackClick = () => {
-    naviagte(-1);
+  const handleDeleteClick = () => {
+    setTransactionId(transaction.id);
+    setOpenDeleteDialog(true);
   };
 
   return (
     <Box sx={{ width: 500 }}>
-      <MuiLink component="button" onClick={handleBackClick}>
-        Back
-      </MuiLink>
+      <BackButton />
       <Card variant="outlined">
         <CardContent>
           <Typography sx={{ fontSize: 32 }} color="text.secondary" gutterBottom>
@@ -71,8 +70,11 @@ function Transaction() {
             Amount: {currencyFormatter(transaction.amount)}
           </Typography>
         </CardContent>
-        <CardActions>
-          <Button size="small">Learn More</Button>
+        <CardActions sx={{ justifyContent: "space-around" }}>
+          <Button size="large">Edit</Button>
+          <Button size="large" onClick={handleDeleteClick}>
+            Delete
+          </Button>
         </CardActions>
       </Card>
     </Box>

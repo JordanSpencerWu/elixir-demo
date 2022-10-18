@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useQuery } from "@apollo/client";
+import { useOutletContext } from "react-router-dom";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
 
@@ -7,10 +7,12 @@ import query from "clients/graphql/queries/transactionsQuery";
 import currencyFormatter from "utils/currencyFormatter";
 import Table from "components/Table";
 import getTransactionType from "utils/getTransactionType";
+import TableToolbar from "components/TableToolbar";
 
 function Transactions() {
   const { loading, error, data } = useQuery(query);
-  const [selectedTransactionId, setSelectedTransactionId] = useState();
+  const { transactionId, setTransactionId, setOpenDeleteDialog } =
+    useOutletContext();
 
   if (loading) return null;
   if (error) return <div>Failed to fetch transactions</div>;
@@ -39,23 +41,35 @@ function Transactions() {
     type: getTransactionType(transaction),
   }));
 
-  function handleRowClick(transactionId) {
-    if (transactionId == selectedTransactionId) {
-      setSelectedTransactionId(null);
+  function handleRowClick(id) {
+    if (id == transactionId) {
+      setTransactionId(null);
     } else {
-      setSelectedTransactionId(transactionId);
+      setTransactionId(id);
     }
   }
+
+  const handleDeleteClick = () => {
+    setOpenDeleteDialog(true);
+  };
+
   return (
-    <TableContainer component={Paper} sx={{ maxWidth: 1200, height: 650 }}>
-      <Table
-        columns={columns}
-        rows={rows}
-        selectedId={selectedTransactionId}
-        handleRowClick={handleRowClick}
-        checkbox
+    <Paper sx={{ width: 1200, mb: 2 }}>
+      <TableToolbar
+        label="Transactions"
+        open={!!transactionId}
+        handleDeleteClick={handleDeleteClick}
       />
-    </TableContainer>
+      <TableContainer sx={{ height: 650 }}>
+        <Table
+          columns={columns}
+          rows={rows}
+          selectedId={transactionId}
+          handleRowClick={handleRowClick}
+          checkbox
+        />
+      </TableContainer>
+    </Paper>
   );
 }
 

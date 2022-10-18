@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useOutletContext } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -13,12 +13,18 @@ import pathTo from "utils/pathTo";
 
 function User() {
   const { id } = useParams();
+  const { setUserId, setOpenDeleteDialog } = useOutletContext();
   const { loading, error, data } = useQuery(query, { variables: { id: id } });
 
   if (loading) return null;
   if (error) return <div>Failed to fetch user</div>;
 
   const { user } = data;
+
+  const handleDeleteClick = () => {
+    setUserId(user.id);
+    setOpenDeleteDialog(true);
+  };
 
   return (
     <Box sx={{ width: 500 }}>
@@ -48,7 +54,10 @@ function User() {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">Learn More</Button>
+          <Button size="large">Edit</Button>
+          <Button size="large" onClick={handleDeleteClick}>
+            Delete
+          </Button>
         </CardActions>
       </Card>
     </Box>

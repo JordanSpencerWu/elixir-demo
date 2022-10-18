@@ -1,14 +1,15 @@
-import { useState } from "react";
 import { useQuery } from "@apollo/client";
+import { useOutletContext } from "react-router-dom";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
 
 import query from "clients/graphql/queries/usersQuery";
 import Table from "components/Table";
+import TableToolbar from "components/TableToolbar";
 
 function Users() {
   const { loading, error, data } = useQuery(query);
-  const [selectedUserId, setSelectedUserId] = useState();
+  const { userId, setUserId, setOpenDeleteDialog } = useOutletContext();
 
   if (loading) return null;
   if (error) return <div>Failed to fetch users</div>;
@@ -41,24 +42,35 @@ function Users() {
     dob: user.dob,
   }));
 
-  function handleRowClick(userId) {
-    if (userId == selectedUserId) {
-      setSelectedUserId(null);
+  function handleRowClick(id) {
+    if (id == userId) {
+      setUserId(null);
     } else {
-      setSelectedUserId(userId);
+      setUserId(id);
     }
   }
 
+  const handleDeleteClick = () => {
+    setOpenDeleteDialog(true);
+  };
+
   return (
-    <TableContainer component={Paper} sx={{ maxWidth: 1200, height: 650 }}>
-      <Table
-        columns={columns}
-        rows={rows}
-        selectedId={selectedUserId}
-        handleRowClick={handleRowClick}
-        checkbox
+    <Paper sx={{ width: 1200, mb: 2 }}>
+      <TableToolbar
+        label="Users"
+        open={!!userId}
+        handleDeleteClick={handleDeleteClick}
       />
-    </TableContainer>
+      <TableContainer sx={{ height: 650 }}>
+        <Table
+          columns={columns}
+          rows={rows}
+          selectedId={userId}
+          handleRowClick={handleRowClick}
+          checkbox
+        />
+      </TableContainer>
+    </Paper>
   );
 }
 

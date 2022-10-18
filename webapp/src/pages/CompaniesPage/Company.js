@@ -13,7 +13,8 @@ import currencyFormatter from "utils/currencyFormatter";
 
 function Company() {
   const { id } = useParams();
-  const { setCompanyId, setOpenDeleteDialog } = useOutletContext();
+  const { setSelectCompany, setOpenDeleteDialog, setOpenCompanyFormModal } =
+    useOutletContext();
   const { loading, error, data } = useQuery(query, { variables: { id: id } });
 
   if (loading) return null;
@@ -22,8 +23,13 @@ function Company() {
   const { company } = data;
 
   const handleDeleteClick = () => {
-    setCompanyId(company.id);
+    setSelectCompany(company);
     setOpenDeleteDialog(true);
+  };
+
+  const handleEditClick = () => {
+    setSelectCompany(company);
+    setOpenCompanyFormModal(true);
   };
 
   return (
@@ -48,7 +54,9 @@ function Company() {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="large">Edit</Button>
+          <Button size="large" onClick={handleEditClick}>
+            Edit
+          </Button>
           <Button size="large" onClick={handleDeleteClick}>
             Delete
           </Button>

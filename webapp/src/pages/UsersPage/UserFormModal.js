@@ -26,7 +26,7 @@ const style = {
 
 function UserFormModal(props) {
   const { open, handleClose, handleSubmit, user } = props;
-  const [formUser, setFormUser] = useState(user);
+  const [formUser, setFormUser] = useState({});
   const { loading, data } = useQuery(query);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ function UserFormModal(props) {
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Create User
+          User
         </Typography>
         <FormControl>
           <Box
@@ -82,7 +82,7 @@ function UserFormModal(props) {
             autoComplete="off"
           >
             <Autocomplete
-              id="companyId"
+              id="company-id"
               freeSolo
               options={options}
               value={companyValue}
@@ -100,7 +100,7 @@ function UserFormModal(props) {
               renderInput={(params) => <TextField {...params} />}
             />
             <TextField
-              id="firstName"
+              id="first-name"
               label="First Name"
               variant="outlined"
               value={formUser?.firstName}
@@ -108,7 +108,7 @@ function UserFormModal(props) {
               required
             />
             <TextField
-              id="lastName"
+              id="last-name"
               label="Last Name"
               variant="outlined"
               value={formUser?.lastName}

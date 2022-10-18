@@ -10,7 +10,12 @@ import TableToolbar from "components/TableToolbar";
 
 function Companies() {
   const { loading, error, data } = useQuery(query);
-  const { companyId, setCompanyId, setOpenDeleteDialog } = useOutletContext();
+  const {
+    selectCompany,
+    setSelectCompany,
+    setOpenDeleteDialog,
+    setOpenCompanyFormModal,
+  } = useOutletContext();
 
   if (loading) return null;
   if (error) return <div>Failed to fetch companies</div>;
@@ -41,10 +46,11 @@ function Companies() {
   }));
 
   function handleRowClick(id) {
-    if (id == companyId) {
-      setCompanyId(null);
+    if (id == selectCompany?.id) {
+      setSelectCompany({});
     } else {
-      setCompanyId(id);
+      const company = companies.entries.find((company) => company.id == id);
+      setSelectCompany(company);
     }
   }
 
@@ -52,18 +58,24 @@ function Companies() {
     setOpenDeleteDialog(true);
   };
 
+  const handleAddOrEditClick = () => {
+    setOpenCompanyFormModal(true);
+  };
+
   return (
     <Paper sx={{ width: 1200, mb: 2 }}>
       <TableToolbar
         label="Companies"
-        open={!!companyId}
+        open={!!selectCompany?.id}
         handleDeleteClick={handleDeleteClick}
+        handleAddClick={handleAddOrEditClick}
+        handleEditClick={handleAddOrEditClick}
       />
       <TableContainer sx={{ height: 650 }}>
         <Table
           columns={columns}
           rows={rows}
-          selectedId={companyId}
+          selectedId={selectCompany?.id}
           handleRowClick={handleRowClick}
           checkbox
         />

@@ -13,7 +13,6 @@ import DeleteDialog from "components/DeleteDialog/DeleteDialog";
 import pathTo from "utils/pathTo";
 
 import UserFormModal from "./UserFormModal";
-import { IosShare } from "@mui/icons-material";
 
 function UsersPage() {
   const navigate = useNavigate();
@@ -26,7 +25,7 @@ function UsersPage() {
     onCompleted: (data) => {
       const { deleteUser } = data;
 
-      if (selectedUser?.id === deleteUser.id) {
+      if (selectedUser.id === deleteUser.id) {
         setSelectedUser({});
       }
     },
@@ -51,7 +50,7 @@ function UsersPage() {
   }
 
   function handleAgree() {
-    deleteUser({ variables: { id: selectedUser?.id } });
+    deleteUser({ variables: { id: selectedUser.id } });
     setOpenDeleteDialog((previousOpen) => !previousOpen);
     navigate(pathTo.users, { replace: true });
   }

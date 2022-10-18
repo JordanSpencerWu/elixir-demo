@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
@@ -6,10 +6,11 @@ import Paper from "@mui/material/Paper";
 import query from "clients/graphql/queries/companiesQuery";
 import currencyFormatter from "utils/currencyFormatter";
 import Table from "components/Table";
+import TableToolbar from "components/TableToolbar";
 
 function Companies() {
   const { loading, error, data } = useQuery(query);
-  const [selectedCompanyId, setSelectedCompanyId] = useState();
+  const { companyId, setCompanyId, setOpenDeleteDialog } = useOutletContext();
 
   if (loading) return null;
   if (error) return <div>Failed to fetch companies</div>;
@@ -39,24 +40,35 @@ function Companies() {
     creditLine: currencyFormatter(company.creditLine),
   }));
 
-  function handleRowClick(companyId) {
-    if (companyId == selectedCompanyId) {
-      setSelectedCompanyId(null);
+  function handleRowClick(id) {
+    if (id == companyId) {
+      setCompanyId(null);
     } else {
-      setSelectedCompanyId(companyId);
+      setCompanyId(id);
     }
   }
 
+  const handleDeleteClick = () => {
+    setOpenDeleteDialog(true);
+  };
+
   return (
-    <TableContainer component={Paper} sx={{ maxWidth: 1200, height: 650 }}>
-      <Table
-        columns={columns}
-        rows={rows}
-        selectedId={selectedCompanyId}
-        handleRowClick={handleRowClick}
-        checkbox
+    <Paper sx={{ width: 1200, mb: 2 }}>
+      <TableToolbar
+        label="Companies"
+        open={!!companyId}
+        handleDeleteClick={handleDeleteClick}
       />
-    </TableContainer>
+      <TableContainer sx={{ height: 650 }}>
+        <Table
+          columns={columns}
+          rows={rows}
+          selectedId={companyId}
+          handleRowClick={handleRowClick}
+          checkbox
+        />
+      </TableContainer>
+    </Paper>
   );
 }
 

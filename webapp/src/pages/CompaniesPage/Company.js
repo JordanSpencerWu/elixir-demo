@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -13,12 +13,18 @@ import currencyFormatter from "utils/currencyFormatter";
 
 function Company() {
   const { id } = useParams();
+  const { setCompanyId, setOpenDeleteDialog } = useOutletContext();
   const { loading, error, data } = useQuery(query, { variables: { id: id } });
 
   if (loading) return null;
   if (error) return <div>Failed to fetch company</div>;
 
   const { company } = data;
+
+  const handleDeleteClick = () => {
+    setCompanyId(company.id);
+    setOpenDeleteDialog(true);
+  };
 
   return (
     <Box sx={{ width: 500 }}>
@@ -42,7 +48,10 @@ function Company() {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">Learn More</Button>
+          <Button size="large">Edit</Button>
+          <Button size="large" onClick={handleDeleteClick}>
+            Delete
+          </Button>
         </CardActions>
       </Card>
     </Box>

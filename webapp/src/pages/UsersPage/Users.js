@@ -9,7 +9,12 @@ import TableToolbar from "components/TableToolbar";
 
 function Users() {
   const { loading, error, data } = useQuery(query);
-  const { userId, setUserId, setOpenDeleteDialog } = useOutletContext();
+  const {
+    selectedUser,
+    setSelectedUser,
+    setOpenDeleteDialog,
+    setOpenUserFormModal,
+  } = useOutletContext();
 
   if (loading) return null;
   if (error) return <div>Failed to fetch users</div>;
@@ -43,10 +48,11 @@ function Users() {
   }));
 
   function handleRowClick(id) {
-    if (id == userId) {
-      setUserId(null);
+    if (id == selectedUser?.id) {
+      setSelectedUser({});
     } else {
-      setUserId(id);
+      const user = users.entries.find((user) => user.id == id);
+      setSelectedUser(user);
     }
   }
 
@@ -54,18 +60,24 @@ function Users() {
     setOpenDeleteDialog(true);
   };
 
+  const handleAddOrEditClick = () => {
+    setOpenUserFormModal(true);
+  };
+
   return (
     <Paper sx={{ width: 1200, mb: 2 }}>
       <TableToolbar
         label="Users"
-        open={!!userId}
+        open={!!selectedUser?.id}
         handleDeleteClick={handleDeleteClick}
+        handleAddClick={handleAddOrEditClick}
+        handleEditClick={handleAddOrEditClick}
       />
       <TableContainer sx={{ height: 650 }}>
         <Table
           columns={columns}
           rows={rows}
-          selectedId={userId}
+          selectedId={selectedUser?.id}
           handleRowClick={handleRowClick}
           checkbox
         />

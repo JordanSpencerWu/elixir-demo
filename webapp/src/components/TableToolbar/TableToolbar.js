@@ -2,14 +2,16 @@ import { bool, func, string } from "prop-types";
 import { alpha } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import { lightBlue } from "@mui/material/colors";
 
 function TableToolbar(props) {
-  const { label, open, handleDeleteClick } = props;
+  const { label, open, handleDeleteClick, handleAddClick, handleEditClick } =
+    props;
 
   return (
     <Toolbar
@@ -48,15 +50,22 @@ function TableToolbar(props) {
         </Typography>
       )}
       {open ? (
-        <Tooltip title="Delete">
-          <IconButton onClick={handleDeleteClick}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+        <>
+          <Tooltip title="Edit">
+            <IconButton onClick={handleEditClick}>
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton onClick={handleDeleteClick}>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        </>
       ) : (
         <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon sx={{ color: "white" }} />
+          <IconButton onClick={handleAddClick}>
+            <AddIcon sx={{ color: "white" }} />
           </IconButton>
         </Tooltip>
       )}
@@ -65,9 +74,11 @@ function TableToolbar(props) {
 }
 
 TableToolbar.propTypes = {
+  handleAddClick: func.isRequired,
+  handleDeleteClick: func.isRequired,
+  handleEditClick: func.isRequired,
   label: string.isRequired,
   open: bool.isRequired,
-  handleDeleteClick: func.isRequired,
 };
 
 export default TableToolbar;

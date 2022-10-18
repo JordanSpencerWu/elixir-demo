@@ -6,5 +6,6 @@ export const userFields = gql`
     dob
     firstName
     lastName
+    companyId
   }
 `;

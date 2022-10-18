@@ -13,7 +13,8 @@ import pathTo from "utils/pathTo";
 
 function User() {
   const { id } = useParams();
-  const { setUserId, setOpenDeleteDialog } = useOutletContext();
+  const { setSelectedUser, setOpenDeleteDialog, setOpenUserFormModal } =
+    useOutletContext();
   const { loading, error, data } = useQuery(query, { variables: { id: id } });
 
   if (loading) return null;
@@ -22,8 +23,13 @@ function User() {
   const { user } = data;
 
   const handleDeleteClick = () => {
-    setUserId(user.id);
+    setSelectedUser(user);
     setOpenDeleteDialog(true);
+  };
+
+  const handleEditClick = () => {
+    setSelectedUser(user);
+    setOpenUserFormModal(true);
   };
 
   return (
@@ -54,7 +60,9 @@ function User() {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="large">Edit</Button>
+          <Button size="large" onClick={handleEditClick}>
+            Edit
+          </Button>
           <Button size="large" onClick={handleDeleteClick}>
             Delete
           </Button>

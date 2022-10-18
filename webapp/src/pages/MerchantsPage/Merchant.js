@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -12,12 +12,18 @@ import BackButton from "components/BackButton";
 
 function Merchant() {
   const { id } = useParams();
+  const { setMerchantId, setOpenDeleteDialog } = useOutletContext();
   const { loading, error, data } = useQuery(query, { variables: { id: id } });
 
   if (loading) return null;
   if (error) return <div>Failed to fetch merchant</div>;
 
   const { merchant } = data;
+
+  const handleDeleteClick = () => {
+    setMerchantId(merchant.id);
+    setOpenDeleteDialog(true);
+  };
 
   return (
     <Box sx={{ width: 500 }}>
@@ -41,7 +47,10 @@ function Merchant() {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">Learn More</Button>
+          <Button size="large">Edit</Button>
+          <Button size="large" onClick={handleDeleteClick}>
+            Delete
+          </Button>
         </CardActions>
       </Card>
     </Box>

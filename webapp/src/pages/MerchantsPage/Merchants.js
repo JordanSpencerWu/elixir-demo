@@ -1,14 +1,15 @@
-import { useState } from "react";
 import { useQuery } from "@apollo/client";
+import { useOutletContext } from "react-router-dom";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
 
 import query from "clients/graphql/queries/merchantsQuery";
 import Table from "components/Table";
+import TableToolbar from "components/TableToolbar";
 
 function Merchants() {
   const { loading, error, data } = useQuery(query);
-  const [selectedMerchantId, setSelectedMerchantId] = useState();
+  const { merchantId, setMerchantId, setOpenDeleteDialog } = useOutletContext();
 
   if (loading) return null;
   if (error) return <div>Failed to fetch merchants</div>;
@@ -36,24 +37,35 @@ function Merchants() {
     name: merchant.name,
   }));
 
-  function handleRowClick(merchantId) {
-    if (merchantId == selectedMerchantId) {
-      setSelectedMerchantId(null);
+  function handleRowClick(id) {
+    if (id == merchantId) {
+      setMerchantId(null);
     } else {
-      setSelectedMerchantId(merchantId);
+      setMerchantId(id);
     }
   }
 
+  const handleDeleteClick = () => {
+    setOpenDeleteDialog(true);
+  };
+
   return (
-    <TableContainer component={Paper} sx={{ maxWidth: 1200, height: 650 }}>
-      <Table
-        columns={columns}
-        rows={rows}
-        selectedId={selectedMerchantId}
-        handleRowClick={handleRowClick}
-        checkbox
+    <Paper sx={{ width: 1200, mb: 2 }}>
+      <TableToolbar
+        label="Merchants"
+        open={!!merchantId}
+        handleDeleteClick={handleDeleteClick}
       />
-    </TableContainer>
+      <TableContainer sx={{ height: 650 }}>
+        <Table
+          columns={columns}
+          rows={rows}
+          selectedId={merchantId}
+          handleRowClick={handleRowClick}
+          checkbox
+        />
+      </TableContainer>
+    </Paper>
   );
 }
 

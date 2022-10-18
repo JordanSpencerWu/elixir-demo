@@ -15,7 +15,7 @@ import pathTo from "utils/pathTo";
 
 function Transaction() {
   const { id } = useParams();
-  const { setTransactionId, setOpenDeleteDialog } = useOutletContext();
+  const { setSelectTransaction, setOpenDeleteDialog } = useOutletContext();
   const { loading, error, data } = useQuery(query, { variables: { id: id } });
 
   if (loading) return null;
@@ -24,7 +24,7 @@ function Transaction() {
   const { transaction } = data;
 
   const handleDeleteClick = () => {
-    setTransactionId(transaction.id);
+    setSelectTransaction(transaction);
     setOpenDeleteDialog(true);
   };
 

@@ -11,14 +11,14 @@ import pathTo from "utils/pathTo";
 function TransactionsPage() {
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [transactionId, setTransactionId] = useState();
+  const [selectTransaction, setSelectTransaction] = useState();
   const [deleteTransaction] = useMutation(deleteTransactionMutation, {
     refetchQueries: [{ query: transactionsQuery }],
     onCompleted: (data) => {
       const { deleteTransaction } = data;
 
-      if (transactionId === deleteTransaction.id) {
-        setTransactionId(null);
+      if (selectTransaction.id === deleteTransaction.id) {
+        setSelectTransaction({});
       }
     },
   });
@@ -28,7 +28,7 @@ function TransactionsPage() {
   }
 
   function handleAgree() {
-    deleteTransaction({ variables: { id: transactionId } });
+    deleteTransaction({ variables: { id: selectTransaction.id } });
     setOpenDeleteDialog((previousOpen) => !previousOpen);
     navigate(pathTo.transactions, { replace: true });
   }
@@ -51,7 +51,11 @@ function TransactionsPage() {
         }}
       >
         <Outlet
-          context={{ transactionId, setTransactionId, setOpenDeleteDialog }}
+          context={{
+            selectTransaction,
+            setSelectTransaction,
+            setOpenDeleteDialog,
+          }}
         />
       </Box>
     </>

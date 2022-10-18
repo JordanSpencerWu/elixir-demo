@@ -11,7 +11,7 @@ import TableToolbar from "components/TableToolbar";
 
 function Transactions() {
   const { loading, error, data } = useQuery(query);
-  const { transactionId, setTransactionId, setOpenDeleteDialog } =
+  const { selectTransaction, setSelectTransaction, setOpenDeleteDialog } =
     useOutletContext();
 
   if (loading) return null;
@@ -42,10 +42,13 @@ function Transactions() {
   }));
 
   function handleRowClick(id) {
-    if (id == transactionId) {
-      setTransactionId(null);
+    if (id == selectTransaction?.id) {
+      setSelectTransaction({});
     } else {
-      setTransactionId(id);
+      const transaction = transactions.entries.find(
+        (transaction) => transaction.id == id
+      );
+      setSelectTransaction(transaction);
     }
   }
 
@@ -57,14 +60,14 @@ function Transactions() {
     <Paper sx={{ width: 1200, mb: 2 }}>
       <TableToolbar
         label="Transactions"
-        open={!!transactionId}
+        open={!!selectTransaction?.id}
         handleDeleteClick={handleDeleteClick}
       />
       <TableContainer sx={{ height: 650 }}>
         <Table
           columns={columns}
           rows={rows}
-          selectedId={transactionId}
+          selectedId={selectTransaction?.id}
           handleRowClick={handleRowClick}
           checkbox
         />

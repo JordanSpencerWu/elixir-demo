@@ -28,7 +28,7 @@ defmodule HomeworkWeb.Schemas.UsersSchema do
     @desc "Get all Users"
     field(:users, :page_result) do
       arg(:filter, :user_filter, default_value: %{})
-      arg(:limit, :integer, default_value: 50)
+      arg(:limit, :integer, default_value: 10_000)
       arg(:search, :user_search, default_value: %{})
       arg(:skip, :integer, default_value: 0)
 

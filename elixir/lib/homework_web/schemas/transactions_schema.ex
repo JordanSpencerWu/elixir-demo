@@ -54,7 +54,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
     @desc "Get all Transactions"
     field(:transactions, :page_result) do
       arg(:filter, :transaction_filter, default_value: %{})
-      arg(:limit, :integer, default_value: 50)
+      arg(:limit, :integer, default_value: 10_000)
       arg(:skip, :integer, default_value: 0)
 
       resolve(&TransactionsResolver.transactions/3)

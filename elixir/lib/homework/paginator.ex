@@ -28,12 +28,12 @@ defmodule Homework.Paginator do
 
   ## Options
 
-  * `:limit` - Limits the number of records returned per page. Defaults to `50`.
+  * `:limit` - Limits the number of records returned per page. Defaults to `10_000`.
   * `:skip` - Define the number of records to skip. Defaults to `0`.
   """
   @spec paginate([any], keyword) :: {:ok, Page.t()} | {:error, String.t()}
   def paginate(items, opts \\ []) do
-    limit = Keyword.get(opts, :limit, 50)
+    limit = Keyword.get(opts, :limit, 10_000)
     skip = Keyword.get(opts, :skip, 0)
 
     do_paginate(items, limit, skip)

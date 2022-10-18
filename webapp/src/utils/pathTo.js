@@ -1,7 +1,12 @@
+// used with breadcrumbs, order mattters!
 export default {
   dashboard: "/",
-  transactions: "/transactions",
   companies: "/companies",
+  company: "/companies/",
   merchants: "/merchants",
+  merchant: "/merchants/",
+  transactions: "/transactions",
+  transaction: "/transactions/",
   users: "/users",
+  user: "/users/",
 };

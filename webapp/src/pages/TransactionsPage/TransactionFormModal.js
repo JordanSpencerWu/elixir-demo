@@ -65,8 +65,6 @@ function TransactionFormModal(props) {
     !formTransaction.merchantId ||
     !formTransaction.userId;
 
-  console.log(formTransaction);
-
   function getUserName(user) {
     if (user) return user.firstName + " " + user.lastName;
     return null;

@@ -63,7 +63,7 @@ function TableToolbar(props) {
           </Tooltip>
         </>
       ) : (
-        <Tooltip title="Filter list">
+        <Tooltip title="Add">
           <IconButton onClick={handleAddClick}>
             <AddIcon sx={{ color: "white" }} />
           </IconButton>

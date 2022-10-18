@@ -8,15 +8,7 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 
 import { DRAWER_WIDTH } from "components/Drawer";
-import pathTo from "utils/pathTo";
-
-export const PATHNAME_TO_NAME = {
-  [pathTo.dashboard]: "Dashboard",
-  [pathTo.transactions]: "Transactions",
-  [pathTo.companies]: "Companies",
-  [pathTo.merchants]: "Merchants",
-  [pathTo.users]: "Users",
-};
+import pathToName from "utils/pathToName";
 
 const StyledAppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -66,7 +58,7 @@ function AppBar(props) {
           noWrap
           sx={{ flexGrow: 1 }}
         >
-          {PATHNAME_TO_NAME[location.pathname]}
+          {pathToName[location.pathname]}
         </Typography>
       </Toolbar>
     </StyledAppBar>

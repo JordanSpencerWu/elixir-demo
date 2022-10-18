@@ -55,7 +55,7 @@ function User() {
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Company:{" "}
             {user.company && (
-              <Link to={`${pathTo.companies}/${user.company.id}`}>
+              <Link to={`${pathTo.company}${user.company.id}`}>
                 {user.company.name}
               </Link>
             )}

@@ -60,7 +60,7 @@ function Transaction() {
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             User:{" "}
             {transaction.user && (
-              <Link to={`${pathTo.users}/${transaction.user.id}`}>
+              <Link to={`${pathTo.user}${transaction.user.id}`}>
                 {transaction.user.firstName + " " + transaction.user.lastName}
               </Link>
             )}
@@ -68,7 +68,7 @@ function Transaction() {
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Company:{" "}
             {transaction.company && (
-              <Link to={`${pathTo.companies}/${transaction.company.id}`}>
+              <Link to={`${pathTo.company}${transaction.company.id}`}>
                 {transaction.company.name}
               </Link>
             )}
@@ -76,7 +76,7 @@ function Transaction() {
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Merchant:{" "}
             {transaction.merchant && (
-              <Link to={`${pathTo.merchants}/${transaction.merchant.id}`}>
+              <Link to={`${pathTo.merchant}${transaction.merchant.id}`}>
                 {transaction.merchant.name}
               </Link>
             )}

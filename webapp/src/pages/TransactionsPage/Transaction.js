@@ -15,7 +15,11 @@ import pathTo from "utils/pathTo";
 
 function Transaction() {
   const { id } = useParams();
-  const { setSelectTransaction, setOpenDeleteDialog } = useOutletContext();
+  const {
+    setSelectTransaction,
+    setOpenDeleteDialog,
+    setOpenTransactionFormModal,
+  } = useOutletContext();
   const { loading, error, data } = useQuery(query, { variables: { id: id } });
 
   if (loading) return null;
@@ -26,6 +30,11 @@ function Transaction() {
   const handleDeleteClick = () => {
     setSelectTransaction(transaction);
     setOpenDeleteDialog(true);
+  };
+
+  const handleEditClick = () => {
+    setSelectTransaction(transaction);
+    setOpenTransactionFormModal(true);
   };
 
   return (
@@ -50,28 +59,36 @@ function Transaction() {
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             User:{" "}
-            <Link to={`${pathTo.users}/${transaction.user.id}`}>
-              {transaction.user.firstName + " " + transaction.user.lastName}
-            </Link>
+            {transaction.user && (
+              <Link to={`${pathTo.users}/${transaction.user.id}`}>
+                {transaction.user.firstName + " " + transaction.user.lastName}
+              </Link>
+            )}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Company:{" "}
-            <Link to={`${pathTo.companies}/${transaction.company.id}`}>
-              {transaction.company.name}
-            </Link>
+            {transaction.company && (
+              <Link to={`${pathTo.companies}/${transaction.company.id}`}>
+                {transaction.company.name}
+              </Link>
+            )}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Merchant:{" "}
-            <Link to={`${pathTo.merchants}/${transaction.merchant.id}`}>
-              {transaction.merchant.name}
-            </Link>
+            {transaction.merchant && (
+              <Link to={`${pathTo.merchants}/${transaction.merchant.id}`}>
+                {transaction.merchant.name}
+              </Link>
+            )}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Amount: {currencyFormatter(transaction.amount)}
           </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: "space-around" }}>
-          <Button size="large">Edit</Button>
+          <Button size="large" onClick={handleEditClick}>
+            Edit
+          </Button>
           <Button size="large" onClick={handleDeleteClick}>
             Delete
           </Button>

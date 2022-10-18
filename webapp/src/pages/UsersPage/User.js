@@ -54,9 +54,11 @@ function User() {
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Company:{" "}
-            <Link to={`${pathTo.companies}/${user.company.id}`}>
-              {user.company.name}
-            </Link>
+            {user.company && (
+              <Link to={`${pathTo.companies}/${user.company.id}`}>
+                {user.company.name}
+              </Link>
+            )}
           </Typography>
         </CardContent>
         <CardActions>

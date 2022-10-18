@@ -59,19 +59,14 @@ function CompaniesPage() {
   }
 
   function handleSubmit(formCompany) {
+    const options = {
+      variables: {
+        ...formCompany,
+      },
+    };
     if (formCompany.id) {
-      const options = {
-        variables: {
-          ...formCompany,
-        },
-      };
       updateCompany(options);
     } else {
-      const options = {
-        variables: {
-          ...formCompany,
-        },
-      };
       createCompany(options);
     }
   }

@@ -11,8 +11,12 @@ import TableToolbar from "components/TableToolbar";
 
 function Transactions() {
   const { loading, error, data } = useQuery(query);
-  const { selectTransaction, setSelectTransaction, setOpenDeleteDialog } =
-    useOutletContext();
+  const {
+    selectTransaction,
+    setSelectTransaction,
+    setOpenDeleteDialog,
+    setOpenTransactionFormModal,
+  } = useOutletContext();
 
   if (loading) return null;
   if (error) return <div>Failed to fetch transactions</div>;
@@ -56,12 +60,18 @@ function Transactions() {
     setOpenDeleteDialog(true);
   };
 
+  const handleAddOrEditClick = () => {
+    setOpenTransactionFormModal(true);
+  };
+
   return (
     <Paper sx={{ width: 1200, mb: 2 }}>
       <TableToolbar
         label="Transactions"
         open={!!selectTransaction?.id}
         handleDeleteClick={handleDeleteClick}
+        handleAddClick={handleAddOrEditClick}
+        handleEditClick={handleAddOrEditClick}
       />
       <TableContainer sx={{ height: 650 }}>
         <Table

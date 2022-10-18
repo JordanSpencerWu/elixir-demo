@@ -59,19 +59,14 @@ function MerchantsPage() {
   }
 
   function handleSubmit(formMerchant) {
+    const options = {
+      variables: {
+        ...formMerchant,
+      },
+    };
     if (formMerchant.id) {
-      const options = {
-        variables: {
-          ...formMerchant,
-        },
-      };
       updateMerchant(options);
     } else {
-      const options = {
-        variables: {
-          ...formMerchant,
-        },
-      };
       createMerchant(options);
     }
   }

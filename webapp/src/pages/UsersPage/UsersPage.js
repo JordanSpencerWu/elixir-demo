@@ -61,21 +61,15 @@ function UsersPage() {
 
   function handleSubmit(formUser) {
     const dob = moment(formUser.dob);
+    const options = {
+      variables: {
+        ...formUser,
+        dob: dob.format("YYYY-MM-DD"),
+      },
+    };
     if (formUser.id) {
-      const options = {
-        variables: {
-          ...formUser,
-          dob: dob.format("YYYY-MM-DD"),
-        },
-      };
       updateUser(options);
     } else {
-      const options = {
-        variables: {
-          ...formUser,
-          dob: dob.format("YYYY-MM-DD"),
-        },
-      };
       createUser(options);
     }
   }

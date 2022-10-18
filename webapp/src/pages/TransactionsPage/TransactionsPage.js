@@ -5,13 +5,21 @@ import Box from "@mui/material/Box";
 
 import deleteTransactionMutation from "clients/graphql/mutations/deleteTransactionMutation";
 import transactionsQuery from "clients/graphql/queries/transactionsQuery";
+import createTransactionMutation from "clients/graphql/mutations/createTransactionMutation";
+import updateTransactionMutation from "clients/graphql/mutations/updateTransactionMutation";
+
 import DeleteDialog from "components/DeleteDialog/DeleteDialog";
 import pathTo from "utils/pathTo";
+
+import TransactionFormModal from "./TransactionFormModal";
 
 function TransactionsPage() {
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openTransactionFormModal, setOpenTransactionFormModal] =
+    useState(false);
   const [selectTransaction, setSelectTransaction] = useState();
+
   const [deleteTransaction] = useMutation(deleteTransactionMutation, {
     refetchQueries: [{ query: transactionsQuery }],
     onCompleted: (data) => {
@@ -20,6 +28,20 @@ function TransactionsPage() {
       if (selectTransaction.id === deleteTransaction.id) {
         setSelectTransaction({});
       }
+    },
+  });
+
+  const [createTransaction] = useMutation(createTransactionMutation, {
+    refetchQueries: [{ query: transactionsQuery }],
+    onCompleted: () => {
+      setOpenTransactionFormModal(false);
+    },
+  });
+
+  const [updateTransaction] = useMutation(updateTransactionMutation, {
+    refetchQueries: [{ query: transactionsQuery }],
+    onCompleted: () => {
+      setOpenTransactionFormModal(false);
     },
   });
 
@@ -33,8 +55,33 @@ function TransactionsPage() {
     navigate(pathTo.transactions, { replace: true });
   }
 
+  function handleTransactionFormModelClose() {
+    setOpenTransactionFormModal(false);
+  }
+
+  function handleSubmit(formTransaction) {
+    const options = {
+      variables: {
+        ...formTransaction,
+        debit: formTransaction?.debit ?? false,
+        credit: formTransaction?.credit ?? false,
+      },
+    };
+    if (formTransaction.id) {
+      updateTransaction(options);
+    } else {
+      createTransaction(options);
+    }
+  }
+
   return (
     <>
+      <TransactionFormModal
+        open={openTransactionFormModal}
+        handleClose={handleTransactionFormModelClose}
+        handleSubmit={handleSubmit}
+        transaction={selectTransaction}
+      />
       <DeleteDialog
         open={openDeleteDialog}
         deleteMessage="Are you sure you want to delete this transaction?"
@@ -55,6 +102,7 @@ function TransactionsPage() {
             selectTransaction,
             setSelectTransaction,
             setOpenDeleteDialog,
+            setOpenTransactionFormModal,
           }}
         />
       </Box>

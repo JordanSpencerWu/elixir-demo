@@ -16,6 +16,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
     field(:merchant_id, :id)
     field(:updated_at, :naive_datetime)
     field(:user_id, :id)
+    field(:company_id, :id)
 
     field(:company, :company) do
       resolve(fn transaction, _args, _info ->

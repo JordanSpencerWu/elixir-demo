@@ -41,6 +41,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
     id
     user_id
     amount
+    company_id
     credit
     debit
     description
@@ -273,6 +274,9 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert transaction["credit"] == expected_transaction.credit
       assert transaction["debit"] == expected_transaction.debit
       assert transaction["description"] == expected_transaction.description
+      assert transaction["company_id"] == expected_transaction.company.id
+      assert transaction["merchant_id"] == expected_transaction.merchant.id
+      assert transaction["user_id"] == expected_transaction.user.id
       assert transaction["user"]["id"] == expected_transaction.user.id
       assert transaction["user"]["dob"] == expected_transaction.user.dob
       assert transaction["user"]["first_name"] == expected_transaction.user.first_name

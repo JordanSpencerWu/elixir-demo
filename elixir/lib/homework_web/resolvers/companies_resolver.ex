@@ -12,11 +12,17 @@ defmodule HomeworkWeb.Resolvers.CompaniesResolver do
   def available_credit_by_companies_by_ids(_args, company_ids) do
     criteria = %{ids: company_ids}
 
-    companies = criteria |> Companies.list_companies() |> Companies.preload(:transactions)
+    companies =
+      criteria |> Companies.list_companies(with_deleted: true) |> Companies.preload(:transactions)
 
     for company <- companies, into: %{} do
+      epoch = DateTime.utc_now() |> DateTime.to_naive()
+
+      non_deleted_transactions =
+        Enum.filter(company.transactions, fn t -> t.deleted_at != epoch end)
+
       available_credit =
-        Companies.calculate_available_credit(company.credit_line, company.transactions)
+        Companies.calculate_available_credit(company.credit_line, non_deleted_transactions)
 
       {company.id, available_credit}
     end

@@ -162,8 +162,8 @@ defmodule Homework.Transactions do
   defp calculate_company_available_credit(transaction) do
     transaction = preload(transaction, :company)
     company = transaction.company
-    company_transactions = list_transactions(%{company_id: company.id})
+    non_deleted_company_transactions = list_transactions(%{company_id: company.id})
 
-    Companies.calculate_available_credit(company.credit_line, company_transactions)
+    Companies.calculate_available_credit(company.credit_line, non_deleted_company_transactions)
   end
 end

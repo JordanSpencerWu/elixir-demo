@@ -12,7 +12,7 @@ export default gql`
         }
       }
       offset
-      total_rows
+      totalRows
     }
   }
   ${userFields}

@@ -1,5 +1,6 @@
 import React from "react";
 import ListItem from "@mui/material/ListItem";
+import Tooltip from "@mui/material/Tooltip";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { NavLink } from "react-router-dom";
@@ -34,7 +35,11 @@ function ListItemLink(props) {
       />
       <li>
         <ListItem button component={renderLink}>
-          {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+          {icon ? (
+            <Tooltip title={primary}>
+              <ListItemIcon>{icon}</ListItemIcon>
+            </Tooltip>
+          ) : null}
           <ListItemText primary={primary} />
         </ListItem>
       </li>

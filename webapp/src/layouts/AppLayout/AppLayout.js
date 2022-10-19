@@ -5,7 +5,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 import AppBar from "components/AppBar";
 import Drawer from "components/Drawer";
-import Breadcrumbs from "./Breadcrumbs";
 
 function AppLayout() {
   const [open, setOpen] = useState(true);
@@ -27,7 +26,6 @@ function AppLayout() {
           width: "100%",
         }}
       >
-        <Breadcrumbs />
         <Outlet />
       </Box>
     </Box>

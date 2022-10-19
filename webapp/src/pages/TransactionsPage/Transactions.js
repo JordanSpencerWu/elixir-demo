@@ -51,12 +51,24 @@ function Transactions() {
       label: "id",
     },
     {
+      id: "userName",
+      label: "user name",
+    },
+    {
+      id: "merchantName",
+      label: "merchant name",
+    },
+    {
+      id: "companyName",
+      label: "company name",
+    },
+    {
       id: "type",
       label: "type",
     },
     {
       id: "amount",
-      label: "Amount",
+      label: "amount",
       align: "right",
     },
   ];
@@ -64,6 +76,11 @@ function Transactions() {
   const rows = transactions.map((transaction) => ({
     id: transaction.id,
     amount: currencyFormatter(transaction.amount),
+    merchantName: transaction?.merchant ? transaction.merchant.name : "Deleted",
+    userName: transaction?.user
+      ? transaction.user.firstName + " " + transaction.user.lastName
+      : "Deleted",
+    companyName: transaction?.company ? transaction.company.name : "Deleted",
     type: getTransactionType(transaction),
   }));
 

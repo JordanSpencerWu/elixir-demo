@@ -4,11 +4,10 @@ import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 
 import { DRAWER_WIDTH } from "components/Drawer";
-import pathToName from "utils/pathToName";
+import Breadcrumbs from "./Breadcrumbs";
 
 const StyledAppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -51,15 +50,7 @@ function AppBar(props) {
         >
           <MenuIcon />
         </IconButton>
-        <Typography
-          component="h1"
-          variant="h6"
-          color="inherit"
-          noWrap
-          sx={{ flexGrow: 1 }}
-        >
-          {pathToName[location.pathname]}
-        </Typography>
+        <Breadcrumbs />
       </Toolbar>
     </StyledAppBar>
   );

@@ -4,6 +4,9 @@ import { useQuery } from "@apollo/client";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import Box from "@mui/material/Box";
 
 import query from "clients/graphql/queries/companiesQuery";
 import currencyFormatter from "utils/currencyFormatter";
@@ -50,6 +53,10 @@ function Companies() {
       label: "id",
     },
     {
+      id: "companyName",
+      label: "company name",
+    },
+    {
       id: "availableCredit",
       label: "available credit",
       align: "right",
@@ -63,6 +70,7 @@ function Companies() {
 
   const rows = companies.map((company) => ({
     id: company.id,
+    companyName: company.name,
     availableCredit: currencyFormatter(company.availableCredit),
     creditLine: currencyFormatter(company.creditLine),
   }));
@@ -95,6 +103,16 @@ function Companies() {
 
   return (
     <Paper sx={{ width: 1200, mb: 2 }}>
+      <Box sx={{ m: 2, display: "flex" }}>
+        <FormControl sx={{ width: 500 }}>
+          <TextField
+            fullWidth
+            id="outlined-search"
+            label="Search by company name"
+            type="search"
+          />
+        </FormControl>
+      </Box>
       <TableToolbar
         label="Companies"
         open={!!selectCompany?.id}

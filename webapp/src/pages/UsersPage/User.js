@@ -54,10 +54,12 @@ function User() {
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Company:{" "}
-            {user.company && (
+            {user.company ? (
               <Link to={`${pathTo.company}${user.company.id}`}>
                 {user.company.name}
               </Link>
+            ) : (
+              "Deleted"
             )}
           </Typography>
         </CardContent>

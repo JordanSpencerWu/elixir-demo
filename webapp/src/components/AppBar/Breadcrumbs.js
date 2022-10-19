@@ -24,20 +24,36 @@ function Breadcrumbs() {
   }
 
   return (
-    <MuiBreadcrumbs
-      aria-label="breadcrumb"
-      sx={{ position: "absolute", top: 16, left: 24, fontSize: 24 }}
-    >
+    <MuiBreadcrumbs aria-label="breadcrumb" sx={{ fontSize: 24 }}>
       {breadcrumbs.map((breadcrumb, index) => {
         const isLastIndex = index === breadcrumbs.length - 1;
         if (isLastIndex) {
           return (
-            <Typography sx={{ fontSize: 24 }} color="text.primary">
+            <Typography
+              key={breadcrumb.name}
+              component="h1"
+              variant="h6"
+              color="white"
+              noWrap
+              sx={{ flexGrow: 1 }}
+            >
               {breadcrumb.name}
             </Typography>
           );
         }
-        return <Link to={breadcrumb.to}>{breadcrumb.name}</Link>;
+        return (
+          <Link key={breadcrumb.name} to={breadcrumb.to}>
+            <Typography
+              component="h1"
+              variant="h6"
+              color="blue"
+              noWrap
+              sx={{ flexGrow: 1 }}
+            >
+              {breadcrumb.name}
+            </Typography>
+          </Link>
+        );
       })}
     </MuiBreadcrumbs>
   );

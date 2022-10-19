@@ -4,6 +4,9 @@ import { useOutletContext } from "react-router-dom";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import Box from "@mui/material/Box";
 
 import query from "clients/graphql/queries/usersQuery";
 import Table from "components/Table";
@@ -97,6 +100,24 @@ function Users() {
 
   return (
     <Paper sx={{ width: 1200, mb: 2 }}>
+      <Box sx={{ m: 2, display: "flex" }}>
+        <FormControl sx={{ width: 300, mr: 2 }}>
+          <TextField
+            fullWidth
+            id="outlined-search"
+            label="Search by user first name"
+            type="search"
+          />
+        </FormControl>
+        <FormControl sx={{ width: 300 }}>
+          <TextField
+            fullWidth
+            id="outlined-search"
+            label="Search by user last name"
+            type="search"
+          />
+        </FormControl>
+      </Box>
       <TableToolbar
         label="Users"
         open={!!selectedUser?.id}

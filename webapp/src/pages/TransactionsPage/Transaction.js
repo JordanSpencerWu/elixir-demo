@@ -59,26 +59,32 @@ function Transaction() {
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             User:{" "}
-            {transaction.user && (
+            {transaction.user ? (
               <Link to={`${pathTo.user}${transaction.user.id}`}>
                 {transaction.user.firstName + " " + transaction.user.lastName}
               </Link>
+            ) : (
+              "Deleted"
             )}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Company:{" "}
-            {transaction.company && (
+            {transaction.company ? (
               <Link to={`${pathTo.company}${transaction.company.id}`}>
                 {transaction.company.name}
               </Link>
+            ) : (
+              "Deleted"
             )}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Merchant:{" "}
-            {transaction.merchant && (
+            {transaction.merchant ? (
               <Link to={`${pathTo.merchant}${transaction.merchant.id}`}>
                 {transaction.merchant.name}
               </Link>
+            ) : (
+              "Deleted"
             )}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">

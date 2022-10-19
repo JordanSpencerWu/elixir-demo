@@ -26,7 +26,8 @@ defmodule HomeworkWeb.Resolvers.CompaniesResolver do
   Get a list of companies
   """
   def companies(_root, args, _info) do
-    companies = Companies.list_companies()
+    criteria = args.search
+    companies = Companies.list_companies(criteria)
     opts = args |> Map.take([:limit, :skip]) |> Enum.into([])
 
     Paginator.paginate(companies, opts)

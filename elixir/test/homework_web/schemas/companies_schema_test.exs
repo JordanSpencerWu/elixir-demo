@@ -16,8 +16,8 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
 
   describe "companies query" do
     @query """
-    query {
-      companies {
+    query companies($search: CompanySearch){
+      companies(search: $search) {
         entries {
           __typename
           ... on Company {
@@ -62,6 +62,33 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
       assert length(companies) == num_of_companies
       assert offset == num_of_companies
       assert total_rows == num_of_companies
+    end
+
+    test "success: return companies query when searching by name for Mary", %{conn: conn} do
+      Factory.insert(:company, name: "Mary Jane")
+      Factory.insert(:company, name: "Mary Poppins")
+      Factory.insert(:company, name: "Marylin Monroe")
+      Factory.insert(:company, name: "Miley Cyrus")
+      Factory.insert(:company, name: "Peter Parker")
+
+      params = %{
+        "query" => @query,
+        "variables" => %{
+          "search" => %{
+            "search_by_name" => "Mary"
+          }
+        }
+      }
+
+      %{
+        "data" => %{
+          "companies" => %{"entries" => companies}
+        }
+      } = conn |> post("/graphql", params) |> json_response(200)
+
+      company_names = Enum.map(companies, & &1["name"])
+
+      assert ["Mary Jane", "Mary Poppins", "Marylin Monroe"] == company_names
     end
 
     test "success: return companies query with correct available_credit", %{conn: conn} do

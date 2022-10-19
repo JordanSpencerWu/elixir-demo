@@ -30,6 +30,7 @@ defmodule HomeworkWeb.Schemas.CompaniesSchema do
     @desc "Get all Companies"
     field(:companies, :page_result) do
       arg(:limit, :integer, default_value: 10_000)
+      arg(:search, :company_search, default_value: %{})
       arg(:skip, :integer, default_value: 0)
 
       resolve(&CompaniesResolver.companies/3)
@@ -67,5 +68,9 @@ defmodule HomeworkWeb.Schemas.CompaniesSchema do
 
       resolve(&CompaniesResolver.delete_company/3)
     end
+  end
+
+  input_object :company_search do
+    field(:search_by_name, :string)
   end
 end

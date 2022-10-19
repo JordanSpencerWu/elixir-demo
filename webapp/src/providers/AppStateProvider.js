@@ -3,6 +3,7 @@ import rootReducer from "reducers/rootReducer";
 
 import { actions as companiesActions } from "reducers/companiesReducer";
 import { actions as merchantsActions } from "reducers/merchantsReducer";
+import { actions as snackbarActions } from "reducers/snackbarReducer";
 import { actions as transactionsActions } from "reducers/transactionsReducer";
 import { actions as usersActions } from "reducers/usersReducer";
 
@@ -31,6 +32,10 @@ const appState = {
     searchByFirstName: "",
     searchByLastName: "",
   },
+  snackbar: {
+    open: false,
+    message: "",
+  },
 };
 
 export const AppStateContext = createContext();
@@ -45,6 +50,9 @@ export default function AppStateProvider({ children }) {
     },
     merchantsActions: {
       ...merchantsActions(dispatch),
+    },
+    snackbarActions: {
+      ...snackbarActions(dispatch),
     },
     transactionsActions: {
       ...transactionsActions(dispatch),

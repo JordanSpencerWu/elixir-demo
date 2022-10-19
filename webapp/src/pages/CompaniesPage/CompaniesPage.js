@@ -17,6 +17,7 @@ function CompaniesPage() {
   const {
     state,
     companiesActions: { setSelected: setSelectedCompany },
+    snackbarActions: { openSnackbar },
   } = useContext(AppStateContext);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openCompanyFormModal, setOpenCompanyFormModal] = useState(false);
@@ -31,6 +32,8 @@ function CompaniesPage() {
       if (selectedCompany.id === deleteCompany.id) {
         setSelectedCompany({});
       }
+
+      openSnackbar("successfully deleted company");
     },
   });
 
@@ -38,6 +41,7 @@ function CompaniesPage() {
     refetchQueries: [companiesOperationName],
     onCompleted: () => {
       setOpenCompanyFormModal(false);
+      openSnackbar("successfully created company");
     },
   });
 
@@ -45,6 +49,7 @@ function CompaniesPage() {
     refetchQueries: [companiesOperationName],
     onCompleted: () => {
       setOpenCompanyFormModal(false);
+      openSnackbar("successfully updated company");
     },
   });
 

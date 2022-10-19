@@ -17,6 +17,7 @@ function TransactionsPage() {
   const {
     state,
     transactionsActions: { setSelected: setSelectedTransaction },
+    snackbarActions: { openSnackbar },
   } = useContext(AppStateContext);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openTransactionFormModal, setOpenTransactionFormModal] =
@@ -31,6 +32,8 @@ function TransactionsPage() {
       if (selectedTransaction.id === deleteTransaction.id) {
         setSelectedTransaction({});
       }
+
+      openSnackbar("successfully deleted transaction");
     },
   });
 
@@ -38,6 +41,7 @@ function TransactionsPage() {
     refetchQueries: [transactionsOperationName],
     onCompleted: () => {
       setOpenTransactionFormModal(false);
+      openSnackbar("successfully created transaction");
     },
   });
 
@@ -45,6 +49,7 @@ function TransactionsPage() {
     refetchQueries: [transactionsOperationName],
     onCompleted: () => {
       setOpenTransactionFormModal(false);
+      openSnackbar("successfully updated transaction");
     },
   });
 

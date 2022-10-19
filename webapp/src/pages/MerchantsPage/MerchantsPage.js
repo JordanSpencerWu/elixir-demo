@@ -17,6 +17,7 @@ function MerchantsPage() {
   const {
     state,
     merchantsActions: { setSelected: setSelectedMerchant },
+    snackbarActions: { openSnackbar },
   } = useContext(AppStateContext);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openMerchantFormModal, setOpenMerchantFormModal] = useState(false);
@@ -30,6 +31,8 @@ function MerchantsPage() {
       if (selectedMerchant.id === deleteMerchant.id) {
         setSelectedMerchant({});
       }
+
+      openSnackbar("successfully deleted merchant");
     },
   });
 
@@ -37,6 +40,7 @@ function MerchantsPage() {
     refetchQueries: [merchantsOperationName],
     onCompleted: () => {
       setOpenMerchantFormModal(false);
+      openSnackbar("successfully created merchant");
     },
   });
 
@@ -44,6 +48,7 @@ function MerchantsPage() {
     refetchQueries: [merchantsOperationName],
     onCompleted: () => {
       setOpenMerchantFormModal(false);
+      openSnackbar("successfully updated merchant");
     },
   });
 

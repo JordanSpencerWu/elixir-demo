@@ -18,6 +18,7 @@ function UsersPage() {
   const {
     state,
     usersActions: { setSelected: setSelectedUser },
+    snackbarActions: { openSnackbar },
   } = useContext(AppStateContext);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
@@ -31,6 +32,8 @@ function UsersPage() {
       if (selectedUser.id === deleteUser.id) {
         setSelectedUser({});
       }
+
+      openSnackbar("successfully deleted user");
     },
   });
 
@@ -38,6 +41,7 @@ function UsersPage() {
     refetchQueries: [UsersOperationName],
     onCompleted: () => {
       setOpenUserFormModal(false);
+      openSnackbar("successfully created user");
     },
   });
 
@@ -45,6 +49,7 @@ function UsersPage() {
     refetchQueries: [UsersOperationName],
     onCompleted: () => {
       setOpenUserFormModal(false);
+      openSnackbar("successfully updated user");
     },
   });
 

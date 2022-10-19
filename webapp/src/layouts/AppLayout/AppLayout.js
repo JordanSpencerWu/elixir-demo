@@ -1,13 +1,23 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Box from "@mui/material/Box";
+import { useContext } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import AppBar from "components/AppBar";
 import Drawer from "components/Drawer";
+import Snackbar from "components/Snackbar";
+
+import { AppStateContext } from "providers/AppStateProvider";
 
 function AppLayout() {
   const [open, setOpen] = useState(true);
+  const {
+    state,
+    snackbarActions: { closeSnackbar },
+  } = useContext(AppStateContext);
+  const openSnackbar = state.snackbar.open;
+  const snackbarMessage = state.snackbar.message;
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -28,6 +38,11 @@ function AppLayout() {
       >
         <Outlet />
       </Box>
+      <Snackbar
+        open={openSnackbar}
+        closeSnackbar={closeSnackbar}
+        message={snackbarMessage}
+      />
     </Box>
   );
 }

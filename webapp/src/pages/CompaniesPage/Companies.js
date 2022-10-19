@@ -43,7 +43,10 @@ function Companies() {
     delete variables["search"];
   }
 
-  const { data } = useQuery(query, { variables });
+  const { data } = useQuery(query, {
+    variables,
+    fetchPolicy: "cache-and-network",
+  });
   const {
     selectedCompany,
     setSelectedCompany,

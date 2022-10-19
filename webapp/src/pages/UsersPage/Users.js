@@ -56,7 +56,10 @@ function Users() {
     delete variables["skip"];
   }
 
-  const { data } = useQuery(query, { variables });
+  const { data } = useQuery(query, {
+    variables,
+    fetchPolicy: "cache-and-network",
+  });
   const {
     selectedUser,
     setSelectedUser,

@@ -25,18 +25,24 @@ function Transactions() {
   const page = state.transactions.page;
   const rowsPerPage = state.transactions.rowsPerPage;
 
-  let queryOptions = {
-    variables: {
-      limit: rowsPerPage,
-      skip: page * rowsPerPage,
-    },
+  let variables = {
+    limit: rowsPerPage,
+    skip: page * rowsPerPage,
   };
+
+  if (rowsPerPage === -1) {
+    delete variables["limit"];
+    delete variables["skip"];
+  }
 
   if (rowsPerPage === -1) {
     queryOptions = {};
   }
 
-  const { data } = useQuery(query, queryOptions);
+  const { data } = useQuery(query, {
+    variables,
+    fetchPolicy: "cache-and-network",
+  });
   const {
     selectedTransaction,
     setSelectedTransaction,

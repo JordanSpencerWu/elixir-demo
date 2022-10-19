@@ -4,6 +4,7 @@ const initialState = {
   rowsPerPage: 10,
   searchByFirstName: "",
   searchByLastName: "",
+  filterByCompanyId: null,
 };
 
 export function actions(dispatch) {
@@ -27,6 +28,12 @@ export function actions(dispatch) {
       dispatch({
         type: "users/setSearchByLastName",
         payload: searchByLastName,
+      });
+    },
+    setFilterByCompanyId: (id) => {
+      dispatch({
+        type: "users/setFilterByCompanyId",
+        payload: id,
       });
     },
   };
@@ -62,6 +69,12 @@ export default function usersReducer(state = initialState, action) {
       return {
         ...state,
         searchByLastName: action.payload,
+      };
+    }
+    case "users/setFilterByCompanyId": {
+      return {
+        ...state,
+        filterByCompanyId: action.payload,
       };
     }
     default:

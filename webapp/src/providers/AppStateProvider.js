@@ -31,6 +31,7 @@ const appState = {
     rowsPerPage: 10,
     searchByFirstName: "",
     searchByLastName: "",
+    filterByCompanyId: null,
   },
   snackbar: {
     open: false,

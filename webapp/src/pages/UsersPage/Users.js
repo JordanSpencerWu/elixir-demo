@@ -7,13 +7,39 @@ import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import Box from "@mui/material/Box";
+import Autocomplete from "@mui/material/Autocomplete";
 
 import query from "clients/graphql/queries/usersQuery";
+import companiesQuery from "clients/graphql/queries/companiesQuery";
+
 import Table from "components/Table";
 import TableToolbar from "components/TableToolbar";
 import TablePaginationActions from "components/TablePaginationActions";
 import { AppStateContext } from "providers/AppStateProvider";
 import displayName from "utils/displayName";
+
+const columns = [
+  {
+    id: "id",
+    label: "id",
+  },
+  {
+    id: "firstName",
+    label: "first name",
+  },
+  {
+    id: "lastName",
+    label: "last name",
+  },
+  {
+    id: "dob",
+    label: "date of birth",
+  },
+  {
+    id: "companyName",
+    label: "company",
+  },
+];
 
 function Users() {
   const {
@@ -23,6 +49,7 @@ function Users() {
       setRowsPerPage,
       setSearchByFirstName,
       setSearchByLastName,
+      setFilterByCompanyId,
     },
   } = useContext(AppStateContext);
   const [pageResult, setPageResult] = useState();
@@ -31,6 +58,15 @@ function Users() {
   const rowsPerPage = state.users.rowsPerPage;
   const searchByFirstName = state.users.searchByFirstName;
   const searchByLastName = state.users.searchByLastName;
+  const filterByCompanyId = state.users.filterByCompanyId;
+
+  const filter = {
+    companyId: filterByCompanyId,
+  };
+
+  if (!filterByCompanyId) {
+    delete filter["companyId"];
+  }
 
   const search = {
     searchByFirstName,
@@ -49,6 +85,7 @@ function Users() {
     limit: rowsPerPage,
     skip: page * rowsPerPage,
     search,
+    filter,
   };
 
   if (rowsPerPage === -1) {
@@ -60,6 +97,8 @@ function Users() {
     variables,
     fetchPolicy: "cache-and-network",
   });
+  const { data: companiesData } = useQuery(companiesQuery);
+  const companies = companiesData?.companies.entries ?? [];
   const {
     selectedUser,
     setSelectedUser,
@@ -76,29 +115,6 @@ function Users() {
   const users = pageResult?.entries ?? [];
   const totalRows = pageResult?.totalRows ?? 0;
 
-  const columns = [
-    {
-      id: "id",
-      label: "id",
-    },
-    {
-      id: "firstName",
-      label: "first name",
-    },
-    {
-      id: "lastName",
-      label: "last name",
-    },
-    {
-      id: "dob",
-      label: "date of birth",
-    },
-    {
-      id: "companyName",
-      label: "company",
-    },
-  ];
-
   const rows = users.map((user) => ({
     id: user.id,
     companyName: displayName(user.company.name, user.company.deleted),
@@ -106,6 +122,8 @@ function Users() {
     lastName: user.lastName,
     dob: user.dob,
   }));
+
+  const companyOptions = companies.map((company) => company.name) ?? [];
 
   function handleRowClick(id) {
     if (id == selectedUser?.id) {
@@ -133,6 +151,11 @@ function Users() {
     setPage(0);
   };
 
+  function handleCompanyOnChange(companyName) {
+    const companyId = companies.find((c) => c.name == companyName)?.id;
+    setFilterByCompanyId(companyId);
+  }
+
   return (
     <Paper sx={{ width: 1200, mb: 2 }}>
       <Box sx={{ m: 2, display: "flex" }}>
@@ -146,7 +169,7 @@ function Users() {
             onChange={(e) => setSearchByFirstName(e.target.value)}
           />
         </FormControl>
-        <FormControl sx={{ width: 300 }}>
+        <FormControl sx={{ width: 300, mr: 2 }}>
           <TextField
             fullWidth
             id="search-by-last-name"
@@ -154,6 +177,18 @@ function Users() {
             type="search"
             value={searchByLastName}
             onChange={(e) => setSearchByLastName(e.target.value)}
+          />
+        </FormControl>
+        <FormControl sx={{ width: 300 }}>
+          <Autocomplete
+            freeSolo
+            id="filter-by-company"
+            options={companyOptions}
+            fullWidth
+            onChange={(e, companyName) => handleCompanyOnChange(companyName)}
+            renderInput={(params) => (
+              <TextField {...params} label="Filter by company" />
+            )}
           />
         </FormControl>
       </Box>

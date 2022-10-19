@@ -2,6 +2,7 @@ const initialState = {
   selected: {},
   page: 0,
   rowsPerPage: 10,
+  searchByName: "",
 };
 
 export function actions(dispatch) {
@@ -14,6 +15,9 @@ export function actions(dispatch) {
     },
     setRowsPerPage: (rowsPerPage) => {
       dispatch({ type: "companies/setRowsPerPage", payload: rowsPerPage });
+    },
+    setSearchByName: (searchByName) => {
+      dispatch({ type: "companies/setSearchByName", payload: searchByName });
     },
   };
 }
@@ -36,6 +40,12 @@ export default function companiesReducer(state = initialState, action) {
       return {
         ...state,
         rowsPerPage: action.payload,
+      };
+    }
+    case "companies/setSearchByName": {
+      return {
+        ...state,
+        searchByName: action.payload,
       };
     }
     default:

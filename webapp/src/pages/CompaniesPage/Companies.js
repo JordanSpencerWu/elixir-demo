@@ -18,25 +18,32 @@ import { AppStateContext } from "providers/AppStateProvider";
 function Companies() {
   const {
     state,
-    companiesActions: { setPage, setRowsPerPage },
+    companiesActions: { setPage, setRowsPerPage, setSearchByName },
   } = useContext(AppStateContext);
   const [pageResult, setPageResult] = useState();
 
   const page = state.companies.page;
   const rowsPerPage = state.companies.rowsPerPage;
+  const searchByName = state.companies.searchByName;
 
-  let queryOptions = {
-    variables: {
-      limit: rowsPerPage,
-      skip: page * rowsPerPage,
+  let variables = {
+    limit: rowsPerPage,
+    skip: page * rowsPerPage,
+    search: {
+      searchByName,
     },
   };
 
   if (rowsPerPage === -1) {
-    queryOptions = {};
+    delete variables["limit"];
+    delete variables["skip"];
   }
 
-  const { data } = useQuery(query, queryOptions);
+  if (searchByName === "") {
+    delete variables["search"];
+  }
+
+  const { data } = useQuery(query, { variables });
   const {
     selectedCompany,
     setSelectedCompany,
@@ -116,6 +123,8 @@ function Companies() {
             id="outlined-search"
             label="Search by company name"
             type="search"
+            value={searchByName}
+            onChange={(e) => setSearchByName(e.target.value)}
           />
         </FormControl>
       </Box>

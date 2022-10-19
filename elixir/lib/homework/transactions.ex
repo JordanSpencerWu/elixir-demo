@@ -4,7 +4,7 @@ defmodule Homework.Transactions do
   """
 
   import Ecto.Query, except: [preload: 2], warn: false
-  import Homework.Transactions.TransactionQueries, only: [base_query: 0, build_query: 2]
+  import Homework.Transactions.TransactionQueries, only: [base_query: 0, build_query: 3]
 
   alias Homework.Companies
   alias Homework.Repo
@@ -19,10 +19,12 @@ defmodule Homework.Transactions do
       [%Transaction{}, ...]
 
   """
-  @spec list_transactions(map) :: [Transaction.t()]
-  def list_transactions(criteria \\ %{}) do
+  @spec list_transactions(map, keyword) :: [Transaction.t()]
+  def list_transactions(criteria \\ %{}, opts \\ []) do
+    with_deleted = Keyword.get(opts, :with_deleted, false)
+
     base_query()
-    |> build_query(criteria)
+    |> build_query(criteria, with_deleted: with_deleted)
     |> Repo.all()
   end
 
@@ -42,14 +44,7 @@ defmodule Homework.Transactions do
   """
   @spec get_transaction!(Ecto.UUID.t()) :: Transaction.t()
   def get_transaction!(id) do
-    epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
-
-    query =
-      from(t in Transaction,
-        where: t.id == ^id and t.deleted_at == ^epoch
-      )
-
-    Repo.one!(query)
+    Repo.get!(Transaction, id)
   end
 
   @doc """

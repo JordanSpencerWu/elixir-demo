@@ -22,6 +22,15 @@ defmodule HomeworkWeb.Schemas.UsersSchema do
         end)
       end)
     end
+
+    field(:deleted, :boolean) do
+      resolve(fn user, _args, _info ->
+        epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
+        deleted = user.deleted_at != epoch
+
+        {:ok, deleted}
+      end)
+    end
   end
 
   object :user_queries do

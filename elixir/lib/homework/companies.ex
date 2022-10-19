@@ -4,7 +4,7 @@ defmodule Homework.Companies do
   """
 
   import Ecto.Query, warn: false
-  import Homework.Companies.CompanyQueries, only: [base_query: 0, build_query: 2]
+  import Homework.Companies.CompanyQueries, only: [base_query: 0, build_query: 3]
 
   alias Homework.Companies.Company
   alias Homework.Repo
@@ -12,16 +12,22 @@ defmodule Homework.Companies do
   @doc """
   Returns the list of companies.
 
+  ## Options
+
+  * `:with_deleted` - fetches deleted records. Defaults to `false`.
+
   ## Examples
 
       iex> list_companies()
       [%Company{}, ...]
 
   """
-  @spec list_companies(map) :: [Company.t()]
-  def list_companies(criteria \\ %{}) do
+  @spec list_companies(map, keyword) :: [Company.t()]
+  def list_companies(criteria \\ %{}, opts \\ []) do
+    with_deleted = Keyword.get(opts, :with_deleted, false)
+
     base_query()
-    |> build_query(criteria)
+    |> build_query(criteria, with_deleted: with_deleted)
     |> Repo.all()
   end
 
@@ -41,14 +47,7 @@ defmodule Homework.Companies do
   """
   @spec get_company!(Ecto.UUID.t()) :: Company.t()
   def get_company!(id) do
-    epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
-
-    query =
-      from(c in Company,
-        where: c.id == ^id and c.deleted_at == ^epoch
-      )
-
-    Repo.one!(query)
+    Repo.get!(Company, id)
   end
 
   @doc """

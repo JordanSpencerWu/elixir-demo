@@ -6,8 +6,9 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
   @fragment """
   fragment MerchantFields on Merchant {
     id
-    name
+    deleted
     description
+    name
     inserted_at
     updated_at
   }
@@ -112,11 +113,12 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
       } = conn |> post("/graphql", params) |> json_response(200)
 
       assert merchant["id"] == expected_merchant.id
+      assert merchant["deleted"] == false
       assert merchant["description"] == expected_merchant.description
       assert merchant["name"] == expected_merchant.name
     end
 
-    test "success: return nil for deleted company", %{conn: conn} do
+    test "success: return deleted merchant with deleted as true", %{conn: conn} do
       now = DateTime.utc_now() |> DateTime.to_naive()
       expected_merchant = Factory.insert(:merchant, deleted_at: now)
       params = %{"query" => @query, "variables" => %{"id" => expected_merchant.id}}
@@ -127,7 +129,7 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
         }
       } = conn |> post("/graphql", params) |> json_response(200)
 
-      assert merchant == nil
+      assert merchant["deleted"]
     end
 
     test "error: return changeset error", %{conn: conn} do
@@ -173,8 +175,9 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
       assert create_merchant["id"]
       assert create_merchant["inserted_at"]
       assert create_merchant["updated_at"]
-      assert create_merchant["name"] == build_merchant.name
+      assert create_merchant["deleted"] == false
       assert create_merchant["description"] == build_merchant.description
+      assert create_merchant["name"] == build_merchant.name
     end
   end
 
@@ -209,8 +212,9 @@ defmodule HomeworkWeb.Schemas.MerchantsSchemaTest do
         conn |> post("/graphql", params) |> json_response(200)
 
       assert update_merchant["id"] == merchant.id
-      assert update_merchant["name"] == update_name
+      assert update_merchant["deleted"] == false
       assert update_merchant["description"] == update_description
+      assert update_merchant["name"] == update_name
     end
 
     test "error: return error message id is invalid", %{conn: conn} do

@@ -30,6 +30,15 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
       end)
     end
 
+    field(:deleted, :boolean) do
+      resolve(fn transaction, _args, _info ->
+        epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
+        deleted = transaction.deleted_at != epoch
+
+        {:ok, deleted}
+      end)
+    end
+
     field(:user, :user) do
       resolve(fn transaction, _args, _info ->
         batch({TransactionsResolver, :users_by_ids}, transaction.user_id, fn batch_results ->

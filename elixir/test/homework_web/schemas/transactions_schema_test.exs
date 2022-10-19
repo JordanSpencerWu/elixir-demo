@@ -7,8 +7,8 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
   fragment CompanyFields on Company {
     id
     available_credit
-    name
     credit_line
+    name
     inserted_at
     updated_at
   }
@@ -44,6 +44,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
     company_id
     credit
     debit
+    deleted
     description
     merchant_id
     inserted_at
@@ -270,6 +271,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       } = conn |> post("/graphql", params) |> json_response(200)
 
       assert transaction["id"]
+      assert transaction["deleted"] == false
       assert transaction["amount"] == "10.00"
       assert transaction["credit"] == expected_transaction.credit
       assert transaction["debit"] == expected_transaction.debit
@@ -291,7 +293,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert transaction["company"]["name"] == expected_transaction.company.name
     end
 
-    test "success: return nil for deleted transaction", %{conn: conn} do
+    test "success: return deleted transaction with deleted as true", %{conn: conn} do
       now = DateTime.utc_now() |> DateTime.to_naive()
       expected_transaction = Factory.insert(:transaction, deleted_at: now)
 
@@ -303,7 +305,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
         }
       } = conn |> post("/graphql", params) |> json_response(200)
 
-      assert transaction == nil
+      assert transaction["deleted"]
     end
 
     test "error: return changeset error", %{conn: conn} do
@@ -383,6 +385,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert create_transaction["updated_at"]
       assert create_transaction["amount"] == "10.00"
       assert create_transaction["credit"] == build_transaction.credit
+      assert create_transaction["deleted"] == false
       assert create_transaction["debit"] == build_transaction.debit
       assert create_transaction["description"] == build_transaction.description
       assert create_transaction["user"]["id"] == user.id
@@ -516,6 +519,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchemaTest do
       assert update_transaction["amount"] == update_amount
       assert update_transaction["credit"] == update_credit
       assert update_transaction["debit"] == update_debit
+      assert update_transaction["deleted"] == false
       assert update_transaction["description"] == update_description
       assert update_transaction["user"]["id"] == update_user.id
       assert update_transaction["user"]["dob"] == update_user.dob

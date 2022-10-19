@@ -4,7 +4,7 @@ defmodule Homework.Merchants do
   """
 
   import Ecto.Query, warn: false
-  import Homework.Merchants.MerchantQueries, only: [base_query: 0, build_query: 2]
+  import Homework.Merchants.MerchantQueries, only: [base_query: 0, build_query: 3]
 
   alias Homework.Merchants.Merchant
   alias Homework.Repo
@@ -12,16 +12,22 @@ defmodule Homework.Merchants do
   @doc """
   Returns the list of merchants.
 
+  ## Options
+
+  * `:with_deleted` - fetches deleted records. Defaults to `false`.
+
   ## Examples
 
       iex> list_merchants([])
       [%Merchant{}, ...]
 
   """
-  @spec list_merchants(map) :: [Merchant.t()]
-  def list_merchants(criteria \\ %{}) do
+  @spec list_merchants(map, keyword) :: [Merchant.t()]
+  def list_merchants(criteria \\ %{}, opts \\ []) do
+    with_deleted = Keyword.get(opts, :with_deleted, false)
+
     base_query()
-    |> build_query(criteria)
+    |> build_query(criteria, with_deleted: with_deleted)
     |> Repo.all()
   end
 
@@ -41,14 +47,7 @@ defmodule Homework.Merchants do
   """
   @spec get_merchant!(Ecto.UUID.t()) :: Merchant.t()
   def get_merchant!(id) do
-    epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
-
-    query =
-      from(m in Merchant,
-        where: m.id == ^id and m.deleted_at == ^epoch
-      )
-
-    Repo.one!(query)
+    Repo.get!(Merchant, id)
   end
 
   @doc """

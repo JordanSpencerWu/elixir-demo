@@ -4,7 +4,7 @@ defmodule Homework.Users do
   """
 
   import Ecto.Query, warn: false
-  import Homework.Users.UserQueries, only: [base_query: 0, build_query: 2]
+  import Homework.Users.UserQueries, only: [base_query: 0, build_query: 3]
 
   alias Homework.Repo
   alias Homework.Users.User
@@ -18,10 +18,12 @@ defmodule Homework.Users do
       [%User{}, ...]
 
   """
-  @spec list_users(map) :: [User.t()]
-  def list_users(criteria \\ %{}) do
+  @spec list_users(map, keyword) :: [User.t()]
+  def list_users(criteria \\ %{}, opts \\ []) do
+    with_deleted = Keyword.get(opts, :with_deleted, false)
+
     base_query()
-    |> build_query(criteria)
+    |> build_query(criteria, with_deleted: with_deleted)
     |> Repo.all()
   end
 
@@ -41,14 +43,7 @@ defmodule Homework.Users do
   """
   @spec get_user!(Ecto.UUID.t()) :: User.t()
   def get_user!(id) do
-    epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
-
-    query =
-      from(u in User,
-        where: u.id == ^id and u.deleted_at == ^epoch
-      )
-
-    Repo.one!(query)
+    Repo.get!(User, id)
   end
 
   @doc """

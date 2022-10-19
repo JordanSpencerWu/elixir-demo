@@ -12,6 +12,15 @@ defmodule HomeworkWeb.Schemas.MerchantsSchema do
     field(:inserted_at, :naive_datetime)
     field(:name, :string)
     field(:updated_at, :naive_datetime)
+
+    field(:deleted, :boolean) do
+      resolve(fn merchant, _args, _info ->
+        epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
+        deleted = merchant.deleted_at != epoch
+
+        {:ok, deleted}
+      end)
+    end
   end
 
   object :merchant_queries do

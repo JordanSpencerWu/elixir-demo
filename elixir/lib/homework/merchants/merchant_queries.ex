@@ -10,8 +10,16 @@ defmodule Homework.Merchants.MerchantQueries do
     from(m in Merchant)
   end
 
-  def build_query(query, criteria) do
-    Enum.reduce(criteria, query, &compose_query/2) |> not_deleted_query()
+  def build_query(query, criteria, opts \\ []) do
+    with_deleted = Keyword.get(opts, :with_deleted, false)
+
+    query = Enum.reduce(criteria, query, &compose_query/2)
+
+    if with_deleted do
+      query
+    else
+      query |> not_deleted_query()
+    end
   end
 
   defp compose_query({:ids, merchant_ids}, query) do

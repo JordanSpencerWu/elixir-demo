@@ -34,7 +34,7 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   Get the company associated with a transaction
   """
   def companies_by_ids(_args, company_ids) do
-    companies = Companies.list_companies(%{ids: company_ids})
+    companies = Companies.list_companies(%{ids: company_ids}, with_deleted: true)
     Map.new(companies, fn company -> {company.id, company} end)
   end
 
@@ -42,7 +42,7 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   Get the user associated with a transaction
   """
   def users_by_ids(_args, users_ids) do
-    users = Users.list_users(%{ids: users_ids})
+    users = Users.list_users(%{ids: users_ids}, with_deleted: true)
     Map.new(users, fn user -> {user.id, user} end)
   end
 
@@ -50,7 +50,7 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   Get the merchant associated with a transaction
   """
   def merchants_by_ids(_args, merchant_ids) do
-    merchants = Merchants.list_merchants(%{ids: merchant_ids})
+    merchants = Merchants.list_merchants(%{ids: merchant_ids}, with_deleted: true)
     Map.new(merchants, fn merchant -> {merchant.id, merchant} end)
   end
 

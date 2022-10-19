@@ -19,6 +19,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       id
       company_id
       dob
+      deleted
       first_name
       last_name
       inserted_at
@@ -181,6 +182,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       } = conn |> post("/graphql", params) |> json_response(200)
 
       assert user["id"] == expected_user.id
+      assert user["deleted"] == false
       assert user["dob"] == expected_user.dob
       assert user["first_name"] == expected_user.first_name
       assert user["last_name"] == expected_user.last_name
@@ -191,7 +193,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       assert user["company"]["name"] == expected_user.company.name
     end
 
-    test "success: return nil for deleted user", %{conn: conn} do
+    test "success: return deleted user with deleted as true", %{conn: conn} do
       now = DateTime.utc_now() |> DateTime.to_naive()
       expected_user = Factory.insert(:user, deleted_at: now)
 
@@ -203,7 +205,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
         }
       } = conn |> post("/graphql", params) |> json_response(200)
 
-      assert user == nil
+      assert user["deleted"]
     end
 
     test "error: return changeset error", %{conn: conn} do
@@ -253,6 +255,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
       assert create_user["id"]
       assert create_user["inserted_at"]
       assert create_user["updated_at"]
+      assert create_user["deleted"] == false
       assert create_user["dob"] == build_user.dob
       assert create_user["first_name"] == build_user.first_name
       assert create_user["last_name"] == build_user.last_name
@@ -333,6 +336,7 @@ defmodule HomeworkWeb.Schemas.UsersSchemaTest do
         conn |> post("/graphql", params) |> json_response(200)
 
       assert update_user["id"] == user.id
+      assert update_user["deleted"] == false
       assert update_user["dob"] == update_dob
       assert update_user["first_name"] == update_first_name
       assert update_user["last_name"] == update_last_name

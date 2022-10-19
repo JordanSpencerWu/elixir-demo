@@ -10,8 +10,16 @@ defmodule Homework.Companies.CompanyQueries do
     from(c in Company)
   end
 
-  def build_query(query, criteria) do
-    Enum.reduce(criteria, query, &compose_query/2) |> not_deleted_query()
+  def build_query(query, criteria, opts \\ []) do
+    with_deleted = Keyword.get(opts, :with_deleted, false)
+
+    query = Enum.reduce(criteria, query, &compose_query/2)
+
+    if with_deleted do
+      query
+    else
+      query |> not_deleted_query()
+    end
   end
 
   defp compose_query({:ids, company_ids}, query) do

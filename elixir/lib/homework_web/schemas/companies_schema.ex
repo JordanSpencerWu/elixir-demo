@@ -24,6 +24,15 @@ defmodule HomeworkWeb.Schemas.CompaniesSchema do
         )
       end)
     end
+
+    field(:deleted, :boolean) do
+      resolve(fn company, _args, _info ->
+        epoch = DateTime.from_unix!(0) |> DateTime.to_naive()
+        deleted = company.deleted_at != epoch
+
+        {:ok, deleted}
+      end)
+    end
   end
 
   object :company_queries do

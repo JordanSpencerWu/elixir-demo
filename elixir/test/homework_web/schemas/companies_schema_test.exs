@@ -7,8 +7,9 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
   fragment CompanyFields on Company {
     id
     available_credit
-    name
     credit_line
+    deleted
+    name
     inserted_at
     updated_at
   }
@@ -161,11 +162,12 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
 
       assert company["id"] == expected_company.id
       assert company["available_credit"] == "1000000.00"
+      assert company["deleted"] == false
       assert company["credit_line"] == "1000000.00"
       assert company["name"] == expected_company.name
     end
 
-    test "success: return nil for deleted company", %{conn: conn} do
+    test "success: return deleted company with deleted as true", %{conn: conn} do
       now = DateTime.utc_now() |> DateTime.to_naive()
       expected_company = Factory.insert(:company, deleted_at: now)
 
@@ -177,7 +179,7 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
         }
       } = conn |> post("/graphql", params) |> json_response(200)
 
-      assert company == nil
+      assert company["deleted"]
     end
 
     test "error: return changeset error", %{conn: conn} do
@@ -227,6 +229,7 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
       assert create_company["inserted_at"]
       assert create_company["updated_at"]
       assert create_company["available_credit"] == credit_line
+      assert create_company["deleted"] == false
       assert create_company["credit_line"] == credit_line
       assert create_company["name"] == build_company.name
     end
@@ -262,6 +265,7 @@ defmodule HomeworkWeb.Schemas.CompaniesSchemaTest do
 
       assert update_company["id"] == company.id
       assert update_company["available_credit"] == update_credit_line
+      assert update_company["deleted"] == false
       assert update_company["credit_line"] == update_credit_line
       assert update_company["name"] == update_name
     end

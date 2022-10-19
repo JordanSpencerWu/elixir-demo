@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Outlet } from "react-router-dom";
-import Box from "@mui/material/Box";
-import { useContext } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
 
 import AppBar from "components/AppBar";
 import Drawer from "components/Drawer";
@@ -20,7 +19,7 @@ function AppLayout() {
   const snackbarMessage = state.snackbar.message;
 
   const toggleDrawer = () => {
-    setOpen(!open);
+    setOpen((previousOpen) => !previousOpen);
   };
 
   return (

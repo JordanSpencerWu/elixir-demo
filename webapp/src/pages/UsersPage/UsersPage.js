@@ -1,8 +1,8 @@
 import { useState, useContext } from "react";
 import { Outlet } from "react-router-dom";
 import { useMutation } from "@apollo/client";
-import Box from "@mui/material/Box";
 import moment from "moment";
+import Box from "@mui/material/Box";
 
 import deleteUserMutation from "clients/graphql/mutations/deleteUserMutation";
 import createUserMutation from "clients/graphql/mutations/createUserMutation";

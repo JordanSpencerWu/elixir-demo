@@ -42,11 +42,15 @@ function Breadcrumbs() {
           );
         }
         return (
-          <Link key={breadcrumb.name} to={breadcrumb.to}>
+          <Link
+            key={breadcrumb.name}
+            to={breadcrumb.to}
+            style={{ color: "white" }}
+          >
             <Typography
               component="h1"
               variant="h6"
-              color="blue"
+              color="white"
               noWrap
               sx={{ flexGrow: 1 }}
             >

@@ -45,6 +45,7 @@ function UserFormModal(props) {
   };
 
   function handleClick() {
+    setFormUser({});
     handleSubmit(formUser);
   }
 

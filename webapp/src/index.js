@@ -11,15 +11,13 @@ import App from "./App";
 const mdTheme = createTheme();
 
 ReactDOM.createRoot(document.getElementById("app")).render(
-  <div data-app-init="">
-    <ApolloProvider client={client}>
-      <ThemeProvider theme={mdTheme}>
-        <LocalizationProvider dateAdapter={AdapterMoment}>
-          <AppStateProvider>
-            <App />
-          </AppStateProvider>
-        </LocalizationProvider>
-      </ThemeProvider>
-    </ApolloProvider>
-  </div>
+  <ApolloProvider client={client}>
+    <ThemeProvider theme={mdTheme}>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <AppStateProvider>
+          <App />
+        </AppStateProvider>
+      </LocalizationProvider>
+    </ThemeProvider>
+  </ApolloProvider>
 );

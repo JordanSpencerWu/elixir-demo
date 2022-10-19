@@ -35,6 +35,7 @@ function MerchantFormModal(props) {
   };
 
   function handleClick() {
+    setFormMerchant({});
     handleSubmit(formMerchant);
   }
 

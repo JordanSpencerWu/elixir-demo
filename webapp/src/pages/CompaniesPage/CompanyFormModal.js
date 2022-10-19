@@ -35,6 +35,7 @@ function CompanyFormModal(props) {
   };
 
   function handleClick() {
+    setFormCompany({});
     handleSubmit(formCompany);
   }
 

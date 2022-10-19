@@ -60,6 +60,7 @@ function TransactionFormModal(props) {
   };
 
   function handleClick() {
+    setFormTransaction({});
     handleSubmit(formTransaction);
   }
 
@@ -68,7 +69,8 @@ function TransactionFormModal(props) {
     !formTransaction.companyId ||
     !formTransaction.description ||
     !formTransaction.merchantId ||
-    !formTransaction.userId;
+    !formTransaction.userId ||
+    (formTransaction.credit && formTransaction.debit);
 
   const companyOptions = companies.entries.map((company) => company.name);
   const merchantOptions = merchants.entries.map((merchant) => merchant.name);

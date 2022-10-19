@@ -9,6 +9,7 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
   object :transaction do
     field(:id, non_null(:id))
     field(:amount, :decimal_amount)
+    field(:company_id, :id)
     field(:credit, :boolean)
     field(:debit, :boolean)
     field(:description, :string)
@@ -16,7 +17,6 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
     field(:merchant_id, :id)
     field(:updated_at, :naive_datetime)
     field(:user_id, :id)
-    field(:company_id, :id)
 
     field(:company, :company) do
       resolve(fn transaction, _args, _info ->
@@ -39,14 +39,6 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
       end)
     end
 
-    field(:user, :user) do
-      resolve(fn transaction, _args, _info ->
-        batch({TransactionsResolver, :users_by_ids}, transaction.user_id, fn batch_results ->
-          {:ok, Map.get(batch_results, transaction.user_id)}
-        end)
-      end)
-    end
-
     field(:merchant, :merchant) do
       resolve(fn transaction, _args, _info ->
         batch(
@@ -56,6 +48,14 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
             {:ok, Map.get(batch_results, transaction.merchant_id)}
           end
         )
+      end)
+    end
+
+    field(:user, :user) do
+      resolve(fn transaction, _args, _info ->
+        batch({TransactionsResolver, :users_by_ids}, transaction.user_id, fn batch_results ->
+          {:ok, Map.get(batch_results, transaction.user_id)}
+        end)
       end)
     end
   end
@@ -82,8 +82,8 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
     @desc "Create a new transaction"
     field :create_transaction, :transaction do
       arg(:company_id, non_null(:id))
-      arg(:user_id, non_null(:id))
       arg(:merchant_id, non_null(:id))
+      arg(:user_id, non_null(:id))
       @desc "amount is in decimal amount"
       arg(:amount, non_null(:decimal_amount))
       arg(:credit, non_null(:boolean))
@@ -97,8 +97,8 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
     field :update_transaction, :transaction do
       arg(:id, non_null(:id))
       arg(:company_id, :id)
-      arg(:user_id, :id)
       arg(:merchant_id, :id)
+      arg(:user_id, :id)
       @desc "amount is in decimal amount"
       arg(:amount, :decimal_amount)
       arg(:credit, :boolean)
@@ -118,8 +118,8 @@ defmodule HomeworkWeb.Schemas.TransactionsSchema do
 
   input_object :transaction_filter do
     field(:company_id, :id)
-    field(:user_id, :id)
     field(:merchant_id, :id)
+    field(:user_id, :id)
     @desc "filter by min and max amount inclusive"
     field(:amount, :amount_filter)
   end

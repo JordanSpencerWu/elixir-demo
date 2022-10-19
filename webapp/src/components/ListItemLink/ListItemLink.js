@@ -1,18 +1,17 @@
-import React from "react";
-import ListItem from "@mui/material/ListItem";
-import Tooltip from "@mui/material/Tooltip";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import { useMemo, forwardRef } from "react";
 import { NavLink } from "react-router-dom";
 import { string, node } from "prop-types";
 import { Global, css } from "@emotion/react";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 
 function ListItemLink(props) {
   const { icon, primary, to } = props;
 
-  const renderLink = React.useMemo(
+  const renderLink = useMemo(
     () =>
-      React.forwardRef(function Link(itemProps, ref) {
+      forwardRef(function Link(itemProps, ref) {
         return <NavLink to={to} ref={ref} {...itemProps} />;
       }),
     [to]
@@ -35,11 +34,7 @@ function ListItemLink(props) {
       />
       <li>
         <ListItem button component={renderLink}>
-          {icon ? (
-            <Tooltip title={primary}>
-              <ListItemIcon>{icon}</ListItemIcon>
-            </Tooltip>
-          ) : null}
+          {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
           <ListItemText primary={primary} />
         </ListItem>
       </li>

@@ -1,5 +1,6 @@
 import { bool, func, string } from "prop-types";
 import { alpha } from "@mui/material/styles";
+import { lightBlue } from "@mui/material/colors";
 import Toolbar from "@mui/material/Toolbar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -7,7 +8,6 @@ import AddIcon from "@mui/icons-material/Add";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import { lightBlue } from "@mui/material/colors";
 
 function TableToolbar(props) {
   const { label, open, handleDeleteClick, handleAddClick, handleEditClick } =

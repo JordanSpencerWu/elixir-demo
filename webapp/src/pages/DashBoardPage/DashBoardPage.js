@@ -11,7 +11,7 @@ function DashBoardPage() {
         alignItems: "center",
       }}
     >
-      DashBoard Page
+      DashBoard coming soon
     </Box>
   );
 }

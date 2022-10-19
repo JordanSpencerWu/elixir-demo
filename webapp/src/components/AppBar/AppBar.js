@@ -1,10 +1,9 @@
 import { bool, func } from "prop-types";
-import { useLocation } from "react-router-dom";
+import { styled } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { styled } from "@mui/material/styles";
 
 import { DRAWER_WIDTH } from "components/Drawer";
 import Breadcrumbs from "./Breadcrumbs";
@@ -29,7 +28,6 @@ const StyledAppBar = styled(MuiAppBar, {
 
 function AppBar(props) {
   const { open, toggleDrawer } = props;
-  const location = useLocation();
 
   return (
     <StyledAppBar position="absolute" open={open}>

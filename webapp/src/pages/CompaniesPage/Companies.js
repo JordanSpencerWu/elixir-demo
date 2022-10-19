@@ -120,7 +120,7 @@ function Companies() {
         <FormControl sx={{ width: 500 }}>
           <TextField
             fullWidth
-            id="outlined-search"
+            id="search-by-company-name"
             label="Search by company name"
             type="search"
             value={searchByName}

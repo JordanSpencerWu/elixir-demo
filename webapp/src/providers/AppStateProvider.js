@@ -28,6 +28,8 @@ const appState = {
     selected: {},
     page: 0,
     rowsPerPage: 10,
+    searchByFirstName: "",
+    searchByLastName: "",
   },
 };
 

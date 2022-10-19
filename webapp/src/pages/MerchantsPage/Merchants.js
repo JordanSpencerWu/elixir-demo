@@ -112,7 +112,7 @@ function Merchants() {
         <FormControl sx={{ width: 500 }}>
           <TextField
             fullWidth
-            id="outlined-search"
+            id="search-by-merchant-name"
             label="Search by merchant name"
             type="search"
             value={searchByName}

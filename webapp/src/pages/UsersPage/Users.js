@@ -17,25 +17,45 @@ import { AppStateContext } from "providers/AppStateProvider";
 function Users() {
   const {
     state,
-    usersActions: { setPage, setRowsPerPage },
+    usersActions: {
+      setPage,
+      setRowsPerPage,
+      setSearchByFirstName,
+      setSearchByLastName,
+    },
   } = useContext(AppStateContext);
   const [pageResult, setPageResult] = useState();
 
   const page = state.users.page;
   const rowsPerPage = state.users.rowsPerPage;
+  const searchByFirstName = state.users.searchByFirstName;
+  const searchByLastName = state.users.searchByLastName;
 
-  let queryOptions = {
-    variables: {
-      limit: rowsPerPage,
-      skip: page * rowsPerPage,
-    },
+  const search = {
+    searchByFirstName,
+    searchByLastName,
+  };
+
+  if (searchByFirstName === "") {
+    delete search["searchByFirstName"];
+  }
+
+  if (searchByLastName === "") {
+    delete search["searchByLastName"];
+  }
+
+  const variables = {
+    limit: rowsPerPage,
+    skip: page * rowsPerPage,
+    search,
   };
 
   if (rowsPerPage === -1) {
-    queryOptions = {};
+    delete variables["limit"];
+    delete variables["skip"];
   }
 
-  const { data } = useQuery(query, queryOptions);
+  const { data } = useQuery(query, { variables });
   const {
     selectedUser,
     setSelectedUser,
@@ -110,17 +130,21 @@ function Users() {
         <FormControl sx={{ width: 300, mr: 2 }}>
           <TextField
             fullWidth
-            id="outlined-search"
+            id="search-by-first-name"
             label="Search by user first name"
             type="search"
+            value={searchByFirstName}
+            onChange={(e) => setSearchByFirstName(e.target.value)}
           />
         </FormControl>
         <FormControl sx={{ width: 300 }}>
           <TextField
             fullWidth
-            id="outlined-search"
+            id="search-by-last-name"
             label="Search by user last name"
             type="search"
+            value={searchByLastName}
+            onChange={(e) => setSearchByLastName(e.target.value)}
           />
         </FormControl>
       </Box>

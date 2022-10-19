@@ -2,6 +2,8 @@ const initialState = {
   selected: {},
   page: 0,
   rowsPerPage: 10,
+  searchByFirstName: "",
+  searchByLastName: "",
 };
 
 export function actions(dispatch) {
@@ -14,6 +16,18 @@ export function actions(dispatch) {
     },
     setRowsPerPage: (rowsPerPage) => {
       dispatch({ type: "users/setRowsPerPage", payload: rowsPerPage });
+    },
+    setSearchByFirstName: (searchByFirstName) => {
+      dispatch({
+        type: "users/setSearchByFirstName",
+        payload: searchByFirstName,
+      });
+    },
+    setSearchByLastName: (searchByLastName) => {
+      dispatch({
+        type: "users/setSearchByLastName",
+        payload: searchByLastName,
+      });
     },
   };
 }
@@ -36,6 +50,18 @@ export default function usersReducer(state = initialState, action) {
       return {
         ...state,
         rowsPerPage: action.payload,
+      };
+    }
+    case "users/setSearchByFirstName": {
+      return {
+        ...state,
+        searchByFirstName: action.payload,
+      };
+    }
+    case "users/setSearchByLastName": {
+      return {
+        ...state,
+        searchByLastName: action.payload,
       };
     }
     default:

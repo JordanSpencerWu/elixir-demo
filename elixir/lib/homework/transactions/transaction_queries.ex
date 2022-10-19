@@ -7,7 +7,7 @@ defmodule Homework.Transactions.TransactionQueries do
   alias Homework.Transactions.Transaction
 
   def base_query do
-    from(t in Transaction)
+    from(t in Transaction, order_by: [desc: t.inserted_at])
   end
 
   def build_query(query, criteria, opts \\ []) do

@@ -7,7 +7,7 @@ defmodule Homework.Merchants.MerchantQueries do
   alias Homework.Merchants.Merchant
 
   def base_query do
-    from(m in Merchant)
+    from(m in Merchant, order_by: [desc: m.inserted_at])
   end
 
   def build_query(query, criteria, opts \\ []) do

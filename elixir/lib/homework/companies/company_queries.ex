@@ -7,7 +7,7 @@ defmodule Homework.Companies.CompanyQueries do
   alias Homework.Companies.Company
 
   def base_query do
-    from(c in Company)
+    from(c in Company, order_by: [desc: c.inserted_at])
   end
 
   def build_query(query, criteria, opts \\ []) do

@@ -7,7 +7,7 @@ defmodule Homework.Users.UserQueries do
   alias Homework.Users.User
 
   def base_query do
-    from(u in User)
+    from(u in User, order_by: [desc: u.inserted_at])
   end
 
   def build_query(query, criteria, opts \\ []) do

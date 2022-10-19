@@ -28,7 +28,7 @@ function Transactions() {
     queryOptions = {};
   }
 
-  const { loading, error, data } = useQuery(query, queryOptions);
+  const { data } = useQuery(query, queryOptions);
   const {
     selectTransaction,
     setSelectTransaction,

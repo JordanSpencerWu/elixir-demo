@@ -1,15 +1,33 @@
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import TableContainer from "@mui/material/TableContainer";
+import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
 
 import query from "clients/graphql/queries/companiesQuery";
 import currencyFormatter from "utils/currencyFormatter";
 import Table from "components/Table";
 import TableToolbar from "components/TableToolbar";
+import TablePaginationActions from "components/TablePaginationActions";
 
 function Companies() {
-  const { loading, error, data } = useQuery(query);
+  const [pageResult, setPageResult] = useState();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  let queryOptions = {
+    variables: {
+      limit: rowsPerPage,
+      skip: page * rowsPerPage,
+    },
+  };
+
+  if (rowsPerPage === -1) {
+    queryOptions = {};
+  }
+
+  const { data } = useQuery(query, queryOptions);
   const {
     selectCompany,
     setSelectCompany,
@@ -17,10 +35,14 @@ function Companies() {
     setOpenCompanyFormModal,
   } = useOutletContext();
 
-  if (loading) return null;
-  if (error) return <div>Failed to fetch companies</div>;
+  useEffect(() => {
+    if (data) {
+      setPageResult(data.companies);
+    }
+  }, [data]);
 
-  const { companies } = data;
+  const companies = pageResult?.entries ?? [];
+  const totalRows = pageResult?.totalRows ?? 0;
 
   const columns = [
     {
@@ -39,7 +61,7 @@ function Companies() {
     },
   ];
 
-  const rows = companies.entries.map((company) => ({
+  const rows = companies.map((company) => ({
     id: company.id,
     availableCredit: currencyFormatter(company.availableCredit),
     creditLine: currencyFormatter(company.creditLine),
@@ -49,7 +71,7 @@ function Companies() {
     if (id == selectCompany?.id) {
       setSelectCompany({});
     } else {
-      const company = companies.entries.find((company) => company.id == id);
+      const company = companies.find((company) => company.id == id);
       setSelectCompany(company);
     }
   }
@@ -62,6 +84,15 @@ function Companies() {
     setOpenCompanyFormModal(true);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
   return (
     <Paper sx={{ width: 1200, mb: 2 }}>
       <TableToolbar
@@ -71,7 +102,7 @@ function Companies() {
         handleAddClick={handleAddOrEditClick}
         handleEditClick={handleAddOrEditClick}
       />
-      <TableContainer sx={{ height: 650 }}>
+      <TableContainer sx={{ height: 600 }}>
         <Table
           columns={columns}
           rows={rows}
@@ -80,6 +111,23 @@ function Companies() {
           checkbox
         />
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 100, { label: "All", value: -1 }]}
+        colSpan={3}
+        component="div"
+        count={totalRows}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        SelectProps={{
+          inputProps: {
+            "aria-label": "rows per page",
+          },
+          native: true,
+        }}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        ActionsComponent={TablePaginationActions}
+      />
     </Paper>
   );
 }

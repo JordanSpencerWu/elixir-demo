@@ -17,25 +17,32 @@ import { AppStateContext } from "providers/AppStateProvider";
 function Merchants() {
   const {
     state,
-    merchantsActions: { setPage, setRowsPerPage },
+    merchantsActions: { setPage, setRowsPerPage, setSearchByName },
   } = useContext(AppStateContext);
   const [pageResult, setPageResult] = useState();
 
   const page = state.merchants.page;
   const rowsPerPage = state.merchants.rowsPerPage;
+  const searchByName = state.merchants.searchByName;
 
-  let queryOptions = {
-    variables: {
-      limit: rowsPerPage,
-      skip: page * rowsPerPage,
+  let variables = {
+    limit: rowsPerPage,
+    skip: page * rowsPerPage,
+    search: {
+      searchByName,
     },
   };
 
   if (rowsPerPage === -1) {
-    queryOptions = {};
+    delete variables["limit"];
+    delete variables["skip"];
   }
 
-  const { data } = useQuery(query, queryOptions);
+  if (searchByName === "") {
+    delete variables["search"];
+  }
+
+  const { data } = useQuery(query, { variables });
   const {
     selectedMerchant,
     setSelectedMerchant,
@@ -108,6 +115,8 @@ function Merchants() {
             id="outlined-search"
             label="Search by merchant name"
             type="search"
+            value={searchByName}
+            onChange={(e) => setSearchByName(e.target.value)}
           />
         </FormControl>
       </Box>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useQuery } from "@apollo/client";
 import { useOutletContext } from "react-router-dom";
 import TableContainer from "@mui/material/TableContainer";
@@ -12,11 +12,17 @@ import query from "clients/graphql/queries/usersQuery";
 import Table from "components/Table";
 import TableToolbar from "components/TableToolbar";
 import TablePaginationActions from "components/TablePaginationActions";
+import { AppStateContext } from "providers/AppStateProvider";
 
 function Users() {
+  const {
+    state,
+    usersActions: { setPage, setRowsPerPage },
+  } = useContext(AppStateContext);
   const [pageResult, setPageResult] = useState();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const page = state.users.page;
+  const rowsPerPage = state.users.rowsPerPage;
 
   let queryOptions = {
     variables: {

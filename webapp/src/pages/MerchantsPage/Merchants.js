@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useQuery } from "@apollo/client";
 import { useOutletContext } from "react-router-dom";
 import TableContainer from "@mui/material/TableContainer";
@@ -12,11 +12,17 @@ import query from "clients/graphql/queries/merchantsQuery";
 import Table from "components/Table";
 import TableToolbar from "components/TableToolbar";
 import TablePaginationActions from "components/TablePaginationActions";
+import { AppStateContext } from "providers/AppStateProvider";
 
 function Merchants() {
+  const {
+    state,
+    merchantsActions: { setPage, setRowsPerPage },
+  } = useContext(AppStateContext);
   const [pageResult, setPageResult] = useState();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const page = state.merchants.page;
+  const rowsPerPage = state.merchants.rowsPerPage;
 
   let queryOptions = {
     variables: {

@@ -15,12 +15,14 @@ import { AppStateContext } from "providers/AppStateProvider";
 import MerchantFormModal from "./MerchantFormModal";
 
 function MerchantsPage() {
-  const { state, merchantsActions } = useContext(AppStateContext);
+  const {
+    state,
+    merchantsActions: { setSelected: setSelectedMerchant },
+  } = useContext(AppStateContext);
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openMerchantFormModal, setOpenMerchantFormModal] = useState(false);
   const selectedMerchant = state.merchants.selected;
-  const setSelectedMerchant = merchantsActions.setSelected;
 
   const [deleteMerchant] = useMutation(deleteMerchantMutation, {
     refetchQueries: [merchantsOperationName],

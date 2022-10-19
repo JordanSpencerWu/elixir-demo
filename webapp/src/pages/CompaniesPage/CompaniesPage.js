@@ -15,13 +15,15 @@ import { AppStateContext } from "providers/AppStateProvider";
 import CompanyFormModal from "./CompanyFormModal";
 
 function CompaniesPage() {
-  const { state, companiesActions } = useContext(AppStateContext);
+  const {
+    state,
+    companiesActions: { setSelected: setSelectedCompany },
+  } = useContext(AppStateContext);
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openCompanyFormModal, setOpenCompanyFormModal] = useState(false);
 
   const selectedCompany = state.companies.selected;
-  const setSelectedCompany = companiesActions.setSelected;
 
   const [deleteCompany] = useMutation(deleteCompanyMutation, {
     refetchQueries: [companiesOperationName],

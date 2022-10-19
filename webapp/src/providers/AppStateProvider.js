@@ -9,15 +9,23 @@ import { actions as usersActions } from "reducers/usersReducer";
 const appState = {
   companies: {
     selected: {},
+    page: 0,
+    rowsPerPage: 10,
   },
   merchants: {
     selected: {},
+    page: 0,
+    rowsPerPage: 10,
   },
   transactions: {
     selected: {},
+    page: 0,
+    rowsPerPage: 10,
   },
   users: {
     selected: {},
+    page: 0,
+    rowsPerPage: 10,
   },
 };
 

@@ -15,13 +15,15 @@ import { AppStateContext } from "providers/AppStateProvider";
 import TransactionFormModal from "./TransactionFormModal";
 
 function TransactionsPage() {
-  const { state, transactionsActions } = useContext(AppStateContext);
+  const {
+    state,
+    transactionsActions: { setSelected: setSelectedTransaction },
+  } = useContext(AppStateContext);
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openTransactionFormModal, setOpenTransactionFormModal] =
     useState(false);
   const selectedTransaction = state.transactions.selected;
-  const setSelectedTransaction = transactionsActions.setSelected;
 
   const [deleteTransaction] = useMutation(deleteTransactionMutation, {
     refetchQueries: [transactionsOperationName],

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useQuery } from "@apollo/client";
 import { useOutletContext } from "react-router-dom";
 import TableContainer from "@mui/material/TableContainer";
@@ -11,11 +11,17 @@ import Table from "components/Table";
 import getTransactionType from "utils/getTransactionType";
 import TableToolbar from "components/TableToolbar";
 import TablePaginationActions from "components/TablePaginationActions";
+import { AppStateContext } from "providers/AppStateProvider";
 
 function Transactions() {
+  const {
+    state,
+    transactionsActions: { setPage, setRowsPerPage },
+  } = useContext(AppStateContext);
   const [pageResult, setPageResult] = useState();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const page = state.transactions.page;
+  const rowsPerPage = state.transactions.rowsPerPage;
 
   let queryOptions = {
     variables: {

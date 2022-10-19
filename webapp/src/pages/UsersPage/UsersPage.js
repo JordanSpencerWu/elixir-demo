@@ -16,12 +16,14 @@ import { AppStateContext } from "providers/AppStateProvider";
 import UserFormModal from "./UserFormModal";
 
 function UsersPage() {
-  const { state, usersActions } = useContext(AppStateContext);
+  const {
+    state,
+    usersActions: { setSelected: setSelectedUser },
+  } = useContext(AppStateContext);
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
   const selectedUser = state.users.selected;
-  const setSelectedUser = usersActions.setSelected;
 
   const [deleteUser] = useMutation(deleteUserMutation, {
     refetchQueries: [UsersOperationName],

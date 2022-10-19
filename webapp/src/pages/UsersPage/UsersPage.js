@@ -7,7 +7,7 @@ import moment from "moment";
 import deleteUserMutation from "clients/graphql/mutations/deleteUserMutation";
 import createUserMutation from "clients/graphql/mutations/createUserMutation";
 import updateUserMutation from "clients/graphql/mutations/updateUserMutation";
-import usersQuery from "clients/graphql/queries/usersQuery";
+import { operationName as UsersOperationName } from "clients/graphql/queries/usersQuery";
 
 import DeleteDialog from "components/DeleteDialog/DeleteDialog";
 import pathTo from "utils/pathTo";
@@ -21,7 +21,7 @@ function UsersPage() {
   const [selectedUser, setSelectedUser] = useState();
 
   const [deleteUser] = useMutation(deleteUserMutation, {
-    refetchQueries: [{ query: usersQuery }],
+    refetchQueries: [UsersOperationName],
     onCompleted: (data) => {
       const { deleteUser } = data;
 
@@ -32,14 +32,14 @@ function UsersPage() {
   });
 
   const [createUser] = useMutation(createUserMutation, {
-    refetchQueries: [{ query: usersQuery }],
+    refetchQueries: [UsersOperationName],
     onCompleted: () => {
       setOpenUserFormModal(false);
     },
   });
 
   const [updateUser] = useMutation(updateUserMutation, {
-    refetchQueries: [{ query: usersQuery }],
+    refetchQueries: [UsersOperationName],
     onCompleted: () => {
       setOpenUserFormModal(false);
     },

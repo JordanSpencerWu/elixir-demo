@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import Box from "@mui/material/Box";
 
 import deleteTransactionMutation from "clients/graphql/mutations/deleteTransactionMutation";
-import transactionsQuery from "clients/graphql/queries/transactionsQuery";
+import { operationName as transactionsOperationName } from "clients/graphql/queries/transactionsQuery";
 import createTransactionMutation from "clients/graphql/mutations/createTransactionMutation";
 import updateTransactionMutation from "clients/graphql/mutations/updateTransactionMutation";
 
@@ -21,7 +21,7 @@ function TransactionsPage() {
   const [selectTransaction, setSelectTransaction] = useState();
 
   const [deleteTransaction] = useMutation(deleteTransactionMutation, {
-    refetchQueries: [{ query: transactionsQuery }],
+    refetchQueries: [transactionsOperationName],
     onCompleted: (data) => {
       const { deleteTransaction } = data;
 
@@ -32,14 +32,14 @@ function TransactionsPage() {
   });
 
   const [createTransaction] = useMutation(createTransactionMutation, {
-    refetchQueries: [{ query: transactionsQuery }],
+    refetchQueries: [transactionsOperationName],
     onCompleted: () => {
       setOpenTransactionFormModal(false);
     },
   });
 
   const [updateTransaction] = useMutation(updateTransactionMutation, {
-    refetchQueries: [{ query: transactionsQuery }],
+    refetchQueries: [transactionsOperationName],
     onCompleted: () => {
       setOpenTransactionFormModal(false);
     },

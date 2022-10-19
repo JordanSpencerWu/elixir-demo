@@ -6,7 +6,7 @@ import { useMutation } from "@apollo/client";
 import deleteCompanyMutation from "clients/graphql/mutations/deleteCompanyMutation";
 import createCompanyMutation from "clients/graphql/mutations/createCompanyMutation";
 import updateCompanyMutation from "clients/graphql/mutations/updateCompanyMutation";
-import companiesQuery from "clients/graphql/queries/companiesQuery";
+import { operationName as companiesOperationName } from "clients/graphql/queries/companiesQuery";
 
 import DeleteDialog from "components/DeleteDialog/DeleteDialog";
 import pathTo from "utils/pathTo";
@@ -20,7 +20,7 @@ function CompaniesPage() {
   const [selectCompany, setSelectCompany] = useState();
 
   const [deleteCompany] = useMutation(deleteCompanyMutation, {
-    refetchQueries: [{ query: companiesQuery }],
+    refetchQueries: [companiesOperationName],
     onCompleted: (data) => {
       const { deleteCompany } = data;
 
@@ -31,14 +31,14 @@ function CompaniesPage() {
   });
 
   const [createCompany] = useMutation(createCompanyMutation, {
-    refetchQueries: [{ query: companiesQuery }],
+    refetchQueries: [companiesOperationName],
     onCompleted: () => {
       setOpenCompanyFormModal(false);
     },
   });
 
   const [updateCompany] = useMutation(updateCompanyMutation, {
-    refetchQueries: [{ query: companiesQuery }],
+    refetchQueries: [companiesOperationName],
     onCompleted: () => {
       setOpenCompanyFormModal(false);
     },

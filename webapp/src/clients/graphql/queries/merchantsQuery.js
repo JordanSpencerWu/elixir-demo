@@ -2,8 +2,10 @@ import { gql } from "@apollo/client";
 
 import { merchantFields } from "../fragments/merchantFields";
 
+export const operationName = "merchants";
+
 export default gql`
-  query merchants($search: MerchantSearch, $limit: Int, $skip: Int) {
+  query ${operationName}($search: MerchantSearch, $limit: Int, $skip: Int) {
     merchants(search: $search, limit: $limit, skip: $skip) {
       entries {
         __typename

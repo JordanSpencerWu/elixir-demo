@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import Box from "@mui/material/Box";
 
 import deleteMerchantMutation from "clients/graphql/mutations/deleteMerchantMutation";
-import merchantsQuery from "clients/graphql/queries/merchantsQuery";
+import { operationName as merchantsOperationName } from "clients/graphql/queries/merchantsQuery";
 import createMerchantMutation from "clients/graphql/mutations/createMerchantMutation";
 import updateMerchantMutation from "clients/graphql/mutations/updateMerchantMutation";
 
@@ -20,7 +20,7 @@ function MerchantsPage() {
   const [selectMerchant, setSelectMerchant] = useState();
 
   const [deleteMerchant] = useMutation(deleteMerchantMutation, {
-    refetchQueries: [{ query: merchantsQuery }],
+    refetchQueries: [merchantsOperationName],
     onCompleted: (data) => {
       const { deleteMerchant } = data;
 
@@ -31,14 +31,14 @@ function MerchantsPage() {
   });
 
   const [createMerchant] = useMutation(createMerchantMutation, {
-    refetchQueries: [{ query: merchantsQuery }],
+    refetchQueries: [merchantsOperationName],
     onCompleted: () => {
       setOpenMerchantFormModal(false);
     },
   });
 
   const [updateMerchant] = useMutation(updateMerchantMutation, {
-    refetchQueries: [{ query: merchantsQuery }],
+    refetchQueries: [merchantsOperationName],
     onCompleted: () => {
       setOpenMerchantFormModal(false);
     },

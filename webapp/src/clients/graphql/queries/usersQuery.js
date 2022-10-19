@@ -2,8 +2,10 @@ import { gql } from "@apollo/client";
 
 import { userFields } from "../fragments/userFields";
 
+export const operationName = "users";
+
 export default gql`
-  query users(
+  query ${operationName}(
     $filter: UserFilter
     $search: UserSearch
     $limit: Int

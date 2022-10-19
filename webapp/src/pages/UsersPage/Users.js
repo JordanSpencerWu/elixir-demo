@@ -123,7 +123,7 @@ function Users() {
     dob: user.dob,
   }));
 
-  const companyOptions = companies.map((company) => company.name) ?? [];
+  const companyOptions = companies.map((company) => company.name);
 
   function handleRowClick(id) {
     if (id == selectedUser?.id) {
@@ -150,6 +150,10 @@ function Users() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const companyValue = filterByCompanyId
+    ? companies.find((c) => c.id == filterByCompanyId)?.name
+    : null;
 
   function handleCompanyOnChange(companyName) {
     const companyId = companies.find((c) => c.name == companyName)?.id;
@@ -186,6 +190,7 @@ function Users() {
             options={companyOptions}
             fullWidth
             onChange={(e, companyName) => handleCompanyOnChange(companyName)}
+            value={companyValue}
             renderInput={(params) => (
               <TextField {...params} label="Filter by company" />
             )}

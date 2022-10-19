@@ -14,6 +14,21 @@ import TableToolbar from "components/TableToolbar";
 import TablePaginationActions from "components/TablePaginationActions";
 import { AppStateContext } from "providers/AppStateProvider";
 
+const columns = [
+  {
+    id: "id",
+    label: "id",
+  },
+  {
+    id: "name",
+    label: "name",
+  },
+  {
+    id: "description",
+    label: "description",
+  },
+];
+
 function Merchants() {
   const {
     state,
@@ -61,21 +76,6 @@ function Merchants() {
 
   const merchants = pageResult?.entries ?? [];
   const totalRows = pageResult?.totalRows ?? 0;
-
-  const columns = [
-    {
-      id: "id",
-      label: "id",
-    },
-    {
-      id: "name",
-      label: "name",
-    },
-    {
-      id: "description",
-      label: "description",
-    },
-  ];
 
   const rows = merchants.map((merchant) => ({
     id: merchant.id,

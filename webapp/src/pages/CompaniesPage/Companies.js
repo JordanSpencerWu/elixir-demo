@@ -15,6 +15,27 @@ import TableToolbar from "components/TableToolbar";
 import TablePaginationActions from "components/TablePaginationActions";
 import { AppStateContext } from "providers/AppStateProvider";
 
+const columns = [
+  {
+    id: "id",
+    label: "id",
+  },
+  {
+    id: "companyName",
+    label: "company name",
+  },
+  {
+    id: "availableCredit",
+    label: "available credit",
+    align: "right",
+  },
+  {
+    id: "creditLine",
+    label: "credit line",
+    align: "right",
+  },
+];
+
 function Companies() {
   const {
     state,
@@ -62,27 +83,6 @@ function Companies() {
 
   const companies = pageResult?.entries ?? [];
   const totalRows = pageResult?.totalRows ?? 0;
-
-  const columns = [
-    {
-      id: "id",
-      label: "id",
-    },
-    {
-      id: "companyName",
-      label: "company name",
-    },
-    {
-      id: "availableCredit",
-      label: "available credit",
-      align: "right",
-    },
-    {
-      id: "creditLine",
-      label: "credit line",
-      align: "right",
-    },
-  ];
 
   const rows = companies.map((company) => ({
     id: company.id,

@@ -28,6 +28,11 @@ const style = {
   p: 4,
 };
 
+export function getUserName(user) {
+  if (user) return user.firstName + " " + user.lastName;
+  return null;
+}
+
 function TransactionFormModal(props) {
   const { open, handleClose, handleSubmit, transaction } = props;
   const [formTransaction, setFormTransaction] = useState({});
@@ -64,11 +69,6 @@ function TransactionFormModal(props) {
     !formTransaction.description ||
     !formTransaction.merchantId ||
     !formTransaction.userId;
-
-  function getUserName(user) {
-    if (user) return user.firstName + " " + user.lastName;
-    return null;
-  }
 
   const companyOptions = companies.entries.map((company) => company.name);
   const merchantOptions = merchants.entries.map((merchant) => merchant.name);

@@ -24,6 +24,9 @@ const appState = {
     selected: {},
     page: 0,
     rowsPerPage: 10,
+    filterByCompanyId: null,
+    filterByMerchantId: null,
+    filterByUserId: null,
   },
   users: {
     selected: {},

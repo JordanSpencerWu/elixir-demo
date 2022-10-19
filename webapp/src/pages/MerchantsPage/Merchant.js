@@ -12,7 +12,7 @@ import BackButton from "components/BackButton";
 
 function Merchant() {
   const { id } = useParams();
-  const { setSelectMerchant, setOpenDeleteDialog, setOpenMerchantFormModal } =
+  const { setSelectedMerchant, setOpenDeleteDialog, setOpenMerchantFormModal } =
     useOutletContext();
   const { loading, error, data } = useQuery(query, { variables: { id: id } });
 
@@ -22,12 +22,12 @@ function Merchant() {
   const { merchant } = data;
 
   const handleDeleteClick = () => {
-    setSelectMerchant(merchant);
+    setSelectedMerchant(merchant);
     setOpenDeleteDialog(true);
   };
 
   const handleEditClick = () => {
-    setSelectMerchant(merchant);
+    setSelectedMerchant(merchant);
     setOpenMerchantFormModal(true);
   };
 

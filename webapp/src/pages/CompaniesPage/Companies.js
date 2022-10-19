@@ -32,8 +32,8 @@ function Companies() {
 
   const { data } = useQuery(query, queryOptions);
   const {
-    selectCompany,
-    setSelectCompany,
+    selectedCompany,
+    setSelectedCompany,
     setOpenDeleteDialog,
     setOpenCompanyFormModal,
   } = useOutletContext();
@@ -76,11 +76,11 @@ function Companies() {
   }));
 
   function handleRowClick(id) {
-    if (id == selectCompany?.id) {
-      setSelectCompany({});
+    if (id == selectedCompany?.id) {
+      setSelectedCompany({});
     } else {
       const company = companies.find((company) => company.id == id);
-      setSelectCompany(company);
+      setSelectedCompany(company);
     }
   }
 
@@ -115,7 +115,7 @@ function Companies() {
       </Box>
       <TableToolbar
         label="Companies"
-        open={!!selectCompany?.id}
+        open={!!selectedCompany?.id}
         handleDeleteClick={handleDeleteClick}
         handleAddClick={handleAddOrEditClick}
         handleEditClick={handleAddOrEditClick}
@@ -124,7 +124,7 @@ function Companies() {
         <Table
           columns={columns}
           rows={rows}
-          selectedId={selectCompany?.id}
+          selectedId={selectedCompany?.id}
           handleRowClick={handleRowClick}
           checkbox
         />

@@ -65,6 +65,8 @@ const config = {
       clients: path.resolve(__dirname, "./src/clients"),
       components: path.resolve(__dirname, "./src/components"),
       pages: path.resolve(__dirname, "./src/pages"),
+      providers: path.resolve(__dirname, "./src/providers"),
+      reducers: path.resolve(__dirname, "./src/reducers"),
       utils: path.resolve(__dirname, "./src/utils"),
     },
     extensions: [".js", ".jsx"],

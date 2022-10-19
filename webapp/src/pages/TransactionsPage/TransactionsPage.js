@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import Box from "@mui/material/Box";
@@ -10,23 +10,26 @@ import updateTransactionMutation from "clients/graphql/mutations/updateTransacti
 
 import DeleteDialog from "components/DeleteDialog/DeleteDialog";
 import pathTo from "utils/pathTo";
+import { AppStateContext } from "providers/AppStateProvider";
 
 import TransactionFormModal from "./TransactionFormModal";
 
 function TransactionsPage() {
+  const { state, transactionsActions } = useContext(AppStateContext);
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openTransactionFormModal, setOpenTransactionFormModal] =
     useState(false);
-  const [selectTransaction, setSelectTransaction] = useState();
+  const selectedTransaction = state.transactions.selected;
+  const setSelectedTransaction = transactionsActions.setSelected;
 
   const [deleteTransaction] = useMutation(deleteTransactionMutation, {
     refetchQueries: [transactionsOperationName],
     onCompleted: (data) => {
       const { deleteTransaction } = data;
 
-      if (selectTransaction.id === deleteTransaction.id) {
-        setSelectTransaction({});
+      if (selectedTransaction.id === deleteTransaction.id) {
+        setSelectedTransaction({});
       }
     },
   });
@@ -50,7 +53,7 @@ function TransactionsPage() {
   }
 
   function handleAgree() {
-    deleteTransaction({ variables: { id: selectTransaction.id } });
+    deleteTransaction({ variables: { id: selectedTransaction.id } });
     setOpenDeleteDialog((previousOpen) => !previousOpen);
     navigate(pathTo.transactions, { replace: true });
   }
@@ -80,7 +83,7 @@ function TransactionsPage() {
         open={openTransactionFormModal}
         handleClose={handleTransactionFormModelClose}
         handleSubmit={handleSubmit}
-        transaction={selectTransaction}
+        transaction={selectedTransaction}
       />
       <DeleteDialog
         open={openDeleteDialog}
@@ -99,8 +102,8 @@ function TransactionsPage() {
       >
         <Outlet
           context={{
-            selectTransaction,
-            setSelectTransaction,
+            selectedTransaction,
+            setSelectedTransaction,
             setOpenDeleteDialog,
             setOpenTransactionFormModal,
           }}

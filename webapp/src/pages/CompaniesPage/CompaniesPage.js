@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { useMutation } from "@apollo/client";
@@ -10,22 +10,26 @@ import { operationName as companiesOperationName } from "clients/graphql/queries
 
 import DeleteDialog from "components/DeleteDialog/DeleteDialog";
 import pathTo from "utils/pathTo";
+import { AppStateContext } from "providers/AppStateProvider";
 
 import CompanyFormModal from "./CompanyFormModal";
 
 function CompaniesPage() {
+  const { state, companiesActions } = useContext(AppStateContext);
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openCompanyFormModal, setOpenCompanyFormModal] = useState(false);
-  const [selectCompany, setSelectCompany] = useState();
+
+  const selectedCompany = state.companies.selected;
+  const setSelectedCompany = companiesActions.setSelected;
 
   const [deleteCompany] = useMutation(deleteCompanyMutation, {
     refetchQueries: [companiesOperationName],
     onCompleted: (data) => {
       const { deleteCompany } = data;
 
-      if (selectCompany.id === deleteCompany.id) {
-        setSelectCompany({});
+      if (selectedCompany.id === deleteCompany.id) {
+        setSelectedCompany({});
       }
     },
   });
@@ -49,7 +53,7 @@ function CompaniesPage() {
   }
 
   function handleAgree() {
-    deleteCompany({ variables: { id: selectCompany.id } });
+    deleteCompany({ variables: { id: selectedCompany.id } });
     setOpenDeleteDialog((previousOpen) => !previousOpen);
     navigate(pathTo.companies, { replace: true });
   }
@@ -77,7 +81,7 @@ function CompaniesPage() {
         open={openCompanyFormModal}
         handleClose={handleCompanyFormModelClose}
         handleSubmit={handleSubmit}
-        company={selectCompany}
+        company={selectedCompany}
       />
       <DeleteDialog
         open={openDeleteDialog}
@@ -96,8 +100,8 @@ function CompaniesPage() {
       >
         <Outlet
           context={{
-            selectCompany,
-            setSelectCompany,
+            selectedCompany,
+            setSelectedCompany,
             setOpenDeleteDialog,
             setOpenCompanyFormModal,
           }}

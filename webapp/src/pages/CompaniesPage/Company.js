@@ -13,7 +13,7 @@ import currencyFormatter from "utils/currencyFormatter";
 
 function Company() {
   const { id } = useParams();
-  const { setSelectCompany, setOpenDeleteDialog, setOpenCompanyFormModal } =
+  const { setSelectedCompany, setOpenDeleteDialog, setOpenCompanyFormModal } =
     useOutletContext();
   const { loading, error, data } = useQuery(query, { variables: { id: id } });
 
@@ -23,12 +23,12 @@ function Company() {
   const { company } = data;
 
   const handleDeleteClick = () => {
-    setSelectCompany(company);
+    setSelectedCompany(company);
     setOpenDeleteDialog(true);
   };
 
   const handleEditClick = () => {
-    setSelectCompany(company);
+    setSelectedCompany(company);
     setOpenCompanyFormModal(true);
   };
 

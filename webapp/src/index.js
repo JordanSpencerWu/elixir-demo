@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
+import AppStateProvider from "providers/AppStateProvider";
 import { client } from "clients/graphql/apolloClient";
 import App from "./App";
 
@@ -14,7 +15,9 @@ ReactDOM.createRoot(document.getElementById("app")).render(
     <ApolloProvider client={client}>
       <ThemeProvider theme={mdTheme}>
         <LocalizationProvider dateAdapter={AdapterMoment}>
-          <App />
+          <AppStateProvider>
+            <App />
+          </AppStateProvider>
         </LocalizationProvider>
       </ThemeProvider>
     </ApolloProvider>

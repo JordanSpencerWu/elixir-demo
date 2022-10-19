@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import Box from "@mui/material/Box";
@@ -10,22 +10,25 @@ import updateMerchantMutation from "clients/graphql/mutations/updateMerchantMuta
 
 import DeleteDialog from "components/DeleteDialog/DeleteDialog";
 import pathTo from "utils/pathTo";
+import { AppStateContext } from "providers/AppStateProvider";
 
 import MerchantFormModal from "./MerchantFormModal";
 
 function MerchantsPage() {
+  const { state, merchantsActions } = useContext(AppStateContext);
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openMerchantFormModal, setOpenMerchantFormModal] = useState(false);
-  const [selectMerchant, setSelectMerchant] = useState();
+  const selectedMerchant = state.merchants.selected;
+  const setSelectedMerchant = merchantsActions.setSelected;
 
   const [deleteMerchant] = useMutation(deleteMerchantMutation, {
     refetchQueries: [merchantsOperationName],
     onCompleted: (data) => {
       const { deleteMerchant } = data;
 
-      if (selectMerchant.id === deleteMerchant.id) {
-        setSelectMerchant({});
+      if (selectedMerchant.id === deleteMerchant.id) {
+        setSelectedMerchant({});
       }
     },
   });
@@ -49,7 +52,7 @@ function MerchantsPage() {
   }
 
   function handleAgree() {
-    deleteMerchant({ variables: { id: selectMerchant.id } });
+    deleteMerchant({ variables: { id: selectedMerchant.id } });
     setOpenDeleteDialog((previousOpen) => !previousOpen);
     navigate(pathTo.merchants, { replace: true });
   }
@@ -77,7 +80,7 @@ function MerchantsPage() {
         open={openMerchantFormModal}
         handleClose={handleMerchantFormModelClose}
         handleSubmit={handleSubmit}
-        merchant={selectMerchant}
+        merchant={selectedMerchant}
       />
       <DeleteDialog
         open={openDeleteDialog}
@@ -96,8 +99,8 @@ function MerchantsPage() {
       >
         <Outlet
           context={{
-            selectMerchant,
-            setSelectMerchant,
+            selectedMerchant,
+            setSelectedMerchant,
             setOpenDeleteDialog,
             setOpenMerchantFormModal,
           }}

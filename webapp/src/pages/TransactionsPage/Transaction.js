@@ -16,7 +16,7 @@ import pathTo from "utils/pathTo";
 function Transaction() {
   const { id } = useParams();
   const {
-    setSelectTransaction,
+    setSelectedTransaction,
     setOpenDeleteDialog,
     setOpenTransactionFormModal,
   } = useOutletContext();
@@ -28,12 +28,12 @@ function Transaction() {
   const { transaction } = data;
 
   const handleDeleteClick = () => {
-    setSelectTransaction(transaction);
+    setSelectedTransaction(transaction);
     setOpenDeleteDialog(true);
   };
 
   const handleEditClick = () => {
-    setSelectTransaction(transaction);
+    setSelectedTransaction(transaction);
     setOpenTransactionFormModal(true);
   };
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import Box from "@mui/material/Box";
@@ -11,14 +11,17 @@ import { operationName as UsersOperationName } from "clients/graphql/queries/use
 
 import DeleteDialog from "components/DeleteDialog/DeleteDialog";
 import pathTo from "utils/pathTo";
+import { AppStateContext } from "providers/AppStateProvider";
 
 import UserFormModal from "./UserFormModal";
 
 function UsersPage() {
+  const { state, usersActions } = useContext(AppStateContext);
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState();
+  const selectedUser = state.users.selected;
+  const setSelectedUser = usersActions.setSelected;
 
   const [deleteUser] = useMutation(deleteUserMutation, {
     refetchQueries: [UsersOperationName],

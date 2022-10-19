@@ -30,8 +30,8 @@ function Transactions() {
 
   const { data } = useQuery(query, queryOptions);
   const {
-    selectTransaction,
-    setSelectTransaction,
+    selectedTransaction,
+    setSelectedTransaction,
     setOpenDeleteDialog,
     setOpenTransactionFormModal,
   } = useOutletContext();
@@ -85,13 +85,13 @@ function Transactions() {
   }));
 
   function handleRowClick(id) {
-    if (id == selectTransaction?.id) {
-      setSelectTransaction({});
+    if (id == selectedTransaction?.id) {
+      setSelectedTransaction({});
     } else {
       const transaction = transactions.find(
         (transaction) => transaction.id == id
       );
-      setSelectTransaction(transaction);
+      setSelectedTransaction(transaction);
     }
   }
 
@@ -116,7 +116,7 @@ function Transactions() {
     <Paper sx={{ width: 1200, mb: 2 }}>
       <TableToolbar
         label="Transactions"
-        open={!!selectTransaction?.id}
+        open={!!selectedTransaction?.id}
         handleDeleteClick={handleDeleteClick}
         handleAddClick={handleAddOrEditClick}
         handleEditClick={handleAddOrEditClick}
@@ -125,7 +125,7 @@ function Transactions() {
         <Table
           columns={columns}
           rows={rows}
-          selectedId={selectTransaction?.id}
+          selectedId={selectedTransaction?.id}
           handleRowClick={handleRowClick}
           checkbox
         />

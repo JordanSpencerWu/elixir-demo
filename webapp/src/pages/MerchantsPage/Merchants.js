@@ -31,8 +31,8 @@ function Merchants() {
 
   const { data } = useQuery(query, queryOptions);
   const {
-    selectMerchant,
-    setSelectMerchant,
+    selectedMerchant,
+    setSelectedMerchant,
     setOpenDeleteDialog,
     setOpenMerchantFormModal,
   } = useOutletContext();
@@ -68,11 +68,11 @@ function Merchants() {
   }));
 
   function handleRowClick(id) {
-    if (id == selectMerchant?.id) {
-      setSelectMerchant({});
+    if (id == selectedMerchant?.id) {
+      setSelectedMerchant({});
     } else {
       const merchant = merchants.find((merchant) => merchant.id == id);
-      setSelectMerchant(merchant);
+      setSelectedMerchant(merchant);
     }
   }
 
@@ -107,7 +107,7 @@ function Merchants() {
       </Box>
       <TableToolbar
         label="Merchants"
-        open={!!selectMerchant?.id}
+        open={!!selectedMerchant?.id}
         handleDeleteClick={handleDeleteClick}
         handleAddClick={handleAddOrEditClick}
         handleEditClick={handleAddOrEditClick}
@@ -116,7 +116,7 @@ function Merchants() {
         <Table
           columns={columns}
           rows={rows}
-          selectedId={selectMerchant?.id}
+          selectedId={selectedMerchant?.id}
           handleRowClick={handleRowClick}
           checkbox
         />

@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { useMutation } from "@apollo/client";
 
@@ -9,7 +9,6 @@ import updateCompanyMutation from "clients/graphql/mutations/updateCompanyMutati
 import { operationName as companiesOperationName } from "clients/graphql/queries/companiesQuery";
 
 import DeleteDialog from "components/DeleteDialog/DeleteDialog";
-import pathTo from "utils/pathTo";
 import { AppStateContext } from "providers/AppStateProvider";
 
 import CompanyFormModal from "./CompanyFormModal";
@@ -19,7 +18,6 @@ function CompaniesPage() {
     state,
     companiesActions: { setSelected: setSelectedCompany },
   } = useContext(AppStateContext);
-  const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openCompanyFormModal, setOpenCompanyFormModal] = useState(false);
 
@@ -57,7 +55,6 @@ function CompaniesPage() {
   function handleAgree() {
     deleteCompany({ variables: { id: selectedCompany.id } });
     setOpenDeleteDialog((previousOpen) => !previousOpen);
-    navigate(pathTo.companies, { replace: true });
   }
 
   function handleCompanyFormModelClose() {

@@ -13,6 +13,7 @@ import Table from "components/Table";
 import TableToolbar from "components/TableToolbar";
 import TablePaginationActions from "components/TablePaginationActions";
 import { AppStateContext } from "providers/AppStateProvider";
+import displayName from "utils/displayName";
 
 function Users() {
   const {
@@ -89,10 +90,15 @@ function Users() {
       id: "dob",
       label: "date of birth",
     },
+    {
+      id: "companyName",
+      label: "company",
+    },
   ];
 
   const rows = users.map((user) => ({
     id: user.id,
+    companyName: displayName(user.company.name, user.company.deleted),
     firstName: user.firstName,
     lastName: user.lastName,
     dob: user.dob,

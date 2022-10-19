@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import query from "clients/graphql/queries/userQuery";
 import BackButton from "components/BackButton";
 import pathTo from "utils/pathTo";
+import displayName from "utils/displayName";
 
 function User() {
   const { id } = useParams();
@@ -32,13 +33,15 @@ function User() {
     setOpenUserFormModal(true);
   };
 
+  const disabled = user.deleted;
+
   return (
     <Box sx={{ width: 500 }}>
       <BackButton />
       <Card variant="outlined">
         <CardContent>
           <Typography sx={{ fontSize: 32 }} color="text.secondary" gutterBottom>
-            User
+            {displayName("User", user.deleted)}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Id: {user.id}
@@ -53,21 +56,17 @@ function User() {
             Date Of Birth: {user.dob}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            Company:{" "}
-            {user.company ? (
-              <Link to={`${pathTo.company}${user.company.id}`}>
-                {user.company.name}
-              </Link>
-            ) : (
-              "Deleted"
-            )}
+            {displayName("Company", user.company.deleted)}:{" "}
+            <Link to={`${pathTo.company}${user.company.id}`}>
+              {user.company.name}
+            </Link>
           </Typography>
         </CardContent>
-        <CardActions>
-          <Button size="large" onClick={handleEditClick}>
+        <CardActions sx={{ justifyContent: "space-around" }}>
+          <Button size="large" onClick={handleEditClick} disabled={disabled}>
             Edit
           </Button>
-          <Button size="large" onClick={handleDeleteClick}>
+          <Button size="large" onClick={handleDeleteClick} disabled={disabled}>
             Delete
           </Button>
         </CardActions>

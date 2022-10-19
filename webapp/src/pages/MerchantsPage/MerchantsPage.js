@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import Box from "@mui/material/Box";
 
@@ -9,7 +9,6 @@ import createMerchantMutation from "clients/graphql/mutations/createMerchantMuta
 import updateMerchantMutation from "clients/graphql/mutations/updateMerchantMutation";
 
 import DeleteDialog from "components/DeleteDialog/DeleteDialog";
-import pathTo from "utils/pathTo";
 import { AppStateContext } from "providers/AppStateProvider";
 
 import MerchantFormModal from "./MerchantFormModal";
@@ -19,7 +18,6 @@ function MerchantsPage() {
     state,
     merchantsActions: { setSelected: setSelectedMerchant },
   } = useContext(AppStateContext);
-  const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openMerchantFormModal, setOpenMerchantFormModal] = useState(false);
   const selectedMerchant = state.merchants.selected;
@@ -56,7 +54,6 @@ function MerchantsPage() {
   function handleAgree() {
     deleteMerchant({ variables: { id: selectedMerchant.id } });
     setOpenDeleteDialog((previousOpen) => !previousOpen);
-    navigate(pathTo.merchants, { replace: true });
   }
 
   function handleMerchantFormModelClose() {

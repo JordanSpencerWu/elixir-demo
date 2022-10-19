@@ -11,7 +11,9 @@ import Table from "components/Table";
 import getTransactionType from "utils/getTransactionType";
 import TableToolbar from "components/TableToolbar";
 import TablePaginationActions from "components/TablePaginationActions";
+
 import { AppStateContext } from "providers/AppStateProvider";
+import displayName from "utils/displayName";
 
 function Transactions() {
   const {
@@ -61,14 +63,6 @@ function Transactions() {
       label: "user name",
     },
     {
-      id: "merchantName",
-      label: "merchant name",
-    },
-    {
-      id: "companyName",
-      label: "company name",
-    },
-    {
       id: "type",
       label: "type",
     },
@@ -82,11 +76,10 @@ function Transactions() {
   const rows = transactions.map((transaction) => ({
     id: transaction.id,
     amount: currencyFormatter(transaction.amount),
-    merchantName: transaction?.merchant ? transaction.merchant.name : "Deleted",
-    userName: transaction?.user
-      ? transaction.user.firstName + " " + transaction.user.lastName
-      : "Deleted",
-    companyName: transaction?.company ? transaction.company.name : "Deleted",
+    userName: displayName(
+      transaction.user.firstName + " " + transaction.user.lastName,
+      transaction.user.deleted
+    ),
     type: getTransactionType(transaction),
   }));
 

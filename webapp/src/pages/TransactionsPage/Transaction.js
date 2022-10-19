@@ -12,6 +12,7 @@ import getTransactionType from "utils/getTransactionType";
 import currencyFormatter from "utils/currencyFormatter";
 import BackButton from "components/BackButton";
 import pathTo from "utils/pathTo";
+import displayName from "utils/displayName";
 
 function Transaction() {
   const { id } = useParams();
@@ -37,13 +38,15 @@ function Transaction() {
     setOpenTransactionFormModal(true);
   };
 
+  const disabled = transaction.deleted;
+
   return (
     <Box sx={{ width: 500 }}>
       <BackButton />
       <Card variant="outlined">
         <CardContent>
           <Typography sx={{ fontSize: 32 }} color="text.secondary" gutterBottom>
-            Transction
+            {displayName("Transaction", transaction.deleted)}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Id: {transaction.id}
@@ -58,44 +61,32 @@ function Transaction() {
             Description: {transaction.description}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            User:{" "}
-            {transaction.user ? (
-              <Link to={`${pathTo.user}${transaction.user.id}`}>
-                {transaction.user.firstName + " " + transaction.user.lastName}
-              </Link>
-            ) : (
-              "Deleted"
-            )}
+            {displayName("User", transaction.user.deleted)}:{" "}
+            <Link to={`${pathTo.user}${transaction.user.id}`}>
+              {transaction.user.firstName + " " + transaction.user.lastName}
+            </Link>
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            Company:{" "}
-            {transaction.company ? (
-              <Link to={`${pathTo.company}${transaction.company.id}`}>
-                {transaction.company.name}
-              </Link>
-            ) : (
-              "Deleted"
-            )}
+            {displayName("Company", transaction.company.deleted)}:{" "}
+            <Link to={`${pathTo.company}${transaction.company.id}`}>
+              {transaction.company.name}
+            </Link>
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            Merchant:{" "}
-            {transaction.merchant ? (
-              <Link to={`${pathTo.merchant}${transaction.merchant.id}`}>
-                {transaction.merchant.name}
-              </Link>
-            ) : (
-              "Deleted"
-            )}
+            {displayName("Merchant", transaction.merchant.deleted)}:{" "}
+            <Link to={`${pathTo.merchant}${transaction.merchant.id}`}>
+              {transaction.merchant.name}
+            </Link>
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Amount: {currencyFormatter(transaction.amount)}
           </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: "space-around" }}>
-          <Button size="large" onClick={handleEditClick}>
+          <Button size="large" onClick={handleEditClick} disabled={disabled}>
             Edit
           </Button>
-          <Button size="large" onClick={handleDeleteClick}>
+          <Button size="large" onClick={handleDeleteClick} disabled={disabled}>
             Delete
           </Button>
         </CardActions>

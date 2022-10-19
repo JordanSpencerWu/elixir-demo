@@ -5,6 +5,7 @@ export const companyFields = gql`
     id
     availableCredit
     creditLine
+    deleted
     name
   }
 `;

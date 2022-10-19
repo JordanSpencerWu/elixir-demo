@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import Box from "@mui/material/Box";
 
@@ -9,7 +9,6 @@ import createTransactionMutation from "clients/graphql/mutations/createTransacti
 import updateTransactionMutation from "clients/graphql/mutations/updateTransactionMutation";
 
 import DeleteDialog from "components/DeleteDialog/DeleteDialog";
-import pathTo from "utils/pathTo";
 import { AppStateContext } from "providers/AppStateProvider";
 
 import TransactionFormModal from "./TransactionFormModal";
@@ -19,7 +18,6 @@ function TransactionsPage() {
     state,
     transactionsActions: { setSelected: setSelectedTransaction },
   } = useContext(AppStateContext);
-  const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openTransactionFormModal, setOpenTransactionFormModal] =
     useState(false);
@@ -57,7 +55,6 @@ function TransactionsPage() {
   function handleAgree() {
     deleteTransaction({ variables: { id: selectedTransaction.id } });
     setOpenDeleteDialog((previousOpen) => !previousOpen);
-    navigate(pathTo.transactions, { replace: true });
   }
 
   function handleTransactionFormModelClose() {

@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import query from "clients/graphql/queries/companyQuery";
 import BackButton from "components/BackButton";
 import currencyFormatter from "utils/currencyFormatter";
+import displayName from "utils/displayName";
 
 function Company() {
   const { id } = useParams();
@@ -32,13 +33,15 @@ function Company() {
     setOpenCompanyFormModal(true);
   };
 
+  const disabled = company.deleted;
+
   return (
     <Box sx={{ width: 500 }}>
       <BackButton />
       <Card variant="outlined">
         <CardContent>
           <Typography sx={{ fontSize: 32 }} color="text.secondary" gutterBottom>
-            Company
+            {displayName("Company", company.deleted)}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Id: {company.id}
@@ -53,11 +56,11 @@ function Company() {
             Available credit: {currencyFormatter(company.availableCredit)}
           </Typography>
         </CardContent>
-        <CardActions>
-          <Button size="large" onClick={handleEditClick}>
+        <CardActions sx={{ justifyContent: "space-around" }}>
+          <Button size="large" onClick={handleEditClick} disabled={disabled}>
             Edit
           </Button>
-          <Button size="large" onClick={handleDeleteClick}>
+          <Button size="large" onClick={handleDeleteClick} disabled={disabled}>
             Delete
           </Button>
         </CardActions>

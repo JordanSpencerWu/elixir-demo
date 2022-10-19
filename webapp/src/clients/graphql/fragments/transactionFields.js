@@ -11,6 +11,7 @@ export const transactionFields = gql`
     companyId
     credit
     debit
+    deleted
     description
     merchantId
     userId

@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 
 import query from "clients/graphql/queries/merchantQuery";
 import BackButton from "components/BackButton";
+import displayName from "utils/displayName";
 
 function Merchant() {
   const { id } = useParams();
@@ -31,13 +32,15 @@ function Merchant() {
     setOpenMerchantFormModal(true);
   };
 
+  const disabled = merchant.deleted;
+
   return (
     <Box sx={{ width: 500 }}>
       <BackButton />
       <Card variant="outlined">
         <CardContent>
           <Typography sx={{ fontSize: 32 }} color="text.secondary" gutterBottom>
-            Merchant
+            {displayName("Merchant", merchant.deleted)}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             Id: {merchant.id}
@@ -52,11 +55,11 @@ function Merchant() {
             Description: {merchant.description}
           </Typography>
         </CardContent>
-        <CardActions>
-          <Button size="large" onClick={handleEditClick}>
+        <CardActions sx={{ justifyContent: "space-around" }}>
+          <Button size="large" onClick={handleEditClick} disabled={disabled}>
             Edit
           </Button>
-          <Button size="large" onClick={handleDeleteClick}>
+          <Button size="large" onClick={handleDeleteClick} disabled={disabled}>
             Delete
           </Button>
         </CardActions>

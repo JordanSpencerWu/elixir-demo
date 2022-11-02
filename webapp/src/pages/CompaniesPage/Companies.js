@@ -113,7 +113,7 @@ function Companies() {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
+    setRowsPerPage(event.target.value);
     setPage(0);
   };
 

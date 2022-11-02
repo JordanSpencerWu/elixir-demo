@@ -47,7 +47,9 @@ function TransactionsPage() {
 
   const [updateTransaction] = useMutation(updateTransactionMutation, {
     refetchQueries: [transactionsOperationName],
-    onCompleted: () => {
+    onCompleted: (data) => {
+      const { updateTransaction } = data;
+      setSelectedTransaction(updateTransaction);
       setOpenTransactionFormModal(false);
       openSnackbar("successfully updated transaction");
     },

@@ -47,7 +47,9 @@ function CompaniesPage() {
 
   const [updateCompany] = useMutation(updateCompanyMutation, {
     refetchQueries: [companiesOperationName],
-    onCompleted: () => {
+    onCompleted: (data) => {
+      const { updateCompany } = data;
+      setSelectedCompany(updateCompany);
       setOpenCompanyFormModal(false);
       openSnackbar("successfully updated company");
     },

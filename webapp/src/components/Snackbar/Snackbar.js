@@ -28,7 +28,7 @@ function Snackbar(props) {
   );
 
   return (
-    <div>
+    <>
       <MuiSnackbar
         open={open}
         autoHideDuration={6000}
@@ -36,7 +36,7 @@ function Snackbar(props) {
         message={message}
         action={action}
       />
-    </div>
+    </>
   );
 }
 

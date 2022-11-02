@@ -47,7 +47,9 @@ function UsersPage() {
 
   const [updateUser] = useMutation(updateUserMutation, {
     refetchQueries: [UsersOperationName],
-    onCompleted: () => {
+    onCompleted: (data) => {
+      const { updateUser } = data;
+      setSelectedUser(updateUser);
       setOpenUserFormModal(false);
       openSnackbar("successfully updated user");
     },

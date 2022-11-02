@@ -46,7 +46,9 @@ function MerchantsPage() {
 
   const [updateMerchant] = useMutation(updateMerchantMutation, {
     refetchQueries: [merchantsOperationName],
-    onCompleted: () => {
+    onCompleted: (data) => {
+      const { updateMerchant } = data;
+      setSelectedMerchant(updateMerchant);
       setOpenMerchantFormModal(false);
       openSnackbar("successfully updated merchant");
     },

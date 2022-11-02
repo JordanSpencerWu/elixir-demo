@@ -12,23 +12,23 @@ if Mix.env() == :dev do
   num_of_transactions = 100
 
   company_entries =
-    for _ <- 1..num_of_companies do
-      SeedsFactory.build_company()
+    for seconds <- 1..num_of_companies do
+      SeedsFactory.build_company(seconds)
     end
 
   {_count, companies} = Homework.Repo.insert_all(Company, company_entries, returning: true)
 
   user_entries =
-    for _ <- 1..num_of_users do
+    for seconds <- 1..num_of_users do
       company = Enum.random(companies)
-      SeedsFactory.build_user(company)
+      SeedsFactory.build_user(company, seconds)
     end
 
   {_count, users} = Homework.Repo.insert_all(User, user_entries, returning: true)
 
   merchant_entries =
-    for _ <- 1..num_of_merchants do
-      SeedsFactory.build_merchant()
+    for seconds <- 1..num_of_merchants do
+      SeedsFactory.build_merchant(seconds)
     end
 
   {_count, merchants} = Homework.Repo.insert_all(Merchant, merchant_entries, returning: true)
@@ -36,12 +36,12 @@ if Mix.env() == :dev do
   transaction_types = [:credit, :debit, :cash]
 
   transaction_entries =
-    for _ <- 1..num_of_transactions do
+    for seconds <- 1..num_of_transactions do
       user = Enum.random(users)
       merchant = Enum.random(merchants)
       transaction_type = Enum.random(transaction_types)
 
-      SeedsFactory.build_transaction(user, merchant, transaction_type)
+      SeedsFactory.build_transaction(user, merchant, transaction_type, seconds)
     end
 
   Homework.Repo.insert_all(Transaction, transaction_entries)

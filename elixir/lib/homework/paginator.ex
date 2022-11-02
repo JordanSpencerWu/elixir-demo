@@ -24,7 +24,7 @@ defmodule Homework.Paginator do
   end
 
   @doc """
-  Will paginate the a list of items.
+  Will paginate a list of items.
 
   ## Options
 

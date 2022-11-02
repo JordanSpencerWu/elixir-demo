@@ -7,9 +7,9 @@ defmodule SeedsFactory do
 
   @type transaction_type :: :credit | :debit | :cash
 
-  @spec build_company() :: map
-  def build_company do
-    now = NaiveDateTime.utc_now()
+  @spec build_company(integer) :: map
+  def build_company(seconds) do
+    now = NaiveDateTime.utc_now() |> NaiveDateTime.add(seconds)
 
     %{
       name: Faker.Company.name(),
@@ -19,9 +19,9 @@ defmodule SeedsFactory do
     }
   end
 
-  @spec build_user(Company.t()) :: map
-  def build_user(company) do
-    now = NaiveDateTime.utc_now()
+  @spec build_user(Company.t(), integer) :: map
+  def build_user(company, seconds) do
+    now = NaiveDateTime.utc_now() |> NaiveDateTime.add(seconds)
     start_date = Date.utc_today()
     end_date = Date.new!(1900, 1, 1)
     dob = Faker.Date.between(start_date, end_date)
@@ -36,9 +36,9 @@ defmodule SeedsFactory do
     }
   end
 
-  @spec build_merchant() :: map
-  def build_merchant do
-    now = NaiveDateTime.utc_now()
+  @spec build_merchant(integer) :: map
+  def build_merchant(seconds) do
+    now = NaiveDateTime.utc_now() |> NaiveDateTime.add(seconds)
 
     %{
       description: Faker.Company.catch_phrase(),
@@ -48,9 +48,9 @@ defmodule SeedsFactory do
     }
   end
 
-  @spec build_transaction(User.t(), Merchant.t(), transaction_type) :: map
-  def build_transaction(user, merchant, type \\ :credit) do
-    now = NaiveDateTime.utc_now()
+  @spec build_transaction(User.t(), Merchant.t(), transaction_type, integer) :: map
+  def build_transaction(user, merchant, type, seconds) do
+    now = NaiveDateTime.utc_now() |> NaiveDateTime.add(seconds)
 
     credit_transaction = %{
       amount: :rand.uniform(100_000_000),
